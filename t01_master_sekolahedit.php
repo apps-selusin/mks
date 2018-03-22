@@ -334,6 +334,8 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		$this->no_stat->SetVisibility();
 		$this->nama->SetVisibility();
 		$this->status->SetVisibility();
+		$this->alamat1->SetVisibility();
+		$this->alamat2->SetVisibility();
 		$this->desa->SetVisibility();
 		$this->kecamatan->SetVisibility();
 		$this->kabupaten->SetVisibility();
@@ -631,6 +633,12 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		if (!$this->status->FldIsDetailKey) {
 			$this->status->setFormValue($objForm->GetValue("x_status"));
 		}
+		if (!$this->alamat1->FldIsDetailKey) {
+			$this->alamat1->setFormValue($objForm->GetValue("x_alamat1"));
+		}
+		if (!$this->alamat2->FldIsDetailKey) {
+			$this->alamat2->setFormValue($objForm->GetValue("x_alamat2"));
+		}
 		if (!$this->desa->FldIsDetailKey) {
 			$this->desa->setFormValue($objForm->GetValue("x_desa"));
 		}
@@ -654,6 +662,8 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		$this->no_stat->CurrentValue = $this->no_stat->FormValue;
 		$this->nama->CurrentValue = $this->nama->FormValue;
 		$this->status->CurrentValue = $this->status->FormValue;
+		$this->alamat1->CurrentValue = $this->alamat1->FormValue;
+		$this->alamat2->CurrentValue = $this->alamat2->FormValue;
 		$this->desa->CurrentValue = $this->desa->FormValue;
 		$this->kecamatan->CurrentValue = $this->kecamatan->FormValue;
 		$this->kabupaten->CurrentValue = $this->kabupaten->FormValue;
@@ -723,6 +733,8 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		$this->no_stat->setDbValue($row['no_stat']);
 		$this->nama->setDbValue($row['nama']);
 		$this->status->setDbValue($row['status']);
+		$this->alamat1->setDbValue($row['alamat1']);
+		$this->alamat2->setDbValue($row['alamat2']);
 		$this->desa->setDbValue($row['desa']);
 		$this->kecamatan->setDbValue($row['kecamatan']);
 		$this->kabupaten->setDbValue($row['kabupaten']);
@@ -736,6 +748,8 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		$row['no_stat'] = NULL;
 		$row['nama'] = NULL;
 		$row['status'] = NULL;
+		$row['alamat1'] = NULL;
+		$row['alamat2'] = NULL;
 		$row['desa'] = NULL;
 		$row['kecamatan'] = NULL;
 		$row['kabupaten'] = NULL;
@@ -752,6 +766,8 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		$this->no_stat->DbValue = $row['no_stat'];
 		$this->nama->DbValue = $row['nama'];
 		$this->status->DbValue = $row['status'];
+		$this->alamat1->DbValue = $row['alamat1'];
+		$this->alamat2->DbValue = $row['alamat2'];
 		$this->desa->DbValue = $row['desa'];
 		$this->kecamatan->DbValue = $row['kecamatan'];
 		$this->kabupaten->DbValue = $row['kabupaten'];
@@ -794,6 +810,8 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		// no_stat
 		// nama
 		// status
+		// alamat1
+		// alamat2
 		// desa
 		// kecamatan
 		// kabupaten
@@ -816,6 +834,14 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		// status
 		$this->status->ViewValue = $this->status->CurrentValue;
 		$this->status->ViewCustomAttributes = "";
+
+		// alamat1
+		$this->alamat1->ViewValue = $this->alamat1->CurrentValue;
+		$this->alamat1->ViewCustomAttributes = "";
+
+		// alamat2
+		$this->alamat2->ViewValue = $this->alamat2->CurrentValue;
+		$this->alamat2->ViewCustomAttributes = "";
 
 		// desa
 		$this->desa->ViewValue = $this->desa->CurrentValue;
@@ -847,6 +873,16 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 			$this->status->LinkCustomAttributes = "";
 			$this->status->HrefValue = "";
 			$this->status->TooltipValue = "";
+
+			// alamat1
+			$this->alamat1->LinkCustomAttributes = "";
+			$this->alamat1->HrefValue = "";
+			$this->alamat1->TooltipValue = "";
+
+			// alamat2
+			$this->alamat2->LinkCustomAttributes = "";
+			$this->alamat2->HrefValue = "";
+			$this->alamat2->TooltipValue = "";
 
 			// desa
 			$this->desa->LinkCustomAttributes = "";
@@ -887,6 +923,18 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 			$this->status->EditValue = ew_HtmlEncode($this->status->CurrentValue);
 			$this->status->PlaceHolder = ew_RemoveHtml($this->status->FldCaption());
 
+			// alamat1
+			$this->alamat1->EditAttrs["class"] = "form-control";
+			$this->alamat1->EditCustomAttributes = "";
+			$this->alamat1->EditValue = ew_HtmlEncode($this->alamat1->CurrentValue);
+			$this->alamat1->PlaceHolder = ew_RemoveHtml($this->alamat1->FldCaption());
+
+			// alamat2
+			$this->alamat2->EditAttrs["class"] = "form-control";
+			$this->alamat2->EditCustomAttributes = "";
+			$this->alamat2->EditValue = ew_HtmlEncode($this->alamat2->CurrentValue);
+			$this->alamat2->PlaceHolder = ew_RemoveHtml($this->alamat2->FldCaption());
+
 			// desa
 			$this->desa->EditAttrs["class"] = "form-control";
 			$this->desa->EditCustomAttributes = "";
@@ -924,6 +972,14 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 			// status
 			$this->status->LinkCustomAttributes = "";
 			$this->status->HrefValue = "";
+
+			// alamat1
+			$this->alamat1->LinkCustomAttributes = "";
+			$this->alamat1->HrefValue = "";
+
+			// alamat2
+			$this->alamat2->LinkCustomAttributes = "";
+			$this->alamat2->HrefValue = "";
 
 			// desa
 			$this->desa->LinkCustomAttributes = "";
@@ -967,6 +1023,12 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 		}
 		if (!$this->status->FldIsDetailKey && !is_null($this->status->FormValue) && $this->status->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->status->FldCaption(), $this->status->ReqErrMsg));
+		}
+		if (!$this->alamat1->FldIsDetailKey && !is_null($this->alamat1->FormValue) && $this->alamat1->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->alamat1->FldCaption(), $this->alamat1->ReqErrMsg));
+		}
+		if (!$this->alamat2->FldIsDetailKey && !is_null($this->alamat2->FormValue) && $this->alamat2->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->alamat2->FldCaption(), $this->alamat2->ReqErrMsg));
 		}
 		if (!$this->desa->FldIsDetailKey && !is_null($this->desa->FormValue) && $this->desa->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->desa->FldCaption(), $this->desa->ReqErrMsg));
@@ -1024,6 +1086,12 @@ class ct01_master_sekolah_edit extends ct01_master_sekolah {
 
 			// status
 			$this->status->SetDbValueDef($rsnew, $this->status->CurrentValue, "", $this->status->ReadOnly);
+
+			// alamat1
+			$this->alamat1->SetDbValueDef($rsnew, $this->alamat1->CurrentValue, "", $this->alamat1->ReadOnly);
+
+			// alamat2
+			$this->alamat2->SetDbValueDef($rsnew, $this->alamat2->CurrentValue, "", $this->alamat2->ReadOnly);
 
 			// desa
 			$this->desa->SetDbValueDef($rsnew, $this->desa->CurrentValue, "", $this->desa->ReadOnly);
@@ -1212,6 +1280,12 @@ ft01_master_sekolahedit.Validate = function() {
 			elm = this.GetElements("x" + infix + "_status");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t01_master_sekolah->status->FldCaption(), $t01_master_sekolah->status->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_alamat1");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t01_master_sekolah->alamat1->FldCaption(), $t01_master_sekolah->alamat1->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_alamat2");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t01_master_sekolah->alamat2->FldCaption(), $t01_master_sekolah->alamat2->ReqErrMsg)) ?>");
 			elm = this.GetElements("x" + infix + "_desa");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t01_master_sekolah->desa->FldCaption(), $t01_master_sekolah->desa->ReqErrMsg)) ?>");
@@ -1345,6 +1419,26 @@ $t01_master_sekolah_edit->ShowMessage();
 <input type="text" data-table="t01_master_sekolah" data-field="x_status" name="x_status" id="x_status" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t01_master_sekolah->status->getPlaceHolder()) ?>" value="<?php echo $t01_master_sekolah->status->EditValue ?>"<?php echo $t01_master_sekolah->status->EditAttributes() ?>>
 </span>
 <?php echo $t01_master_sekolah->status->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t01_master_sekolah->alamat1->Visible) { // alamat1 ?>
+	<div id="r_alamat1" class="form-group">
+		<label id="elh_t01_master_sekolah_alamat1" for="x_alamat1" class="<?php echo $t01_master_sekolah_edit->LeftColumnClass ?>"><?php echo $t01_master_sekolah->alamat1->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $t01_master_sekolah_edit->RightColumnClass ?>"><div<?php echo $t01_master_sekolah->alamat1->CellAttributes() ?>>
+<span id="el_t01_master_sekolah_alamat1">
+<input type="text" data-table="t01_master_sekolah" data-field="x_alamat1" name="x_alamat1" id="x_alamat1" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t01_master_sekolah->alamat1->getPlaceHolder()) ?>" value="<?php echo $t01_master_sekolah->alamat1->EditValue ?>"<?php echo $t01_master_sekolah->alamat1->EditAttributes() ?>>
+</span>
+<?php echo $t01_master_sekolah->alamat1->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t01_master_sekolah->alamat2->Visible) { // alamat2 ?>
+	<div id="r_alamat2" class="form-group">
+		<label id="elh_t01_master_sekolah_alamat2" for="x_alamat2" class="<?php echo $t01_master_sekolah_edit->LeftColumnClass ?>"><?php echo $t01_master_sekolah->alamat2->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $t01_master_sekolah_edit->RightColumnClass ?>"><div<?php echo $t01_master_sekolah->alamat2->CellAttributes() ?>>
+<span id="el_t01_master_sekolah_alamat2">
+<input type="text" data-table="t01_master_sekolah" data-field="x_alamat2" name="x_alamat2" id="x_alamat2" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t01_master_sekolah->alamat2->getPlaceHolder()) ?>" value="<?php echo $t01_master_sekolah->alamat2->EditValue ?>"<?php echo $t01_master_sekolah->alamat2->EditAttributes() ?>>
+</span>
+<?php echo $t01_master_sekolah->alamat2->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($t01_master_sekolah->desa->Visible) { // desa ?>

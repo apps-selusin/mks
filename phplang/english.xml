@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2018/3/20" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2018/3/22" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -619,7 +619,7 @@
     <phrase id="bodytitle" value="Manajemen Keuangan Sekolah" />
     <phrase id="footertext" value="&amp;copy;2018 Selaras Solusindo. All rights reserved." />
     <menu id="6">
-      <phrase id="menutext" value="Home" />
+      <phrase id="menutext" value="Beranda" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="Identitas Sekolah" />
@@ -648,6 +648,18 @@
     <menu id="12">
       <phrase id="menutext" value="Setup" />
     </menu>
+    <menu id="30">
+      <phrase id="menutext" value="RKAS" />
+    </menu>
+    <menu id="24">
+      <phrase id="menutext" value="RKAS Level-1" />
+    </menu>
+    <menu id="31">
+      <phrase id="menutext" value="RKAS Level-2" />
+    </menu>
+    <menu id="32">
+      <phrase id="menutext" value="RKAS Level-3" />
+    </menu>
     <menu id="5">
       <phrase id="menutext" value="Pengguna" />
     </menu>
@@ -660,6 +672,9 @@
     <menu id="4">
       <phrase id="menutext" value="t 98 userlevelpermissions" />
     </menu>
+    <table id="cf01_home_php">
+      <phrase id="tblcaption" value="Beranda" />
+    </table>
     <table id="t01_master_sekolah">
       <phrase id="tblcaption" value="Identitas Sekolah" />
       <field id="id">
@@ -674,6 +689,10 @@
       <field id="status">
         <phrase id="fldcaption" value="Status Sekolah" />
       </field>
+      <field id="alamat1">
+        <phrase id="fldcaption" value="Alamat" />
+      </field>
+      <field id="alamat2" />
       <field id="desa">
         <phrase id="fldcaption" value="Desa" />
       </field>
@@ -685,6 +704,51 @@
       </field>
       <field id="provinsi">
         <phrase id="fldcaption" value="Provinsi" />
+      </field>
+    </table>
+    <table id="t02_rkas01">
+      <phrase id="tblcaption" value="RKAS Level-1" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="keterangan">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="jumlah">
+        <phrase id="fldcaption" value="Jumlah" />
+      </field>
+    </table>
+    <table id="t03_rkas02">
+      <phrase id="tblcaption" value="RKAS Level-2" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="lv1_id">
+        <phrase id="fldcaption" value="Level-1" />
+      </field>
+      <field id="keterangan">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="jumlah">
+        <phrase id="fldcaption" value="Jumlah" />
+      </field>
+    </table>
+    <table id="t04_rkas03">
+      <phrase id="tblcaption" value="RKAS Level-3" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="lv1_id">
+        <phrase id="fldcaption" value="Level-1" />
+      </field>
+      <field id="lv2_id">
+        <phrase id="fldcaption" value="Level-2" />
+      </field>
+      <field id="keterangan">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="jumlah">
+        <phrase id="fldcaption" value="Jumlah" />
       </field>
     </table>
     <table id="t96_employees">
@@ -816,9 +880,6 @@
       <field id="newvalue">
         <phrase id="fldcaption" value="newvalue" />
       </field>
-    </table>
-    <table id="cf01_home_php">
-      <phrase id="tblcaption" value="Home" />
     </table>
   </project>
 </ew-language>

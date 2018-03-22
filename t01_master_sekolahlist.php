@@ -458,6 +458,8 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 		$this->no_stat->SetVisibility();
 		$this->nama->SetVisibility();
 		$this->status->SetVisibility();
+		$this->alamat1->SetVisibility();
+		$this->alamat2->SetVisibility();
 		$this->desa->SetVisibility();
 		$this->kecamatan->SetVisibility();
 		$this->kabupaten->SetVisibility();
@@ -775,6 +777,8 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 			$this->UpdateSort($this->no_stat, $bCtrl); // no_stat
 			$this->UpdateSort($this->nama, $bCtrl); // nama
 			$this->UpdateSort($this->status, $bCtrl); // status
+			$this->UpdateSort($this->alamat1, $bCtrl); // alamat1
+			$this->UpdateSort($this->alamat2, $bCtrl); // alamat2
 			$this->UpdateSort($this->desa, $bCtrl); // desa
 			$this->UpdateSort($this->kecamatan, $bCtrl); // kecamatan
 			$this->UpdateSort($this->kabupaten, $bCtrl); // kabupaten
@@ -810,6 +814,8 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 				$this->no_stat->setSort("");
 				$this->nama->setSort("");
 				$this->status->setSort("");
+				$this->alamat1->setSort("");
+				$this->alamat2->setSort("");
 				$this->desa->setSort("");
 				$this->kecamatan->setSort("");
 				$this->kabupaten->setSort("");
@@ -1231,6 +1237,8 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 		$this->no_stat->setDbValue($row['no_stat']);
 		$this->nama->setDbValue($row['nama']);
 		$this->status->setDbValue($row['status']);
+		$this->alamat1->setDbValue($row['alamat1']);
+		$this->alamat2->setDbValue($row['alamat2']);
 		$this->desa->setDbValue($row['desa']);
 		$this->kecamatan->setDbValue($row['kecamatan']);
 		$this->kabupaten->setDbValue($row['kabupaten']);
@@ -1244,6 +1252,8 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 		$row['no_stat'] = NULL;
 		$row['nama'] = NULL;
 		$row['status'] = NULL;
+		$row['alamat1'] = NULL;
+		$row['alamat2'] = NULL;
 		$row['desa'] = NULL;
 		$row['kecamatan'] = NULL;
 		$row['kabupaten'] = NULL;
@@ -1260,6 +1270,8 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 		$this->no_stat->DbValue = $row['no_stat'];
 		$this->nama->DbValue = $row['nama'];
 		$this->status->DbValue = $row['status'];
+		$this->alamat1->DbValue = $row['alamat1'];
+		$this->alamat2->DbValue = $row['alamat2'];
 		$this->desa->DbValue = $row['desa'];
 		$this->kecamatan->DbValue = $row['kecamatan'];
 		$this->kabupaten->DbValue = $row['kabupaten'];
@@ -1308,6 +1320,8 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 		// no_stat
 		// nama
 		// status
+		// alamat1
+		// alamat2
 		// desa
 		// kecamatan
 		// kabupaten
@@ -1330,6 +1344,14 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 		// status
 		$this->status->ViewValue = $this->status->CurrentValue;
 		$this->status->ViewCustomAttributes = "";
+
+		// alamat1
+		$this->alamat1->ViewValue = $this->alamat1->CurrentValue;
+		$this->alamat1->ViewCustomAttributes = "";
+
+		// alamat2
+		$this->alamat2->ViewValue = $this->alamat2->CurrentValue;
+		$this->alamat2->ViewCustomAttributes = "";
 
 		// desa
 		$this->desa->ViewValue = $this->desa->CurrentValue;
@@ -1361,6 +1383,16 @@ class ct01_master_sekolah_list extends ct01_master_sekolah {
 			$this->status->LinkCustomAttributes = "";
 			$this->status->HrefValue = "";
 			$this->status->TooltipValue = "";
+
+			// alamat1
+			$this->alamat1->LinkCustomAttributes = "";
+			$this->alamat1->HrefValue = "";
+			$this->alamat1->TooltipValue = "";
+
+			// alamat2
+			$this->alamat2->LinkCustomAttributes = "";
+			$this->alamat2->HrefValue = "";
+			$this->alamat2->TooltipValue = "";
 
 			// desa
 			$this->desa->LinkCustomAttributes = "";
@@ -2013,6 +2045,24 @@ $t01_master_sekolah_list->ListOptions->Render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($t01_master_sekolah->alamat1->Visible) { // alamat1 ?>
+	<?php if ($t01_master_sekolah->SortUrl($t01_master_sekolah->alamat1) == "") { ?>
+		<th data-name="alamat1" class="<?php echo $t01_master_sekolah->alamat1->HeaderCellClass() ?>"><div id="elh_t01_master_sekolah_alamat1" class="t01_master_sekolah_alamat1"><div class="ewTableHeaderCaption"><?php echo $t01_master_sekolah->alamat1->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="alamat1" class="<?php echo $t01_master_sekolah->alamat1->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t01_master_sekolah->SortUrl($t01_master_sekolah->alamat1) ?>',2);"><div id="elh_t01_master_sekolah_alamat1" class="t01_master_sekolah_alamat1">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t01_master_sekolah->alamat1->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t01_master_sekolah->alamat1->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t01_master_sekolah->alamat1->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t01_master_sekolah->alamat2->Visible) { // alamat2 ?>
+	<?php if ($t01_master_sekolah->SortUrl($t01_master_sekolah->alamat2) == "") { ?>
+		<th data-name="alamat2" class="<?php echo $t01_master_sekolah->alamat2->HeaderCellClass() ?>"><div id="elh_t01_master_sekolah_alamat2" class="t01_master_sekolah_alamat2"><div class="ewTableHeaderCaption"><?php echo $t01_master_sekolah->alamat2->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="alamat2" class="<?php echo $t01_master_sekolah->alamat2->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t01_master_sekolah->SortUrl($t01_master_sekolah->alamat2) ?>',2);"><div id="elh_t01_master_sekolah_alamat2" class="t01_master_sekolah_alamat2">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t01_master_sekolah->alamat2->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t01_master_sekolah->alamat2->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t01_master_sekolah->alamat2->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php if ($t01_master_sekolah->desa->Visible) { // desa ?>
 	<?php if ($t01_master_sekolah->SortUrl($t01_master_sekolah->desa) == "") { ?>
 		<th data-name="desa" class="<?php echo $t01_master_sekolah->desa->HeaderCellClass() ?>"><div id="elh_t01_master_sekolah_desa" class="t01_master_sekolah_desa"><div class="ewTableHeaderCaption"><?php echo $t01_master_sekolah->desa->FldCaption() ?></div></div></th>
@@ -2135,6 +2185,22 @@ $t01_master_sekolah_list->ListOptions->Render("body", "left", $t01_master_sekola
 <span id="el<?php echo $t01_master_sekolah_list->RowCnt ?>_t01_master_sekolah_status" class="t01_master_sekolah_status">
 <span<?php echo $t01_master_sekolah->status->ViewAttributes() ?>>
 <?php echo $t01_master_sekolah->status->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t01_master_sekolah->alamat1->Visible) { // alamat1 ?>
+		<td data-name="alamat1"<?php echo $t01_master_sekolah->alamat1->CellAttributes() ?>>
+<span id="el<?php echo $t01_master_sekolah_list->RowCnt ?>_t01_master_sekolah_alamat1" class="t01_master_sekolah_alamat1">
+<span<?php echo $t01_master_sekolah->alamat1->ViewAttributes() ?>>
+<?php echo $t01_master_sekolah->alamat1->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t01_master_sekolah->alamat2->Visible) { // alamat2 ?>
+		<td data-name="alamat2"<?php echo $t01_master_sekolah->alamat2->CellAttributes() ?>>
+<span id="el<?php echo $t01_master_sekolah_list->RowCnt ?>_t01_master_sekolah_alamat2" class="t01_master_sekolah_alamat2">
+<span<?php echo $t01_master_sekolah->alamat2->ViewAttributes() ?>>
+<?php echo $t01_master_sekolah->alamat2->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

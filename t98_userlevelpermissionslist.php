@@ -810,10 +810,6 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-
-		// Load server side filters
-		if (EW_SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
-			$sSavedFilterList = $UserProfile->GetSearchFilters(CurrentUserName(), "ft98_userlevelpermissionslistsrch");
 		$sFilterList = ew_Concat($sFilterList, $this->userlevelid->AdvancedSearch->ToJson(), ","); // Field userlevelid
 		$sFilterList = ew_Concat($sFilterList, $this->_tablename->AdvancedSearch->ToJson(), ","); // Field tablename
 		$sFilterList = ew_Concat($sFilterList, $this->permission->AdvancedSearch->ToJson(), ","); // Field permission

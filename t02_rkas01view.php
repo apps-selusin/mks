@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t01_master_sekolahinfo.php" ?>
+<?php include_once "t02_rkas01info.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t01_master_sekolah_view = NULL; // Initialize page object first
+$t02_rkas01_view = NULL; // Initialize page object first
 
-class ct01_master_sekolah_view extends ct01_master_sekolah {
+class ct02_rkas01_view extends ct02_rkas01 {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +25,10 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't01_master_sekolah';
+	var $TableName = 't02_rkas01';
 
 	// Page object name
-	var $PageObjName = 't01_master_sekolah_view';
+	var $PageObjName = 't02_rkas01_view';
 
 	// Page headings
 	var $Heading = '';
@@ -288,10 +288,10 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t01_master_sekolah)
-		if (!isset($GLOBALS["t01_master_sekolah"]) || get_class($GLOBALS["t01_master_sekolah"]) == "ct01_master_sekolah") {
-			$GLOBALS["t01_master_sekolah"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t01_master_sekolah"];
+		// Table object (t02_rkas01)
+		if (!isset($GLOBALS["t02_rkas01"]) || get_class($GLOBALS["t02_rkas01"]) == "ct02_rkas01") {
+			$GLOBALS["t02_rkas01"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t02_rkas01"];
 		}
 		$KeyUrl = "";
 		if (@$_GET["id"] <> "") {
@@ -315,7 +315,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't01_master_sekolah', TRUE);
+			define("EW_TABLE_NAME", 't02_rkas01', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -370,7 +370,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t01_master_sekolahlist.php"));
+				$this->Page_Terminate(ew_GetUrl("t02_rkas01list.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -431,15 +431,8 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->no_stat->SetVisibility();
-		$this->nama->SetVisibility();
-		$this->status->SetVisibility();
-		$this->alamat1->SetVisibility();
-		$this->alamat2->SetVisibility();
-		$this->desa->SetVisibility();
-		$this->kecamatan->SetVisibility();
-		$this->kabupaten->SetVisibility();
-		$this->provinsi->SetVisibility();
+		$this->keterangan->SetVisibility();
+		$this->jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -471,13 +464,13 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t01_master_sekolah;
+		global $EW_EXPORT, $t02_rkas01;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t01_master_sekolah);
+				$doc = new $class($t02_rkas01);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -503,7 +496,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "t01_master_sekolahview.php")
+					if ($pageName == "t02_rkas01view.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -569,7 +562,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 					if ($this->TotalRecs <= 0) { // No record found
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$this->Page_Terminate("t01_master_sekolahlist.php"); // Return to list page
+						$this->Page_Terminate("t02_rkas01list.php"); // Return to list page
 					} elseif ($bLoadCurrentRecord) { // Load current record position
 						$this->SetupStartRec(); // Set up start record position
 
@@ -593,7 +586,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 					if (!$bMatchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "t01_master_sekolahlist.php"; // No matching record, return to list
+						$sReturnUrl = "t02_rkas01list.php"; // No matching record, return to list
 					} else {
 						$this->LoadRowValues($this->Recordset); // Load row values
 					}
@@ -606,7 +599,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "t01_master_sekolahlist.php"; // Not page request, return to list
+			$sReturnUrl = "t02_rkas01list.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -627,6 +620,15 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		$options = &$this->OtherOptions;
 		$option = &$options["action"];
 
+		// Add
+		$item = &$option->Add("add");
+		$addcaption = ew_HtmlTitle($Language->Phrase("ViewPageAddLink"));
+		if ($this->IsModal) // Modal
+			$item->Body = "<a class=\"ewAction ewAdd\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"javascript:void(0);\" onclick=\"ew_ModalDialogShow({lnk:this,url:'" . ew_HtmlEncode($this->AddUrl) . "'});\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
+		else
+			$item->Body = "<a class=\"ewAction ewAdd\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
+		$item->Visible = ($this->AddUrl <> "" && $Security->CanAdd());
+
 		// Edit
 		$item = &$option->Add("edit");
 		$editcaption = ew_HtmlTitle($Language->Phrase("ViewPageEditLink"));
@@ -635,6 +637,23 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		else
 			$item->Body = "<a class=\"ewAction ewEdit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("ViewPageEditLink") . "</a>";
 		$item->Visible = ($this->EditUrl <> "" && $Security->CanEdit());
+
+		// Copy
+		$item = &$option->Add("copy");
+		$copycaption = ew_HtmlTitle($Language->Phrase("ViewPageCopyLink"));
+		if ($this->IsModal) // Modal
+			$item->Body = "<a class=\"ewAction ewCopy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"javascript:void(0);\" onclick=\"ew_ModalDialogShow({lnk:this,btn:'AddBtn',url:'" . ew_HtmlEncode($this->CopyUrl) . "'});\">" . $Language->Phrase("ViewPageCopyLink") . "</a>";
+		else
+			$item->Body = "<a class=\"ewAction ewCopy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . ew_HtmlEncode($this->CopyUrl) . "\">" . $Language->Phrase("ViewPageCopyLink") . "</a>";
+		$item->Visible = ($this->CopyUrl <> "" && $Security->CanAdd());
+
+		// Delete
+		$item = &$option->Add("delete");
+		if ($this->IsModal) // Handle as inline delete
+			$item->Body = "<a onclick=\"return ew_ConfirmDelete(this);\" class=\"ewAction ewDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("ViewPageDeleteLink")) . "\" href=\"" . ew_HtmlEncode(ew_UrlAddQuery($this->DeleteUrl, "a_delete=1")) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
+		else
+			$item->Body = "<a class=\"ewAction ewDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("ViewPageDeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
+		$item->Visible = ($this->DeleteUrl <> "" && $Security->CanDelete());
 
 		// Set up action default
 		$option = &$options["action"];
@@ -744,30 +763,16 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 			return;
 		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->id->setDbValue($row['id']);
-		$this->no_stat->setDbValue($row['no_stat']);
-		$this->nama->setDbValue($row['nama']);
-		$this->status->setDbValue($row['status']);
-		$this->alamat1->setDbValue($row['alamat1']);
-		$this->alamat2->setDbValue($row['alamat2']);
-		$this->desa->setDbValue($row['desa']);
-		$this->kecamatan->setDbValue($row['kecamatan']);
-		$this->kabupaten->setDbValue($row['kabupaten']);
-		$this->provinsi->setDbValue($row['provinsi']);
+		$this->keterangan->setDbValue($row['keterangan']);
+		$this->jumlah->setDbValue($row['jumlah']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
-		$row['no_stat'] = NULL;
-		$row['nama'] = NULL;
-		$row['status'] = NULL;
-		$row['alamat1'] = NULL;
-		$row['alamat2'] = NULL;
-		$row['desa'] = NULL;
-		$row['kecamatan'] = NULL;
-		$row['kabupaten'] = NULL;
-		$row['provinsi'] = NULL;
+		$row['keterangan'] = NULL;
+		$row['jumlah'] = NULL;
 		return $row;
 	}
 
@@ -777,15 +782,8 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->no_stat->DbValue = $row['no_stat'];
-		$this->nama->DbValue = $row['nama'];
-		$this->status->DbValue = $row['status'];
-		$this->alamat1->DbValue = $row['alamat1'];
-		$this->alamat2->DbValue = $row['alamat2'];
-		$this->desa->DbValue = $row['desa'];
-		$this->kecamatan->DbValue = $row['kecamatan'];
-		$this->kabupaten->DbValue = $row['kabupaten'];
-		$this->provinsi->DbValue = $row['provinsi'];
+		$this->keterangan->DbValue = $row['keterangan'];
+		$this->jumlah->DbValue = $row['jumlah'];
 	}
 
 	// Render row values based on field settings
@@ -800,20 +798,17 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		$this->ListUrl = $this->GetListUrl();
 		$this->SetupOtherOptions();
 
+		// Convert decimal values if posted back
+		if ($this->jumlah->FormValue == $this->jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->jumlah->CurrentValue)))
+			$this->jumlah->CurrentValue = ew_StrToFloat($this->jumlah->CurrentValue);
+
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
 		// id
-		// no_stat
-		// nama
-		// status
-		// alamat1
-		// alamat2
-		// desa
-		// kecamatan
-		// kabupaten
-		// provinsi
+		// keterangan
+		// jumlah
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -821,86 +816,25 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// no_stat
-		$this->no_stat->ViewValue = $this->no_stat->CurrentValue;
-		$this->no_stat->ViewCustomAttributes = "";
+		// keterangan
+		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+		$this->keterangan->ViewCustomAttributes = "";
 
-		// nama
-		$this->nama->ViewValue = $this->nama->CurrentValue;
-		$this->nama->ViewCustomAttributes = "";
+		// jumlah
+		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
+		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
+		$this->jumlah->CellCssStyle .= "text-align: right;";
+		$this->jumlah->ViewCustomAttributes = "";
 
-		// status
-		$this->status->ViewValue = $this->status->CurrentValue;
-		$this->status->ViewCustomAttributes = "";
+			// keterangan
+			$this->keterangan->LinkCustomAttributes = "";
+			$this->keterangan->HrefValue = "";
+			$this->keterangan->TooltipValue = "";
 
-		// alamat1
-		$this->alamat1->ViewValue = $this->alamat1->CurrentValue;
-		$this->alamat1->ViewCustomAttributes = "";
-
-		// alamat2
-		$this->alamat2->ViewValue = $this->alamat2->CurrentValue;
-		$this->alamat2->ViewCustomAttributes = "";
-
-		// desa
-		$this->desa->ViewValue = $this->desa->CurrentValue;
-		$this->desa->ViewCustomAttributes = "";
-
-		// kecamatan
-		$this->kecamatan->ViewValue = $this->kecamatan->CurrentValue;
-		$this->kecamatan->ViewCustomAttributes = "";
-
-		// kabupaten
-		$this->kabupaten->ViewValue = $this->kabupaten->CurrentValue;
-		$this->kabupaten->ViewCustomAttributes = "";
-
-		// provinsi
-		$this->provinsi->ViewValue = $this->provinsi->CurrentValue;
-		$this->provinsi->ViewCustomAttributes = "";
-
-			// no_stat
-			$this->no_stat->LinkCustomAttributes = "";
-			$this->no_stat->HrefValue = "";
-			$this->no_stat->TooltipValue = "";
-
-			// nama
-			$this->nama->LinkCustomAttributes = "";
-			$this->nama->HrefValue = "";
-			$this->nama->TooltipValue = "";
-
-			// status
-			$this->status->LinkCustomAttributes = "";
-			$this->status->HrefValue = "";
-			$this->status->TooltipValue = "";
-
-			// alamat1
-			$this->alamat1->LinkCustomAttributes = "";
-			$this->alamat1->HrefValue = "";
-			$this->alamat1->TooltipValue = "";
-
-			// alamat2
-			$this->alamat2->LinkCustomAttributes = "";
-			$this->alamat2->HrefValue = "";
-			$this->alamat2->TooltipValue = "";
-
-			// desa
-			$this->desa->LinkCustomAttributes = "";
-			$this->desa->HrefValue = "";
-			$this->desa->TooltipValue = "";
-
-			// kecamatan
-			$this->kecamatan->LinkCustomAttributes = "";
-			$this->kecamatan->HrefValue = "";
-			$this->kecamatan->TooltipValue = "";
-
-			// kabupaten
-			$this->kabupaten->LinkCustomAttributes = "";
-			$this->kabupaten->HrefValue = "";
-			$this->kabupaten->TooltipValue = "";
-
-			// provinsi
-			$this->provinsi->LinkCustomAttributes = "";
-			$this->provinsi->HrefValue = "";
-			$this->provinsi->TooltipValue = "";
+			// jumlah
+			$this->jumlah->LinkCustomAttributes = "";
+			$this->jumlah->HrefValue = "";
+			$this->jumlah->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -950,7 +884,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t01_master_sekolah\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t01_master_sekolah',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft01_master_sekolahview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t02_rkas01\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t02_rkas01',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft02_rkas01view,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -1151,7 +1085,7 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t01_master_sekolahlist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t02_rkas01list.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1263,30 +1197,30 @@ class ct01_master_sekolah_view extends ct01_master_sekolah {
 <?php
 
 // Create page object
-if (!isset($t01_master_sekolah_view)) $t01_master_sekolah_view = new ct01_master_sekolah_view();
+if (!isset($t02_rkas01_view)) $t02_rkas01_view = new ct02_rkas01_view();
 
 // Page init
-$t01_master_sekolah_view->Page_Init();
+$t02_rkas01_view->Page_Init();
 
 // Page main
-$t01_master_sekolah_view->Page_Main();
+$t02_rkas01_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t01_master_sekolah_view->Page_Render();
+$t02_rkas01_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t01_master_sekolah->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = ft01_master_sekolahview = new ew_Form("ft01_master_sekolahview", "view");
+var CurrentForm = ft02_rkas01view = new ew_Form("ft02_rkas01view", "view");
 
 // Form_CustomValidate event
-ft01_master_sekolahview.Form_CustomValidate = 
+ft02_rkas01view.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1294,7 +1228,7 @@ ft01_master_sekolahview.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft01_master_sekolahview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft02_rkas01view.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
@@ -1305,231 +1239,154 @@ ft01_master_sekolahview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALI
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t01_master_sekolah->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <div class="ewToolbar">
-<?php $t01_master_sekolah_view->ExportOptions->Render("body") ?>
+<?php $t02_rkas01_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($t01_master_sekolah_view->OtherOptions as &$option)
+	foreach ($t02_rkas01_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $t01_master_sekolah_view->ShowPageHeader(); ?>
+<?php $t02_rkas01_view->ShowPageHeader(); ?>
 <?php
-$t01_master_sekolah_view->ShowMessage();
+$t02_rkas01_view->ShowMessage();
 ?>
-<?php if (!$t01_master_sekolah_view->IsModal) { ?>
-<?php if ($t01_master_sekolah->Export == "") { ?>
+<?php if (!$t02_rkas01_view->IsModal) { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t01_master_sekolah_view->Pager)) $t01_master_sekolah_view->Pager = new cPrevNextPager($t01_master_sekolah_view->StartRec, $t01_master_sekolah_view->DisplayRecs, $t01_master_sekolah_view->TotalRecs, $t01_master_sekolah_view->AutoHidePager) ?>
-<?php if ($t01_master_sekolah_view->Pager->RecordCount > 0 && $t01_master_sekolah_view->Pager->Visible) { ?>
+<?php if (!isset($t02_rkas01_view->Pager)) $t02_rkas01_view->Pager = new cPrevNextPager($t02_rkas01_view->StartRec, $t02_rkas01_view->DisplayRecs, $t02_rkas01_view->TotalRecs, $t02_rkas01_view->AutoHidePager) ?>
+<?php if ($t02_rkas01_view->Pager->RecordCount > 0 && $t02_rkas01_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t01_master_sekolah_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t01_master_sekolah_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t01_master_sekolah_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas01_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t01_master_sekolah_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t01_master_sekolah_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t01_master_sekolah_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas01_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 </form>
 <?php } ?>
 <?php } ?>
-<form name="ft01_master_sekolahview" id="ft01_master_sekolahview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t01_master_sekolah_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t01_master_sekolah_view->Token ?>">
+<form name="ft02_rkas01view" id="ft02_rkas01view" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t02_rkas01_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t02_rkas01_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t01_master_sekolah">
-<input type="hidden" name="modal" value="<?php echo intval($t01_master_sekolah_view->IsModal) ?>">
+<input type="hidden" name="t" value="t02_rkas01">
+<input type="hidden" name="modal" value="<?php echo intval($t02_rkas01_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($t01_master_sekolah->no_stat->Visible) { // no_stat ?>
-	<tr id="r_no_stat">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_no_stat"><?php echo $t01_master_sekolah->no_stat->FldCaption() ?></span></td>
-		<td data-name="no_stat"<?php echo $t01_master_sekolah->no_stat->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_no_stat">
-<span<?php echo $t01_master_sekolah->no_stat->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->no_stat->ViewValue ?></span>
+<?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
+	<tr id="r_keterangan">
+		<td class="col-sm-2"><span id="elh_t02_rkas01_keterangan"><?php echo $t02_rkas01->keterangan->FldCaption() ?></span></td>
+		<td data-name="keterangan"<?php echo $t02_rkas01->keterangan->CellAttributes() ?>>
+<span id="el_t02_rkas01_keterangan">
+<span<?php echo $t02_rkas01->keterangan->ViewAttributes() ?>>
+<?php echo $t02_rkas01->keterangan->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t01_master_sekolah->nama->Visible) { // nama ?>
-	<tr id="r_nama">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_nama"><?php echo $t01_master_sekolah->nama->FldCaption() ?></span></td>
-		<td data-name="nama"<?php echo $t01_master_sekolah->nama->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_nama">
-<span<?php echo $t01_master_sekolah->nama->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->nama->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t01_master_sekolah->status->Visible) { // status ?>
-	<tr id="r_status">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_status"><?php echo $t01_master_sekolah->status->FldCaption() ?></span></td>
-		<td data-name="status"<?php echo $t01_master_sekolah->status->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_status">
-<span<?php echo $t01_master_sekolah->status->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->status->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t01_master_sekolah->alamat1->Visible) { // alamat1 ?>
-	<tr id="r_alamat1">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_alamat1"><?php echo $t01_master_sekolah->alamat1->FldCaption() ?></span></td>
-		<td data-name="alamat1"<?php echo $t01_master_sekolah->alamat1->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_alamat1">
-<span<?php echo $t01_master_sekolah->alamat1->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->alamat1->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t01_master_sekolah->alamat2->Visible) { // alamat2 ?>
-	<tr id="r_alamat2">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_alamat2"><?php echo $t01_master_sekolah->alamat2->FldCaption() ?></span></td>
-		<td data-name="alamat2"<?php echo $t01_master_sekolah->alamat2->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_alamat2">
-<span<?php echo $t01_master_sekolah->alamat2->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->alamat2->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t01_master_sekolah->desa->Visible) { // desa ?>
-	<tr id="r_desa">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_desa"><?php echo $t01_master_sekolah->desa->FldCaption() ?></span></td>
-		<td data-name="desa"<?php echo $t01_master_sekolah->desa->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_desa">
-<span<?php echo $t01_master_sekolah->desa->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->desa->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t01_master_sekolah->kecamatan->Visible) { // kecamatan ?>
-	<tr id="r_kecamatan">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_kecamatan"><?php echo $t01_master_sekolah->kecamatan->FldCaption() ?></span></td>
-		<td data-name="kecamatan"<?php echo $t01_master_sekolah->kecamatan->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_kecamatan">
-<span<?php echo $t01_master_sekolah->kecamatan->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->kecamatan->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t01_master_sekolah->kabupaten->Visible) { // kabupaten ?>
-	<tr id="r_kabupaten">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_kabupaten"><?php echo $t01_master_sekolah->kabupaten->FldCaption() ?></span></td>
-		<td data-name="kabupaten"<?php echo $t01_master_sekolah->kabupaten->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_kabupaten">
-<span<?php echo $t01_master_sekolah->kabupaten->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->kabupaten->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t01_master_sekolah->provinsi->Visible) { // provinsi ?>
-	<tr id="r_provinsi">
-		<td class="col-sm-2"><span id="elh_t01_master_sekolah_provinsi"><?php echo $t01_master_sekolah->provinsi->FldCaption() ?></span></td>
-		<td data-name="provinsi"<?php echo $t01_master_sekolah->provinsi->CellAttributes() ?>>
-<span id="el_t01_master_sekolah_provinsi">
-<span<?php echo $t01_master_sekolah->provinsi->ViewAttributes() ?>>
-<?php echo $t01_master_sekolah->provinsi->ViewValue ?></span>
+<?php if ($t02_rkas01->jumlah->Visible) { // jumlah ?>
+	<tr id="r_jumlah">
+		<td class="col-sm-2"><span id="elh_t02_rkas01_jumlah"><?php echo $t02_rkas01->jumlah->FldCaption() ?></span></td>
+		<td data-name="jumlah"<?php echo $t02_rkas01->jumlah->CellAttributes() ?>>
+<span id="el_t02_rkas01_jumlah">
+<span<?php echo $t02_rkas01->jumlah->ViewAttributes() ?>>
+<?php echo $t02_rkas01->jumlah->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
-<?php if (!$t01_master_sekolah_view->IsModal) { ?>
-<?php if ($t01_master_sekolah->Export == "") { ?>
-<?php if (!isset($t01_master_sekolah_view->Pager)) $t01_master_sekolah_view->Pager = new cPrevNextPager($t01_master_sekolah_view->StartRec, $t01_master_sekolah_view->DisplayRecs, $t01_master_sekolah_view->TotalRecs, $t01_master_sekolah_view->AutoHidePager) ?>
-<?php if ($t01_master_sekolah_view->Pager->RecordCount > 0 && $t01_master_sekolah_view->Pager->Visible) { ?>
+<?php if (!$t02_rkas01_view->IsModal) { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
+<?php if (!isset($t02_rkas01_view->Pager)) $t02_rkas01_view->Pager = new cPrevNextPager($t02_rkas01_view->StartRec, $t02_rkas01_view->DisplayRecs, $t02_rkas01_view->TotalRecs, $t02_rkas01_view->AutoHidePager) ?>
+<?php if ($t02_rkas01_view->Pager->RecordCount > 0 && $t02_rkas01_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t01_master_sekolah_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t01_master_sekolah_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t01_master_sekolah_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas01_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t01_master_sekolah_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t01_master_sekolah_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t01_master_sekolah_view->PageUrl() ?>start=<?php echo $t01_master_sekolah_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t01_master_sekolah_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas01_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 <?php } ?>
 <?php } ?>
 </form>
-<?php if ($t01_master_sekolah->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <script type="text/javascript">
-ft01_master_sekolahview.Init();
+ft02_rkas01view.Init();
 </script>
 <?php } ?>
 <?php
-$t01_master_sekolah_view->ShowPageFooter();
+$t02_rkas01_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t01_master_sekolah->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1539,5 +1396,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t01_master_sekolah_view->Page_Terminate();
+$t02_rkas01_view->Page_Terminate();
 ?>

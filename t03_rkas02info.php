@@ -1,12 +1,12 @@
 <?php
 
 // Global variable for table object
-$t01_master_sekolah = NULL;
+$t03_rkas02 = NULL;
 
 //
-// Table class for t01_master_sekolah
+// Table class for t03_rkas02
 //
-class ct01_master_sekolah extends cTable {
+class ct03_rkas02 extends cTable {
 	var $AuditTrailOnAdd = TRUE;
 	var $AuditTrailOnEdit = TRUE;
 	var $AuditTrailOnDelete = TRUE;
@@ -14,15 +14,9 @@ class ct01_master_sekolah extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
-	var $no_stat;
-	var $nama;
-	var $status;
-	var $alamat1;
-	var $alamat2;
-	var $desa;
-	var $kecamatan;
-	var $kabupaten;
-	var $provinsi;
+	var $lv1_id;
+	var $keterangan;
+	var $jumlah;
 
 	//
 	// Table class constructor
@@ -32,12 +26,12 @@ class ct01_master_sekolah extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 't01_master_sekolah';
-		$this->TableName = 't01_master_sekolah';
+		$this->TableVar = 't03_rkas02';
+		$this->TableName = 't03_rkas02';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`t01_master_sekolah`";
+		$this->UpdateTable = "`t03_rkas02`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -57,55 +51,27 @@ class ct01_master_sekolah extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// id
-		$this->id = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->id = new cField('t03_rkas02', 't03_rkas02', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->id->Sortable = TRUE; // Allow sort
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
-		// no_stat
-		$this->no_stat = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_no_stat', 'no_stat', '`no_stat`', '`no_stat`', 200, -1, FALSE, '`no_stat`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->no_stat->Sortable = TRUE; // Allow sort
-		$this->fields['no_stat'] = &$this->no_stat;
+		// lv1_id
+		$this->lv1_id = new cField('t03_rkas02', 't03_rkas02', 'x_lv1_id', 'lv1_id', '`lv1_id`', '`lv1_id`', 3, -1, FALSE, '`EV__lv1_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->lv1_id->Sortable = TRUE; // Allow sort
+		$this->lv1_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['lv1_id'] = &$this->lv1_id;
 
-		// nama
-		$this->nama = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_nama', 'nama', '`nama`', '`nama`', 200, -1, FALSE, '`nama`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->nama->Sortable = TRUE; // Allow sort
-		$this->fields['nama'] = &$this->nama;
+		// keterangan
+		$this->keterangan = new cField('t03_rkas02', 't03_rkas02', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, -1, FALSE, '`keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->keterangan->Sortable = TRUE; // Allow sort
+		$this->fields['keterangan'] = &$this->keterangan;
 
-		// status
-		$this->status = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_status', 'status', '`status`', '`status`', 200, -1, FALSE, '`status`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->status->Sortable = TRUE; // Allow sort
-		$this->fields['status'] = &$this->status;
-
-		// alamat1
-		$this->alamat1 = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_alamat1', 'alamat1', '`alamat1`', '`alamat1`', 200, -1, FALSE, '`alamat1`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->alamat1->Sortable = TRUE; // Allow sort
-		$this->fields['alamat1'] = &$this->alamat1;
-
-		// alamat2
-		$this->alamat2 = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_alamat2', 'alamat2', '`alamat2`', '`alamat2`', 200, -1, FALSE, '`alamat2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->alamat2->Sortable = TRUE; // Allow sort
-		$this->fields['alamat2'] = &$this->alamat2;
-
-		// desa
-		$this->desa = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_desa', 'desa', '`desa`', '`desa`', 200, -1, FALSE, '`desa`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->desa->Sortable = TRUE; // Allow sort
-		$this->fields['desa'] = &$this->desa;
-
-		// kecamatan
-		$this->kecamatan = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_kecamatan', 'kecamatan', '`kecamatan`', '`kecamatan`', 200, -1, FALSE, '`kecamatan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->kecamatan->Sortable = TRUE; // Allow sort
-		$this->fields['kecamatan'] = &$this->kecamatan;
-
-		// kabupaten
-		$this->kabupaten = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_kabupaten', 'kabupaten', '`kabupaten`', '`kabupaten`', 200, -1, FALSE, '`kabupaten`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->kabupaten->Sortable = TRUE; // Allow sort
-		$this->fields['kabupaten'] = &$this->kabupaten;
-
-		// provinsi
-		$this->provinsi = new cField('t01_master_sekolah', 't01_master_sekolah', 'x_provinsi', 'provinsi', '`provinsi`', '`provinsi`', 200, -1, FALSE, '`provinsi`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->provinsi->Sortable = TRUE; // Allow sort
-		$this->fields['provinsi'] = &$this->provinsi;
+		// jumlah
+		$this->jumlah = new cField('t03_rkas02', 't03_rkas02', 'x_jumlah', 'jumlah', '`jumlah`', '`jumlah`', 4, -1, FALSE, '`jumlah`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->jumlah->Sortable = TRUE; // Allow sort
+		$this->jumlah->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['jumlah'] = &$this->jumlah;
 	}
 
 	// Field Visibility
@@ -151,16 +117,38 @@ class ct01_master_sekolah extends cTable {
 			} else {
 				$this->setSessionOrderBy($sSortField . " " . $sThisSort); // Save to Session
 			}
+			$sSortFieldList = ($ofld->FldVirtualExpression <> "") ? $ofld->FldVirtualExpression : $sSortField;
+			if ($ctrl) {
+				$sOrderByList = $this->getSessionOrderByList();
+				if (strpos($sOrderByList, $sSortFieldList . " " . $sLastSort) !== FALSE) {
+					$sOrderByList = str_replace($sSortFieldList . " " . $sLastSort, $sSortFieldList . " " . $sThisSort, $sOrderByList);
+				} else {
+					if ($sOrderByList <> "") $sOrderByList .= ", ";
+					$sOrderByList .= $sSortFieldList . " " . $sThisSort;
+				}
+				$this->setSessionOrderByList($sOrderByList); // Save to Session
+			} else {
+				$this->setSessionOrderByList($sSortFieldList . " " . $sThisSort); // Save to Session
+			}
 		} else {
 			if (!$ctrl) $ofld->setSort("");
 		}
+	}
+
+	// Session ORDER BY for List page
+	function getSessionOrderByList() {
+		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST];
+	}
+
+	function setSessionOrderByList($v) {
+		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST] = $v;
 	}
 
 	// Table level SQL
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t01_master_sekolah`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t03_rkas02`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -182,6 +170,23 @@ class ct01_master_sekolah extends cTable {
 
 	function setSqlSelect($v) {
 		$this->_SqlSelect = $v;
+	}
+	var $_SqlSelectList = "";
+
+	function getSqlSelectList() { // Select for List page
+		$select = "";
+		$select = "SELECT * FROM (" .
+			"SELECT *, (SELECT `keterangan` FROM `t02_rkas01` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t03_rkas02`.`lv1_id` LIMIT 1) AS `EV__lv1_id` FROM `t03_rkas02`" .
+			") `EW_TMP_TABLE`";
+		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
+	}
+
+	function SqlSelectList() { // For backward compatibility
+		return $this->getSqlSelectList();
+	}
+
+	function setSqlSelectList($v) {
+		$this->_SqlSelectList = $v;
 	}
 	var $_SqlWhere = "";
 
@@ -294,16 +299,38 @@ class ct01_master_sekolah extends cTable {
 		ew_AddFilter($sFilter, $this->CurrentFilter);
 		$sFilter = $this->ApplyUserIDFilters($sFilter);
 		$this->Recordset_Selecting($sFilter);
-		$sSelect = $this->getSqlSelect();
-		$sSort = $this->UseSessionForListSQL ? $this->getSessionOrderBy() : "";
+		if ($this->UseVirtualFields()) {
+			$sSelect = $this->getSqlSelectList();
+			$sSort = $this->UseSessionForListSQL ? $this->getSessionOrderByList() : "";
+		} else {
+			$sSelect = $this->getSqlSelect();
+			$sSort = $this->UseSessionForListSQL ? $this->getSessionOrderBy() : "";
+		}
 		return ew_BuildSelectSql($sSelect, $this->getSqlWhere(), $this->getSqlGroupBy(),
 			$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
 	}
 
 	// Get ORDER BY clause
 	function GetOrderBy() {
-		$sSort = $this->getSessionOrderBy();
+		$sSort = ($this->UseVirtualFields()) ? $this->getSessionOrderByList() : $this->getSessionOrderBy();
 		return ew_BuildSelectSql("", "", "", "", $this->getSqlOrderBy(), "", $sSort);
+	}
+
+	// Check if virtual fields is used in SQL
+	function UseVirtualFields() {
+		$sWhere = $this->UseSessionForListSQL ? $this->getSessionWhere() : $this->CurrentFilter;
+		$sOrderBy = $this->UseSessionForListSQL ? $this->getSessionOrderByList() : "";
+		if ($sWhere <> "")
+			$sWhere = " " . str_replace(array("(",")"), array("",""), $sWhere) . " ";
+		if ($sOrderBy <> "")
+			$sOrderBy = " " . str_replace(array("(",")"), array("",""), $sOrderBy) . " ";
+		if ($this->lv1_id->AdvancedSearch->SearchValue <> "" ||
+			$this->lv1_id->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->lv1_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->lv1_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		return FALSE;
 	}
 
 	// Try to get record count
@@ -354,7 +381,10 @@ class ct01_master_sekolah extends cTable {
 		$select = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlSelect() : "SELECT * FROM " . $this->getSqlFrom();
 		$groupBy = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlGroupBy() : "";
 		$having = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlHaving() : "";
-		$sql = ew_BuildSelectSql($select, $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
+		if ($this->UseVirtualFields())
+			$sql = ew_BuildSelectSql($this->getSqlSelectList(), $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
+		else
+			$sql = ew_BuildSelectSql($select, $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
 		$cnt = $this->TryGetRecordCount($sql);
 		if ($cnt == -1) {
 			$conn = &$this->Connection();
@@ -483,7 +513,7 @@ class ct01_master_sekolah extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "t01_master_sekolahlist.php";
+			return "t03_rkas02list.php";
 		}
 	}
 
@@ -494,11 +524,11 @@ class ct01_master_sekolah extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "t01_master_sekolahview.php")
+		if ($pageName == "t03_rkas02view.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "t01_master_sekolahedit.php")
+		elseif ($pageName == "t03_rkas02edit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "t01_master_sekolahadd.php")
+		elseif ($pageName == "t03_rkas02add.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -506,30 +536,30 @@ class ct01_master_sekolah extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "t01_master_sekolahlist.php";
+		return "t03_rkas02list.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("t01_master_sekolahview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("t03_rkas02view.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("t01_master_sekolahview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("t03_rkas02view.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "t01_master_sekolahadd.php?" . $this->UrlParm($parm);
+			$url = "t03_rkas02add.php?" . $this->UrlParm($parm);
 		else
-			$url = "t01_master_sekolahadd.php";
+			$url = "t03_rkas02add.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("t01_master_sekolahedit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t03_rkas02edit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -541,7 +571,7 @@ class ct01_master_sekolah extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("t01_master_sekolahadd.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t03_rkas02add.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -553,7 +583,7 @@ class ct01_master_sekolah extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("t01_master_sekolahdelete.php", $this->UrlParm());
+		return $this->KeyUrl("t03_rkas02delete.php", $this->UrlParm());
 	}
 
 	// Add master url
@@ -655,15 +685,9 @@ class ct01_master_sekolah extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
-		$this->no_stat->setDbValue($rs->fields('no_stat'));
-		$this->nama->setDbValue($rs->fields('nama'));
-		$this->status->setDbValue($rs->fields('status'));
-		$this->alamat1->setDbValue($rs->fields('alamat1'));
-		$this->alamat2->setDbValue($rs->fields('alamat2'));
-		$this->desa->setDbValue($rs->fields('desa'));
-		$this->kecamatan->setDbValue($rs->fields('kecamatan'));
-		$this->kabupaten->setDbValue($rs->fields('kabupaten'));
-		$this->provinsi->setDbValue($rs->fields('provinsi'));
+		$this->lv1_id->setDbValue($rs->fields('lv1_id'));
+		$this->keterangan->setDbValue($rs->fields('keterangan'));
+		$this->jumlah->setDbValue($rs->fields('jumlah'));
 	}
 
 	// Render list row values
@@ -675,105 +699,71 @@ class ct01_master_sekolah extends cTable {
 
 	// Common render codes
 		// id
-		// no_stat
-		// nama
-		// status
-		// alamat1
-		// alamat2
-		// desa
-		// kecamatan
-		// kabupaten
-		// provinsi
+		// lv1_id
+		// keterangan
+		// jumlah
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// no_stat
-		$this->no_stat->ViewValue = $this->no_stat->CurrentValue;
-		$this->no_stat->ViewCustomAttributes = "";
+		// lv1_id
+		if ($this->lv1_id->VirtualValue <> "") {
+			$this->lv1_id->ViewValue = $this->lv1_id->VirtualValue;
+		} else {
+			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+		if (strval($this->lv1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sWhereWrk = "";
+		$this->lv1_id->LookupFilters = array("dx1" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+			}
+		} else {
+			$this->lv1_id->ViewValue = NULL;
+		}
+		}
+		$this->lv1_id->ViewCustomAttributes = "";
 
-		// nama
-		$this->nama->ViewValue = $this->nama->CurrentValue;
-		$this->nama->ViewCustomAttributes = "";
+		// keterangan
+		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+		$this->keterangan->ViewCustomAttributes = "";
 
-		// status
-		$this->status->ViewValue = $this->status->CurrentValue;
-		$this->status->ViewCustomAttributes = "";
-
-		// alamat1
-		$this->alamat1->ViewValue = $this->alamat1->CurrentValue;
-		$this->alamat1->ViewCustomAttributes = "";
-
-		// alamat2
-		$this->alamat2->ViewValue = $this->alamat2->CurrentValue;
-		$this->alamat2->ViewCustomAttributes = "";
-
-		// desa
-		$this->desa->ViewValue = $this->desa->CurrentValue;
-		$this->desa->ViewCustomAttributes = "";
-
-		// kecamatan
-		$this->kecamatan->ViewValue = $this->kecamatan->CurrentValue;
-		$this->kecamatan->ViewCustomAttributes = "";
-
-		// kabupaten
-		$this->kabupaten->ViewValue = $this->kabupaten->CurrentValue;
-		$this->kabupaten->ViewCustomAttributes = "";
-
-		// provinsi
-		$this->provinsi->ViewValue = $this->provinsi->CurrentValue;
-		$this->provinsi->ViewCustomAttributes = "";
+		// jumlah
+		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
+		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
+		$this->jumlah->CellCssStyle .= "text-align: right;";
+		$this->jumlah->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
 
-		// no_stat
-		$this->no_stat->LinkCustomAttributes = "";
-		$this->no_stat->HrefValue = "";
-		$this->no_stat->TooltipValue = "";
+		// lv1_id
+		$this->lv1_id->LinkCustomAttributes = "";
+		$this->lv1_id->HrefValue = "";
+		$this->lv1_id->TooltipValue = "";
 
-		// nama
-		$this->nama->LinkCustomAttributes = "";
-		$this->nama->HrefValue = "";
-		$this->nama->TooltipValue = "";
+		// keterangan
+		$this->keterangan->LinkCustomAttributes = "";
+		$this->keterangan->HrefValue = "";
+		$this->keterangan->TooltipValue = "";
 
-		// status
-		$this->status->LinkCustomAttributes = "";
-		$this->status->HrefValue = "";
-		$this->status->TooltipValue = "";
-
-		// alamat1
-		$this->alamat1->LinkCustomAttributes = "";
-		$this->alamat1->HrefValue = "";
-		$this->alamat1->TooltipValue = "";
-
-		// alamat2
-		$this->alamat2->LinkCustomAttributes = "";
-		$this->alamat2->HrefValue = "";
-		$this->alamat2->TooltipValue = "";
-
-		// desa
-		$this->desa->LinkCustomAttributes = "";
-		$this->desa->HrefValue = "";
-		$this->desa->TooltipValue = "";
-
-		// kecamatan
-		$this->kecamatan->LinkCustomAttributes = "";
-		$this->kecamatan->HrefValue = "";
-		$this->kecamatan->TooltipValue = "";
-
-		// kabupaten
-		$this->kabupaten->LinkCustomAttributes = "";
-		$this->kabupaten->HrefValue = "";
-		$this->kabupaten->TooltipValue = "";
-
-		// provinsi
-		$this->provinsi->LinkCustomAttributes = "";
-		$this->provinsi->HrefValue = "";
-		$this->provinsi->TooltipValue = "";
+		// jumlah
+		$this->jumlah->LinkCustomAttributes = "";
+		$this->jumlah->HrefValue = "";
+		$this->jumlah->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -795,59 +785,24 @@ class ct01_master_sekolah extends cTable {
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// no_stat
-		$this->no_stat->EditAttrs["class"] = "form-control";
-		$this->no_stat->EditCustomAttributes = "";
-		$this->no_stat->EditValue = $this->no_stat->CurrentValue;
-		$this->no_stat->PlaceHolder = ew_RemoveHtml($this->no_stat->FldCaption());
+		// lv1_id
+		$this->lv1_id->EditAttrs["class"] = "form-control";
+		$this->lv1_id->EditCustomAttributes = "";
+		$this->lv1_id->EditValue = $this->lv1_id->CurrentValue;
+		$this->lv1_id->PlaceHolder = ew_RemoveHtml($this->lv1_id->FldCaption());
 
-		// nama
-		$this->nama->EditAttrs["class"] = "form-control";
-		$this->nama->EditCustomAttributes = "";
-		$this->nama->EditValue = $this->nama->CurrentValue;
-		$this->nama->PlaceHolder = ew_RemoveHtml($this->nama->FldCaption());
+		// keterangan
+		$this->keterangan->EditAttrs["class"] = "form-control";
+		$this->keterangan->EditCustomAttributes = "";
+		$this->keterangan->EditValue = $this->keterangan->CurrentValue;
+		$this->keterangan->PlaceHolder = ew_RemoveHtml($this->keterangan->FldCaption());
 
-		// status
-		$this->status->EditAttrs["class"] = "form-control";
-		$this->status->EditCustomAttributes = "";
-		$this->status->EditValue = $this->status->CurrentValue;
-		$this->status->PlaceHolder = ew_RemoveHtml($this->status->FldCaption());
-
-		// alamat1
-		$this->alamat1->EditAttrs["class"] = "form-control";
-		$this->alamat1->EditCustomAttributes = "";
-		$this->alamat1->EditValue = $this->alamat1->CurrentValue;
-		$this->alamat1->PlaceHolder = ew_RemoveHtml($this->alamat1->FldCaption());
-
-		// alamat2
-		$this->alamat2->EditAttrs["class"] = "form-control";
-		$this->alamat2->EditCustomAttributes = "";
-		$this->alamat2->EditValue = $this->alamat2->CurrentValue;
-		$this->alamat2->PlaceHolder = ew_RemoveHtml($this->alamat2->FldCaption());
-
-		// desa
-		$this->desa->EditAttrs["class"] = "form-control";
-		$this->desa->EditCustomAttributes = "";
-		$this->desa->EditValue = $this->desa->CurrentValue;
-		$this->desa->PlaceHolder = ew_RemoveHtml($this->desa->FldCaption());
-
-		// kecamatan
-		$this->kecamatan->EditAttrs["class"] = "form-control";
-		$this->kecamatan->EditCustomAttributes = "";
-		$this->kecamatan->EditValue = $this->kecamatan->CurrentValue;
-		$this->kecamatan->PlaceHolder = ew_RemoveHtml($this->kecamatan->FldCaption());
-
-		// kabupaten
-		$this->kabupaten->EditAttrs["class"] = "form-control";
-		$this->kabupaten->EditCustomAttributes = "";
-		$this->kabupaten->EditValue = $this->kabupaten->CurrentValue;
-		$this->kabupaten->PlaceHolder = ew_RemoveHtml($this->kabupaten->FldCaption());
-
-		// provinsi
-		$this->provinsi->EditAttrs["class"] = "form-control";
-		$this->provinsi->EditCustomAttributes = "";
-		$this->provinsi->EditValue = $this->provinsi->CurrentValue;
-		$this->provinsi->PlaceHolder = ew_RemoveHtml($this->provinsi->FldCaption());
+		// jumlah
+		$this->jumlah->EditAttrs["class"] = "form-control";
+		$this->jumlah->EditCustomAttributes = "";
+		$this->jumlah->EditValue = $this->jumlah->CurrentValue;
+		$this->jumlah->PlaceHolder = ew_RemoveHtml($this->jumlah->FldCaption());
+		if (strval($this->jumlah->EditValue) <> "" && is_numeric($this->jumlah->EditValue)) $this->jumlah->EditValue = ew_FormatNumber($this->jumlah->EditValue, -2, -2, -2, -2);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -876,26 +831,14 @@ class ct01_master_sekolah extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->no_stat->Exportable) $Doc->ExportCaption($this->no_stat);
-					if ($this->nama->Exportable) $Doc->ExportCaption($this->nama);
-					if ($this->status->Exportable) $Doc->ExportCaption($this->status);
-					if ($this->alamat1->Exportable) $Doc->ExportCaption($this->alamat1);
-					if ($this->alamat2->Exportable) $Doc->ExportCaption($this->alamat2);
-					if ($this->desa->Exportable) $Doc->ExportCaption($this->desa);
-					if ($this->kecamatan->Exportable) $Doc->ExportCaption($this->kecamatan);
-					if ($this->kabupaten->Exportable) $Doc->ExportCaption($this->kabupaten);
-					if ($this->provinsi->Exportable) $Doc->ExportCaption($this->provinsi);
+					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
+					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
+					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->no_stat->Exportable) $Doc->ExportCaption($this->no_stat);
-					if ($this->nama->Exportable) $Doc->ExportCaption($this->nama);
-					if ($this->status->Exportable) $Doc->ExportCaption($this->status);
-					if ($this->alamat1->Exportable) $Doc->ExportCaption($this->alamat1);
-					if ($this->alamat2->Exportable) $Doc->ExportCaption($this->alamat2);
-					if ($this->desa->Exportable) $Doc->ExportCaption($this->desa);
-					if ($this->kecamatan->Exportable) $Doc->ExportCaption($this->kecamatan);
-					if ($this->kabupaten->Exportable) $Doc->ExportCaption($this->kabupaten);
-					if ($this->provinsi->Exportable) $Doc->ExportCaption($this->provinsi);
+					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
+					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
+					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
 				}
 				$Doc->EndExportRow();
 			}
@@ -927,26 +870,14 @@ class ct01_master_sekolah extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->no_stat->Exportable) $Doc->ExportField($this->no_stat);
-						if ($this->nama->Exportable) $Doc->ExportField($this->nama);
-						if ($this->status->Exportable) $Doc->ExportField($this->status);
-						if ($this->alamat1->Exportable) $Doc->ExportField($this->alamat1);
-						if ($this->alamat2->Exportable) $Doc->ExportField($this->alamat2);
-						if ($this->desa->Exportable) $Doc->ExportField($this->desa);
-						if ($this->kecamatan->Exportable) $Doc->ExportField($this->kecamatan);
-						if ($this->kabupaten->Exportable) $Doc->ExportField($this->kabupaten);
-						if ($this->provinsi->Exportable) $Doc->ExportField($this->provinsi);
+						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
+						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
+						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->no_stat->Exportable) $Doc->ExportField($this->no_stat);
-						if ($this->nama->Exportable) $Doc->ExportField($this->nama);
-						if ($this->status->Exportable) $Doc->ExportField($this->status);
-						if ($this->alamat1->Exportable) $Doc->ExportField($this->alamat1);
-						if ($this->alamat2->Exportable) $Doc->ExportField($this->alamat2);
-						if ($this->desa->Exportable) $Doc->ExportField($this->desa);
-						if ($this->kecamatan->Exportable) $Doc->ExportField($this->kecamatan);
-						if ($this->kabupaten->Exportable) $Doc->ExportField($this->kabupaten);
-						if ($this->provinsi->Exportable) $Doc->ExportField($this->provinsi);
+						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
+						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
+						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}
@@ -990,7 +921,7 @@ class ct01_master_sekolah extends cTable {
 
 	// Write Audit Trail start/end for grid update
 	function WriteAuditTrailDummy($typ) {
-		$table = 't01_master_sekolah';
+		$table = 't03_rkas02';
 		$usr = CurrentUserID();
 		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
@@ -999,7 +930,7 @@ class ct01_master_sekolah extends cTable {
 	function WriteAuditTrailOnAdd(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnAdd) return;
-		$table = 't01_master_sekolah';
+		$table = 't03_rkas02';
 
 		// Get key value
 		$key = "";
@@ -1033,7 +964,7 @@ class ct01_master_sekolah extends cTable {
 	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
 		global $Language;
 		if (!$this->AuditTrailOnEdit) return;
-		$table = 't01_master_sekolah';
+		$table = 't03_rkas02';
 
 		// Get key value
 		$key = "";
@@ -1080,7 +1011,7 @@ class ct01_master_sekolah extends cTable {
 	function WriteAuditTrailOnDelete(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnDelete) return;
-		$table = 't01_master_sekolah';
+		$table = 't03_rkas02';
 
 		// Get key value
 		$key = "";

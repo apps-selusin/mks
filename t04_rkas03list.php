@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t97_userlevelsinfo.php" ?>
+<?php include_once "t04_rkas03info.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t97_userlevels_list = NULL; // Initialize page object first
+$t04_rkas03_list = NULL; // Initialize page object first
 
-class ct97_userlevels_list extends ct97_userlevels {
+class ct04_rkas03_list extends ct04_rkas03 {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +25,13 @@ class ct97_userlevels_list extends ct97_userlevels {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't97_userlevels';
+	var $TableName = 't04_rkas03';
 
 	// Page object name
-	var $PageObjName = 't97_userlevels_list';
+	var $PageObjName = 't04_rkas03_list';
 
 	// Grid form hidden field names
-	var $FormName = 'ft97_userlevelslist';
+	var $FormName = 'ft04_rkas03list';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -105,12 +105,6 @@ class ct97_userlevels_list extends ct97_userlevels {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
-	var $AuditTrailOnAdd = TRUE;
-	var $AuditTrailOnEdit = TRUE;
-	var $AuditTrailOnDelete = TRUE;
-	var $AuditTrailOnView = FALSE;
-	var $AuditTrailOnViewData = FALSE;
-	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -296,10 +290,10 @@ class ct97_userlevels_list extends ct97_userlevels {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t97_userlevels)
-		if (!isset($GLOBALS["t97_userlevels"]) || get_class($GLOBALS["t97_userlevels"]) == "ct97_userlevels") {
-			$GLOBALS["t97_userlevels"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t97_userlevels"];
+		// Table object (t04_rkas03)
+		if (!isset($GLOBALS["t04_rkas03"]) || get_class($GLOBALS["t04_rkas03"]) == "ct04_rkas03") {
+			$GLOBALS["t04_rkas03"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t04_rkas03"];
 		}
 
 		// Initialize URLs
@@ -310,12 +304,12 @@ class ct97_userlevels_list extends ct97_userlevels {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "t97_userlevelsadd.php";
+		$this->AddUrl = "t04_rkas03add.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "t97_userlevelsdelete.php";
-		$this->MultiUpdateUrl = "t97_userlevelsupdate.php";
+		$this->MultiDeleteUrl = "t04_rkas03delete.php";
+		$this->MultiUpdateUrl = "t04_rkas03update.php";
 
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
@@ -326,7 +320,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't97_userlevels', TRUE);
+			define("EW_TABLE_NAME", 't04_rkas03', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -368,7 +362,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption ft97_userlevelslistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption ft04_rkas03listsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -389,9 +383,10 @@ class ct97_userlevels_list extends ct97_userlevels {
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
 		$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName);
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
-		if (!$Security->CanAdmin()) {
+		if (!$Security->CanList()) {
 			$Security->SaveLastUrl();
-			$this->Page_Terminate(ew_GetUrl("login.php"));
+			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
+			$this->Page_Terminate(ew_GetUrl("index.php"));
 		}
 		if ($Security->IsLoggedIn()) {
 			$Security->UserID_Loading();
@@ -454,8 +449,10 @@ class ct97_userlevels_list extends ct97_userlevels {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->userlevelid->SetVisibility();
-		$this->userlevelname->SetVisibility();
+		$this->lv1_id->SetVisibility();
+		$this->lv2_id->SetVisibility();
+		$this->keterangan->SetVisibility();
+		$this->jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -516,13 +513,13 @@ class ct97_userlevels_list extends ct97_userlevels {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t97_userlevels;
+		global $EW_EXPORT, $t04_rkas03;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t97_userlevels);
+				$doc = new $class($t04_rkas03);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -794,8 +791,8 @@ class ct97_userlevels_list extends ct97_userlevels {
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
 		if (count($arrKeyFlds) >= 1) {
-			$this->userlevelid->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->userlevelid->FormValue))
+			$this->id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->id->FormValue))
 				return FALSE;
 		}
 		return TRUE;
@@ -808,8 +805,11 @@ class ct97_userlevels_list extends ct97_userlevels {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->userlevelid->AdvancedSearch->ToJson(), ","); // Field userlevelid
-		$sFilterList = ew_Concat($sFilterList, $this->userlevelname->AdvancedSearch->ToJson(), ","); // Field userlevelname
+		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJson(), ","); // Field id
+		$sFilterList = ew_Concat($sFilterList, $this->lv1_id->AdvancedSearch->ToJson(), ","); // Field lv1_id
+		$sFilterList = ew_Concat($sFilterList, $this->lv2_id->AdvancedSearch->ToJson(), ","); // Field lv2_id
+		$sFilterList = ew_Concat($sFilterList, $this->keterangan->AdvancedSearch->ToJson(), ","); // Field keterangan
+		$sFilterList = ew_Concat($sFilterList, $this->jumlah->AdvancedSearch->ToJson(), ","); // Field jumlah
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -832,7 +832,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = @$_POST["filters"];
-			$UserProfile->SetSearchFilters(CurrentUserName(), "ft97_userlevelslistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "ft04_rkas03listsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -854,21 +854,45 @@ class ct97_userlevels_list extends ct97_userlevels {
 		$filter = json_decode(@$_POST["filter"], TRUE);
 		$this->Command = "search";
 
-		// Field userlevelid
-		$this->userlevelid->AdvancedSearch->SearchValue = @$filter["x_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchOperator = @$filter["z_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchCondition = @$filter["v_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchValue2 = @$filter["y_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchOperator2 = @$filter["w_userlevelid"];
-		$this->userlevelid->AdvancedSearch->Save();
+		// Field id
+		$this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+		$this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+		$this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+		$this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+		$this->id->AdvancedSearch->Save();
 
-		// Field userlevelname
-		$this->userlevelname->AdvancedSearch->SearchValue = @$filter["x_userlevelname"];
-		$this->userlevelname->AdvancedSearch->SearchOperator = @$filter["z_userlevelname"];
-		$this->userlevelname->AdvancedSearch->SearchCondition = @$filter["v_userlevelname"];
-		$this->userlevelname->AdvancedSearch->SearchValue2 = @$filter["y_userlevelname"];
-		$this->userlevelname->AdvancedSearch->SearchOperator2 = @$filter["w_userlevelname"];
-		$this->userlevelname->AdvancedSearch->Save();
+		// Field lv1_id
+		$this->lv1_id->AdvancedSearch->SearchValue = @$filter["x_lv1_id"];
+		$this->lv1_id->AdvancedSearch->SearchOperator = @$filter["z_lv1_id"];
+		$this->lv1_id->AdvancedSearch->SearchCondition = @$filter["v_lv1_id"];
+		$this->lv1_id->AdvancedSearch->SearchValue2 = @$filter["y_lv1_id"];
+		$this->lv1_id->AdvancedSearch->SearchOperator2 = @$filter["w_lv1_id"];
+		$this->lv1_id->AdvancedSearch->Save();
+
+		// Field lv2_id
+		$this->lv2_id->AdvancedSearch->SearchValue = @$filter["x_lv2_id"];
+		$this->lv2_id->AdvancedSearch->SearchOperator = @$filter["z_lv2_id"];
+		$this->lv2_id->AdvancedSearch->SearchCondition = @$filter["v_lv2_id"];
+		$this->lv2_id->AdvancedSearch->SearchValue2 = @$filter["y_lv2_id"];
+		$this->lv2_id->AdvancedSearch->SearchOperator2 = @$filter["w_lv2_id"];
+		$this->lv2_id->AdvancedSearch->Save();
+
+		// Field keterangan
+		$this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
+		$this->keterangan->AdvancedSearch->Save();
+
+		// Field jumlah
+		$this->jumlah->AdvancedSearch->SearchValue = @$filter["x_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchOperator = @$filter["z_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchCondition = @$filter["v_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchValue2 = @$filter["y_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_jumlah"];
+		$this->jumlah->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -876,7 +900,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->userlevelname, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->keterangan, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -1026,8 +1050,10 @@ class ct97_userlevels_list extends ct97_userlevels {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->userlevelid, $bCtrl); // userlevelid
-			$this->UpdateSort($this->userlevelname, $bCtrl); // userlevelname
+			$this->UpdateSort($this->lv1_id, $bCtrl); // lv1_id
+			$this->UpdateSort($this->lv2_id, $bCtrl); // lv2_id
+			$this->UpdateSort($this->keterangan, $bCtrl); // keterangan
+			$this->UpdateSort($this->jumlah, $bCtrl); // jumlah
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1060,8 +1086,11 @@ class ct97_userlevels_list extends ct97_userlevels {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->userlevelid->setSort("");
-				$this->userlevelname->setSort("");
+				$this->setSessionOrderByList($sOrderBy);
+				$this->lv1_id->setSort("");
+				$this->lv2_id->setSort("");
+				$this->keterangan->setSort("");
+				$this->jumlah->setSort("");
 			}
 
 			// Reset start position
@@ -1097,13 +1126,6 @@ class ct97_userlevels_list extends ct97_userlevels {
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->CanAdd();
 		$item->OnLeft = TRUE;
-
-		// "userpermission"
-		$item = &$this->ListOptions->Add("userpermission");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->IsAdmin();
-		$item->OnLeft = TRUE;
-		$item->ButtonGroupName = "userpermission"; // Use own group
 
 		// List actions
 		$item = &$this->ListOptions->Add("listactions");
@@ -1202,17 +1224,9 @@ class ct97_userlevels_list extends ct97_userlevels {
 			}
 		}
 
-		// "userpermission"
-		$oListOpt = &$this->ListOptions->Items["userpermission"];
-		if ($this->userlevelid->CurrentValue < 0 && $this->userlevelid->CurrentValue <> -2) {
-			$oListOpt->Body = "-";
-		} else {
-			$oListOpt->Body = "<a class=\"ewRowLink ewUserPermission\" title=\"" . ew_HtmlTitle($Language->Phrase("Permission")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("Permission")) . "\" href=\"" . ew_HtmlEncode("userpriv.php?userlevelid=" . $this->userlevelid->CurrentValue) . "\">" . $Language->Phrase("Permission") . "</a>";
-		}
-
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->userlevelid->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1234,7 +1248,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft97_userlevelslist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft04_rkas03list,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = ($Security->CanDelete());
 
 		// Set up options default
@@ -1253,10 +1267,10 @@ class ct97_userlevels_list extends ct97_userlevels {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft97_userlevelslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft04_rkas03listsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft97_userlevelslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft04_rkas03listsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1280,7 +1294,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft97_userlevelslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft04_rkas03list}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1384,7 +1398,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft97_userlevelslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft04_rkas03listsrch\">" . $Language->Phrase("SearchLink") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1476,7 +1490,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 		if ($this->UseSelectLimit) {
 			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 			if ($dbtype == "MSSQL") {
-				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())));
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())));
 			} else {
 				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset);
 			}
@@ -1523,16 +1537,31 @@ class ct97_userlevels_list extends ct97_userlevels {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->userlevelid->setDbValue($row['userlevelid']);
-		$this->userlevelid->CurrentValue = intval($this->userlevelid->CurrentValue);
-		$this->userlevelname->setDbValue($row['userlevelname']);
+		$this->id->setDbValue($row['id']);
+		$this->lv1_id->setDbValue($row['lv1_id']);
+		if (array_key_exists('EV__lv1_id', $rs->fields)) {
+			$this->lv1_id->VirtualValue = $rs->fields('EV__lv1_id'); // Set up virtual field value
+		} else {
+			$this->lv1_id->VirtualValue = ""; // Clear value
+		}
+		$this->lv2_id->setDbValue($row['lv2_id']);
+		if (array_key_exists('EV__lv2_id', $rs->fields)) {
+			$this->lv2_id->VirtualValue = $rs->fields('EV__lv2_id'); // Set up virtual field value
+		} else {
+			$this->lv2_id->VirtualValue = ""; // Clear value
+		}
+		$this->keterangan->setDbValue($row['keterangan']);
+		$this->jumlah->setDbValue($row['jumlah']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['userlevelid'] = NULL;
-		$row['userlevelname'] = NULL;
+		$row['id'] = NULL;
+		$row['lv1_id'] = NULL;
+		$row['lv2_id'] = NULL;
+		$row['keterangan'] = NULL;
+		$row['jumlah'] = NULL;
 		return $row;
 	}
 
@@ -1541,8 +1570,11 @@ class ct97_userlevels_list extends ct97_userlevels {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->userlevelid->DbValue = $row['userlevelid'];
-		$this->userlevelname->DbValue = $row['userlevelname'];
+		$this->id->DbValue = $row['id'];
+		$this->lv1_id->DbValue = $row['lv1_id'];
+		$this->lv2_id->DbValue = $row['lv2_id'];
+		$this->keterangan->DbValue = $row['keterangan'];
+		$this->jumlah->DbValue = $row['jumlah'];
 	}
 
 	// Load old record
@@ -1550,8 +1582,8 @@ class ct97_userlevels_list extends ct97_userlevels {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("userlevelid")) <> "")
-			$this->userlevelid->CurrentValue = $this->getKey("userlevelid"); // userlevelid
+		if (strval($this->getKey("id")) <> "")
+			$this->id->CurrentValue = $this->getKey("id"); // id
 		else
 			$bValidKey = FALSE;
 
@@ -1579,33 +1611,111 @@ class ct97_userlevels_list extends ct97_userlevels {
 		$this->InlineCopyUrl = $this->GetInlineCopyUrl();
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
+		// Convert decimal values if posted back
+		if ($this->jumlah->FormValue == $this->jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->jumlah->CurrentValue)))
+			$this->jumlah->CurrentValue = ew_StrToFloat($this->jumlah->CurrentValue);
+
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// userlevelid
-		// userlevelname
+		// id
+		// lv1_id
+		// lv2_id
+		// keterangan
+		// jumlah
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// userlevelid
-		$this->userlevelid->ViewValue = $this->userlevelid->CurrentValue;
-		$this->userlevelid->ViewCustomAttributes = "";
+		// id
+		$this->id->ViewValue = $this->id->CurrentValue;
+		$this->id->ViewCustomAttributes = "";
 
-		// userlevelname
-		$this->userlevelname->ViewValue = $this->userlevelname->CurrentValue;
-		if ($Security->GetUserLevelName($this->userlevelid->CurrentValue) <> "") $this->userlevelname->ViewValue = $Security->GetUserLevelName($this->userlevelid->CurrentValue);
-		$this->userlevelname->ViewCustomAttributes = "";
+		// lv1_id
+		if ($this->lv1_id->VirtualValue <> "") {
+			$this->lv1_id->ViewValue = $this->lv1_id->VirtualValue;
+		} else {
+			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+		if (strval($this->lv1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sWhereWrk = "";
+		$this->lv1_id->LookupFilters = array("dx1" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+			}
+		} else {
+			$this->lv1_id->ViewValue = NULL;
+		}
+		}
+		$this->lv1_id->ViewCustomAttributes = "";
 
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
+		// lv2_id
+		if ($this->lv2_id->VirtualValue <> "") {
+			$this->lv2_id->ViewValue = $this->lv2_id->VirtualValue;
+		} else {
+			$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
+		if (strval($this->lv2_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+		$sWhereWrk = "";
+		$this->lv2_id->LookupFilters = array("dx1" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->lv2_id->ViewValue = $this->lv2_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
+			}
+		} else {
+			$this->lv2_id->ViewValue = NULL;
+		}
+		}
+		$this->lv2_id->ViewCustomAttributes = "";
 
-			// userlevelname
-			$this->userlevelname->LinkCustomAttributes = "";
-			$this->userlevelname->HrefValue = "";
-			$this->userlevelname->TooltipValue = "";
+		// keterangan
+		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+		$this->keterangan->ViewCustomAttributes = "";
+
+		// jumlah
+		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
+		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
+		$this->jumlah->CellCssStyle .= "text-align: right;";
+		$this->jumlah->ViewCustomAttributes = "";
+
+			// lv1_id
+			$this->lv1_id->LinkCustomAttributes = "";
+			$this->lv1_id->HrefValue = "";
+			$this->lv1_id->TooltipValue = "";
+
+			// lv2_id
+			$this->lv2_id->LinkCustomAttributes = "";
+			$this->lv2_id->HrefValue = "";
+			$this->lv2_id->TooltipValue = "";
+
+			// keterangan
+			$this->keterangan->LinkCustomAttributes = "";
+			$this->keterangan->HrefValue = "";
+			$this->keterangan->TooltipValue = "";
+
+			// jumlah
+			$this->jumlah->LinkCustomAttributes = "";
+			$this->jumlah->HrefValue = "";
+			$this->jumlah->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1655,7 +1765,7 @@ class ct97_userlevels_list extends ct97_userlevels {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t97_userlevels\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t97_userlevels',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft97_userlevelslist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t04_rkas03\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t04_rkas03',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft04_rkas03list,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -2036,31 +2146,31 @@ class ct97_userlevels_list extends ct97_userlevels {
 <?php
 
 // Create page object
-if (!isset($t97_userlevels_list)) $t97_userlevels_list = new ct97_userlevels_list();
+if (!isset($t04_rkas03_list)) $t04_rkas03_list = new ct04_rkas03_list();
 
 // Page init
-$t97_userlevels_list->Page_Init();
+$t04_rkas03_list->Page_Init();
 
 // Page main
-$t97_userlevels_list->Page_Main();
+$t04_rkas03_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t97_userlevels_list->Page_Render();
+$t04_rkas03_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t97_userlevels->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = ft97_userlevelslist = new ew_Form("ft97_userlevelslist", "list");
-ft97_userlevelslist.FormKeyCountName = '<?php echo $t97_userlevels_list->FormKeyCountName ?>';
+var CurrentForm = ft04_rkas03list = new ew_Form("ft04_rkas03list", "list");
+ft04_rkas03list.FormKeyCountName = '<?php echo $t04_rkas03_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-ft97_userlevelslist.Form_CustomValidate = 
+ft04_rkas03list.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -2068,86 +2178,85 @@ ft97_userlevelslist.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft97_userlevelslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft04_rkas03list.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+ft04_rkas03list.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_keterangan","","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
+ft04_rkas03list.Lists["x_lv1_id"].Data = "<?php echo $t04_rkas03_list->lv1_id->LookupFilterQuery(FALSE, "list") ?>";
+ft04_rkas03list.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_list->lv1_id->LookupFilterQuery(TRUE, "list"))) ?>;
+ft04_rkas03list.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_keterangan","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
+ft04_rkas03list.Lists["x_lv2_id"].Data = "<?php echo $t04_rkas03_list->lv2_id->LookupFilterQuery(FALSE, "list") ?>";
+ft04_rkas03list.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_list->lv2_id->LookupFilterQuery(TRUE, "list"))) ?>;
 
-var CurrentSearchForm = ft97_userlevelslistsrch = new ew_Form("ft97_userlevelslistsrch");
+// Form object for search
+var CurrentSearchForm = ft04_rkas03listsrch = new ew_Form("ft04_rkas03listsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t97_userlevels->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <div class="ewToolbar">
-<?php if ($t97_userlevels_list->TotalRecs > 0 && $t97_userlevels_list->ExportOptions->Visible()) { ?>
-<?php $t97_userlevels_list->ExportOptions->Render("body") ?>
+<?php if ($t04_rkas03_list->TotalRecs > 0 && $t04_rkas03_list->ExportOptions->Visible()) { ?>
+<?php $t04_rkas03_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t97_userlevels_list->SearchOptions->Visible()) { ?>
-<?php $t97_userlevels_list->SearchOptions->Render("body") ?>
+<?php if ($t04_rkas03_list->SearchOptions->Visible()) { ?>
+<?php $t04_rkas03_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t97_userlevels_list->FilterOptions->Visible()) { ?>
-<?php $t97_userlevels_list->FilterOptions->Render("body") ?>
+<?php if ($t04_rkas03_list->FilterOptions->Visible()) { ?>
+<?php $t04_rkas03_list->FilterOptions->Render("body") ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
-	$bSelectLimit = $t97_userlevels_list->UseSelectLimit;
+	$bSelectLimit = $t04_rkas03_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($t97_userlevels_list->TotalRecs <= 0)
-			$t97_userlevels_list->TotalRecs = $t97_userlevels->ListRecordCount();
+		if ($t04_rkas03_list->TotalRecs <= 0)
+			$t04_rkas03_list->TotalRecs = $t04_rkas03->ListRecordCount();
 	} else {
-		if (!$t97_userlevels_list->Recordset && ($t97_userlevels_list->Recordset = $t97_userlevels_list->LoadRecordset()))
-			$t97_userlevels_list->TotalRecs = $t97_userlevels_list->Recordset->RecordCount();
+		if (!$t04_rkas03_list->Recordset && ($t04_rkas03_list->Recordset = $t04_rkas03_list->LoadRecordset()))
+			$t04_rkas03_list->TotalRecs = $t04_rkas03_list->Recordset->RecordCount();
 	}
-	$t97_userlevels_list->StartRec = 1;
-	if ($t97_userlevels_list->DisplayRecs <= 0 || ($t97_userlevels->Export <> "" && $t97_userlevels->ExportAll)) // Display all records
-		$t97_userlevels_list->DisplayRecs = $t97_userlevels_list->TotalRecs;
-	if (!($t97_userlevels->Export <> "" && $t97_userlevels->ExportAll))
-		$t97_userlevels_list->SetupStartRec(); // Set up start record position
+	$t04_rkas03_list->StartRec = 1;
+	if ($t04_rkas03_list->DisplayRecs <= 0 || ($t04_rkas03->Export <> "" && $t04_rkas03->ExportAll)) // Display all records
+		$t04_rkas03_list->DisplayRecs = $t04_rkas03_list->TotalRecs;
+	if (!($t04_rkas03->Export <> "" && $t04_rkas03->ExportAll))
+		$t04_rkas03_list->SetupStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$t97_userlevels_list->Recordset = $t97_userlevels_list->LoadRecordset($t97_userlevels_list->StartRec-1, $t97_userlevels_list->DisplayRecs);
+		$t04_rkas03_list->Recordset = $t04_rkas03_list->LoadRecordset($t04_rkas03_list->StartRec-1, $t04_rkas03_list->DisplayRecs);
 
 	// Set no record found message
-	if ($t97_userlevels->CurrentAction == "" && $t97_userlevels_list->TotalRecs == 0) {
+	if ($t04_rkas03->CurrentAction == "" && $t04_rkas03_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$t97_userlevels_list->setWarningMessage(ew_DeniedMsg());
-		if ($t97_userlevels_list->SearchWhere == "0=101")
-			$t97_userlevels_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$t04_rkas03_list->setWarningMessage(ew_DeniedMsg());
+		if ($t04_rkas03_list->SearchWhere == "0=101")
+			$t04_rkas03_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$t97_userlevels_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$t04_rkas03_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
-
-	// Audit trail on search
-	if ($t97_userlevels_list->AuditTrailOnSearch && $t97_userlevels_list->Command == "search" && !$t97_userlevels_list->RestoreSearch) {
-		$searchparm = ew_ServerVar("QUERY_STRING");
-		$searchsql = $t97_userlevels_list->getSessionWhere();
-		$t97_userlevels_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
-	}
-$t97_userlevels_list->RenderOtherOptions();
+$t04_rkas03_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($t97_userlevels->Export == "" && $t97_userlevels->CurrentAction == "") { ?>
-<form name="ft97_userlevelslistsrch" id="ft97_userlevelslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($t97_userlevels_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="ft97_userlevelslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($t04_rkas03->Export == "" && $t04_rkas03->CurrentAction == "") { ?>
+<form name="ft04_rkas03listsrch" id="ft04_rkas03listsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($t04_rkas03_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="ft04_rkas03listsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="t97_userlevels">
+<input type="hidden" name="t" value="t04_rkas03">
 	<div class="ewBasicSearch">
 <div id="xsr_1" class="ewRow">
 	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t97_userlevels_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t97_userlevels_list->BasicSearch->getType()) ?>">
+	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t04_rkas03_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
+	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t04_rkas03_list->BasicSearch->getType()) ?>">
 	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t97_userlevels_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t04_rkas03_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
 		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($t97_userlevels_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($t97_userlevels_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($t97_userlevels_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($t97_userlevels_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
+			<li<?php if ($t04_rkas03_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
+			<li<?php if ($t04_rkas03_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
+			<li<?php if ($t04_rkas03_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
+			<li<?php if ($t04_rkas03_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
 		</ul>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("SearchBtn") ?></button>
 	</div>
@@ -2158,70 +2267,70 @@ $t97_userlevels_list->RenderOtherOptions();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $t97_userlevels_list->ShowPageHeader(); ?>
+<?php $t04_rkas03_list->ShowPageHeader(); ?>
 <?php
-$t97_userlevels_list->ShowMessage();
+$t04_rkas03_list->ShowMessage();
 ?>
-<?php if ($t97_userlevels_list->TotalRecs > 0 || $t97_userlevels->CurrentAction <> "") { ?>
-<div class="box ewBox ewGrid<?php if ($t97_userlevels_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t97_userlevels">
-<?php if ($t97_userlevels->Export == "") { ?>
+<?php if ($t04_rkas03_list->TotalRecs > 0 || $t04_rkas03->CurrentAction <> "") { ?>
+<div class="box ewBox ewGrid<?php if ($t04_rkas03_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t04_rkas03">
+<?php if ($t04_rkas03->Export == "") { ?>
 <div class="box-header ewGridUpperPanel">
-<?php if ($t97_userlevels->CurrentAction <> "gridadd" && $t97_userlevels->CurrentAction <> "gridedit") { ?>
+<?php if ($t04_rkas03->CurrentAction <> "gridadd" && $t04_rkas03->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t97_userlevels_list->Pager)) $t97_userlevels_list->Pager = new cPrevNextPager($t97_userlevels_list->StartRec, $t97_userlevels_list->DisplayRecs, $t97_userlevels_list->TotalRecs, $t97_userlevels_list->AutoHidePager) ?>
-<?php if ($t97_userlevels_list->Pager->RecordCount > 0 && $t97_userlevels_list->Pager->Visible) { ?>
+<?php if (!isset($t04_rkas03_list->Pager)) $t04_rkas03_list->Pager = new cPrevNextPager($t04_rkas03_list->StartRec, $t04_rkas03_list->DisplayRecs, $t04_rkas03_list->TotalRecs, $t04_rkas03_list->AutoHidePager) ?>
+<?php if ($t04_rkas03_list->Pager->RecordCount > 0 && $t04_rkas03_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t97_userlevels_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t97_userlevels_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t97_userlevels_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rkas03_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t97_userlevels_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t97_userlevels_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t97_userlevels_list->Pager->RecordCount > 0) { ?>
+<?php if ($t04_rkas03_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t97_userlevels_list->TotalRecs > 0 && (!$t97_userlevels_list->AutoHidePageSizeSelector || $t97_userlevels_list->Pager->Visible)) { ?>
+<?php if ($t04_rkas03_list->TotalRecs > 0 && (!$t04_rkas03_list->AutoHidePageSizeSelector || $t04_rkas03_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t97_userlevels">
+<input type="hidden" name="t" value="t04_rkas03">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t97_userlevels_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t97_userlevels_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t97_userlevels_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t97_userlevels_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t97_userlevels->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t04_rkas03_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t04_rkas03_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t04_rkas03_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t04_rkas03_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t04_rkas03->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2229,149 +2338,183 @@ $t97_userlevels_list->ShowMessage();
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t97_userlevels_list->OtherOptions as &$option)
+	foreach ($t04_rkas03_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<form name="ft97_userlevelslist" id="ft97_userlevelslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t97_userlevels_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t97_userlevels_list->Token ?>">
+<form name="ft04_rkas03list" id="ft04_rkas03list" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t04_rkas03_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_rkas03_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t97_userlevels">
-<div id="gmp_t97_userlevels" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
-<?php if ($t97_userlevels_list->TotalRecs > 0 || $t97_userlevels->CurrentAction == "gridedit") { ?>
-<table id="tbl_t97_userlevelslist" class="table ewTable">
+<input type="hidden" name="t" value="t04_rkas03">
+<div id="gmp_t04_rkas03" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
+<?php if ($t04_rkas03_list->TotalRecs > 0 || $t04_rkas03->CurrentAction == "gridedit") { ?>
+<table id="tbl_t04_rkas03list" class="table ewTable">
 <thead>
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$t97_userlevels_list->RowType = EW_ROWTYPE_HEADER;
+$t04_rkas03_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$t97_userlevels_list->RenderListOptions();
+$t04_rkas03_list->RenderListOptions();
 
 // Render list options (header, left)
-$t97_userlevels_list->ListOptions->Render("header", "left");
+$t04_rkas03_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($t97_userlevels->userlevelid->Visible) { // userlevelid ?>
-	<?php if ($t97_userlevels->SortUrl($t97_userlevels->userlevelid) == "") { ?>
-		<th data-name="userlevelid" class="<?php echo $t97_userlevels->userlevelid->HeaderCellClass() ?>"><div id="elh_t97_userlevels_userlevelid" class="t97_userlevels_userlevelid"><div class="ewTableHeaderCaption"><?php echo $t97_userlevels->userlevelid->FldCaption() ?></div></div></th>
+<?php if ($t04_rkas03->lv1_id->Visible) { // lv1_id ?>
+	<?php if ($t04_rkas03->SortUrl($t04_rkas03->lv1_id) == "") { ?>
+		<th data-name="lv1_id" class="<?php echo $t04_rkas03->lv1_id->HeaderCellClass() ?>"><div id="elh_t04_rkas03_lv1_id" class="t04_rkas03_lv1_id"><div class="ewTableHeaderCaption"><?php echo $t04_rkas03->lv1_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="userlevelid" class="<?php echo $t97_userlevels->userlevelid->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t97_userlevels->SortUrl($t97_userlevels->userlevelid) ?>',2);"><div id="elh_t97_userlevels_userlevelid" class="t97_userlevels_userlevelid">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t97_userlevels->userlevelid->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t97_userlevels->userlevelid->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t97_userlevels->userlevelid->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="lv1_id" class="<?php echo $t04_rkas03->lv1_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t04_rkas03->SortUrl($t04_rkas03->lv1_id) ?>',2);"><div id="elh_t04_rkas03_lv1_id" class="t04_rkas03_lv1_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t04_rkas03->lv1_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t04_rkas03->lv1_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t04_rkas03->lv1_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t97_userlevels->userlevelname->Visible) { // userlevelname ?>
-	<?php if ($t97_userlevels->SortUrl($t97_userlevels->userlevelname) == "") { ?>
-		<th data-name="userlevelname" class="<?php echo $t97_userlevels->userlevelname->HeaderCellClass() ?>"><div id="elh_t97_userlevels_userlevelname" class="t97_userlevels_userlevelname"><div class="ewTableHeaderCaption"><?php echo $t97_userlevels->userlevelname->FldCaption() ?></div></div></th>
+<?php if ($t04_rkas03->lv2_id->Visible) { // lv2_id ?>
+	<?php if ($t04_rkas03->SortUrl($t04_rkas03->lv2_id) == "") { ?>
+		<th data-name="lv2_id" class="<?php echo $t04_rkas03->lv2_id->HeaderCellClass() ?>"><div id="elh_t04_rkas03_lv2_id" class="t04_rkas03_lv2_id"><div class="ewTableHeaderCaption"><?php echo $t04_rkas03->lv2_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="userlevelname" class="<?php echo $t97_userlevels->userlevelname->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t97_userlevels->SortUrl($t97_userlevels->userlevelname) ?>',2);"><div id="elh_t97_userlevels_userlevelname" class="t97_userlevels_userlevelname">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t97_userlevels->userlevelname->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t97_userlevels->userlevelname->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t97_userlevels->userlevelname->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="lv2_id" class="<?php echo $t04_rkas03->lv2_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t04_rkas03->SortUrl($t04_rkas03->lv2_id) ?>',2);"><div id="elh_t04_rkas03_lv2_id" class="t04_rkas03_lv2_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t04_rkas03->lv2_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t04_rkas03->lv2_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t04_rkas03->lv2_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t04_rkas03->keterangan->Visible) { // keterangan ?>
+	<?php if ($t04_rkas03->SortUrl($t04_rkas03->keterangan) == "") { ?>
+		<th data-name="keterangan" class="<?php echo $t04_rkas03->keterangan->HeaderCellClass() ?>"><div id="elh_t04_rkas03_keterangan" class="t04_rkas03_keterangan"><div class="ewTableHeaderCaption"><?php echo $t04_rkas03->keterangan->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="keterangan" class="<?php echo $t04_rkas03->keterangan->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t04_rkas03->SortUrl($t04_rkas03->keterangan) ?>',2);"><div id="elh_t04_rkas03_keterangan" class="t04_rkas03_keterangan">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t04_rkas03->keterangan->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t04_rkas03->keterangan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t04_rkas03->keterangan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t04_rkas03->jumlah->Visible) { // jumlah ?>
+	<?php if ($t04_rkas03->SortUrl($t04_rkas03->jumlah) == "") { ?>
+		<th data-name="jumlah" class="<?php echo $t04_rkas03->jumlah->HeaderCellClass() ?>"><div id="elh_t04_rkas03_jumlah" class="t04_rkas03_jumlah"><div class="ewTableHeaderCaption"><?php echo $t04_rkas03->jumlah->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="jumlah" class="<?php echo $t04_rkas03->jumlah->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t04_rkas03->SortUrl($t04_rkas03->jumlah) ?>',2);"><div id="elh_t04_rkas03_jumlah" class="t04_rkas03_jumlah">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t04_rkas03->jumlah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t04_rkas03->jumlah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t04_rkas03->jumlah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php
 
 // Render list options (header, right)
-$t97_userlevels_list->ListOptions->Render("header", "right");
+$t04_rkas03_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($t97_userlevels->ExportAll && $t97_userlevels->Export <> "") {
-	$t97_userlevels_list->StopRec = $t97_userlevels_list->TotalRecs;
+if ($t04_rkas03->ExportAll && $t04_rkas03->Export <> "") {
+	$t04_rkas03_list->StopRec = $t04_rkas03_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($t97_userlevels_list->TotalRecs > $t97_userlevels_list->StartRec + $t97_userlevels_list->DisplayRecs - 1)
-		$t97_userlevels_list->StopRec = $t97_userlevels_list->StartRec + $t97_userlevels_list->DisplayRecs - 1;
+	if ($t04_rkas03_list->TotalRecs > $t04_rkas03_list->StartRec + $t04_rkas03_list->DisplayRecs - 1)
+		$t04_rkas03_list->StopRec = $t04_rkas03_list->StartRec + $t04_rkas03_list->DisplayRecs - 1;
 	else
-		$t97_userlevels_list->StopRec = $t97_userlevels_list->TotalRecs;
+		$t04_rkas03_list->StopRec = $t04_rkas03_list->TotalRecs;
 }
-$t97_userlevels_list->RecCnt = $t97_userlevels_list->StartRec - 1;
-if ($t97_userlevels_list->Recordset && !$t97_userlevels_list->Recordset->EOF) {
-	$t97_userlevels_list->Recordset->MoveFirst();
-	$bSelectLimit = $t97_userlevels_list->UseSelectLimit;
-	if (!$bSelectLimit && $t97_userlevels_list->StartRec > 1)
-		$t97_userlevels_list->Recordset->Move($t97_userlevels_list->StartRec - 1);
-} elseif (!$t97_userlevels->AllowAddDeleteRow && $t97_userlevels_list->StopRec == 0) {
-	$t97_userlevels_list->StopRec = $t97_userlevels->GridAddRowCount;
+$t04_rkas03_list->RecCnt = $t04_rkas03_list->StartRec - 1;
+if ($t04_rkas03_list->Recordset && !$t04_rkas03_list->Recordset->EOF) {
+	$t04_rkas03_list->Recordset->MoveFirst();
+	$bSelectLimit = $t04_rkas03_list->UseSelectLimit;
+	if (!$bSelectLimit && $t04_rkas03_list->StartRec > 1)
+		$t04_rkas03_list->Recordset->Move($t04_rkas03_list->StartRec - 1);
+} elseif (!$t04_rkas03->AllowAddDeleteRow && $t04_rkas03_list->StopRec == 0) {
+	$t04_rkas03_list->StopRec = $t04_rkas03->GridAddRowCount;
 }
 
 // Initialize aggregate
-$t97_userlevels->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$t97_userlevels->ResetAttrs();
-$t97_userlevels_list->RenderRow();
-while ($t97_userlevels_list->RecCnt < $t97_userlevels_list->StopRec) {
-	$t97_userlevels_list->RecCnt++;
-	if (intval($t97_userlevels_list->RecCnt) >= intval($t97_userlevels_list->StartRec)) {
-		$t97_userlevels_list->RowCnt++;
+$t04_rkas03->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$t04_rkas03->ResetAttrs();
+$t04_rkas03_list->RenderRow();
+while ($t04_rkas03_list->RecCnt < $t04_rkas03_list->StopRec) {
+	$t04_rkas03_list->RecCnt++;
+	if (intval($t04_rkas03_list->RecCnt) >= intval($t04_rkas03_list->StartRec)) {
+		$t04_rkas03_list->RowCnt++;
 
 		// Set up key count
-		$t97_userlevels_list->KeyCount = $t97_userlevels_list->RowIndex;
+		$t04_rkas03_list->KeyCount = $t04_rkas03_list->RowIndex;
 
 		// Init row class and style
-		$t97_userlevels->ResetAttrs();
-		$t97_userlevels->CssClass = "";
-		if ($t97_userlevels->CurrentAction == "gridadd") {
+		$t04_rkas03->ResetAttrs();
+		$t04_rkas03->CssClass = "";
+		if ($t04_rkas03->CurrentAction == "gridadd") {
 		} else {
-			$t97_userlevels_list->LoadRowValues($t97_userlevels_list->Recordset); // Load row values
+			$t04_rkas03_list->LoadRowValues($t04_rkas03_list->Recordset); // Load row values
 		}
-		$t97_userlevels->RowType = EW_ROWTYPE_VIEW; // Render view
+		$t04_rkas03->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$t97_userlevels->RowAttrs = array_merge($t97_userlevels->RowAttrs, array('data-rowindex'=>$t97_userlevels_list->RowCnt, 'id'=>'r' . $t97_userlevels_list->RowCnt . '_t97_userlevels', 'data-rowtype'=>$t97_userlevels->RowType));
+		$t04_rkas03->RowAttrs = array_merge($t04_rkas03->RowAttrs, array('data-rowindex'=>$t04_rkas03_list->RowCnt, 'id'=>'r' . $t04_rkas03_list->RowCnt . '_t04_rkas03', 'data-rowtype'=>$t04_rkas03->RowType));
 
 		// Render row
-		$t97_userlevels_list->RenderRow();
+		$t04_rkas03_list->RenderRow();
 
 		// Render list options
-		$t97_userlevels_list->RenderListOptions();
+		$t04_rkas03_list->RenderListOptions();
 ?>
-	<tr<?php echo $t97_userlevels->RowAttributes() ?>>
+	<tr<?php echo $t04_rkas03->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$t97_userlevels_list->ListOptions->Render("body", "left", $t97_userlevels_list->RowCnt);
+$t04_rkas03_list->ListOptions->Render("body", "left", $t04_rkas03_list->RowCnt);
 ?>
-	<?php if ($t97_userlevels->userlevelid->Visible) { // userlevelid ?>
-		<td data-name="userlevelid"<?php echo $t97_userlevels->userlevelid->CellAttributes() ?>>
-<span id="el<?php echo $t97_userlevels_list->RowCnt ?>_t97_userlevels_userlevelid" class="t97_userlevels_userlevelid">
-<span<?php echo $t97_userlevels->userlevelid->ViewAttributes() ?>>
-<?php echo $t97_userlevels->userlevelid->ListViewValue() ?></span>
+	<?php if ($t04_rkas03->lv1_id->Visible) { // lv1_id ?>
+		<td data-name="lv1_id"<?php echo $t04_rkas03->lv1_id->CellAttributes() ?>>
+<span id="el<?php echo $t04_rkas03_list->RowCnt ?>_t04_rkas03_lv1_id" class="t04_rkas03_lv1_id">
+<span<?php echo $t04_rkas03->lv1_id->ViewAttributes() ?>>
+<?php echo $t04_rkas03->lv1_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t97_userlevels->userlevelname->Visible) { // userlevelname ?>
-		<td data-name="userlevelname"<?php echo $t97_userlevels->userlevelname->CellAttributes() ?>>
-<span id="el<?php echo $t97_userlevels_list->RowCnt ?>_t97_userlevels_userlevelname" class="t97_userlevels_userlevelname">
-<span<?php echo $t97_userlevels->userlevelname->ViewAttributes() ?>>
-<?php echo $t97_userlevels->userlevelname->ListViewValue() ?></span>
+	<?php if ($t04_rkas03->lv2_id->Visible) { // lv2_id ?>
+		<td data-name="lv2_id"<?php echo $t04_rkas03->lv2_id->CellAttributes() ?>>
+<span id="el<?php echo $t04_rkas03_list->RowCnt ?>_t04_rkas03_lv2_id" class="t04_rkas03_lv2_id">
+<span<?php echo $t04_rkas03->lv2_id->ViewAttributes() ?>>
+<?php echo $t04_rkas03->lv2_id->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t04_rkas03->keterangan->Visible) { // keterangan ?>
+		<td data-name="keterangan"<?php echo $t04_rkas03->keterangan->CellAttributes() ?>>
+<span id="el<?php echo $t04_rkas03_list->RowCnt ?>_t04_rkas03_keterangan" class="t04_rkas03_keterangan">
+<span<?php echo $t04_rkas03->keterangan->ViewAttributes() ?>>
+<?php echo $t04_rkas03->keterangan->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t04_rkas03->jumlah->Visible) { // jumlah ?>
+		<td data-name="jumlah"<?php echo $t04_rkas03->jumlah->CellAttributes() ?>>
+<span id="el<?php echo $t04_rkas03_list->RowCnt ?>_t04_rkas03_jumlah" class="t04_rkas03_jumlah">
+<span<?php echo $t04_rkas03->jumlah->ViewAttributes() ?>>
+<?php echo $t04_rkas03->jumlah->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$t97_userlevels_list->ListOptions->Render("body", "right", $t97_userlevels_list->RowCnt);
+$t04_rkas03_list->ListOptions->Render("body", "right", $t04_rkas03_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($t97_userlevels->CurrentAction <> "gridadd")
-		$t97_userlevels_list->Recordset->MoveNext();
+	if ($t04_rkas03->CurrentAction <> "gridadd")
+		$t04_rkas03_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($t97_userlevels->CurrentAction == "") { ?>
+<?php if ($t04_rkas03->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -2379,67 +2522,67 @@ $t97_userlevels_list->ListOptions->Render("body", "right", $t97_userlevels_list-
 <?php
 
 // Close recordset
-if ($t97_userlevels_list->Recordset)
-	$t97_userlevels_list->Recordset->Close();
+if ($t04_rkas03_list->Recordset)
+	$t04_rkas03_list->Recordset->Close();
 ?>
-<?php if ($t97_userlevels->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <div class="box-footer ewGridLowerPanel">
-<?php if ($t97_userlevels->CurrentAction <> "gridadd" && $t97_userlevels->CurrentAction <> "gridedit") { ?>
+<?php if ($t04_rkas03->CurrentAction <> "gridadd" && $t04_rkas03->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t97_userlevels_list->Pager)) $t97_userlevels_list->Pager = new cPrevNextPager($t97_userlevels_list->StartRec, $t97_userlevels_list->DisplayRecs, $t97_userlevels_list->TotalRecs, $t97_userlevels_list->AutoHidePager) ?>
-<?php if ($t97_userlevels_list->Pager->RecordCount > 0 && $t97_userlevels_list->Pager->Visible) { ?>
+<?php if (!isset($t04_rkas03_list->Pager)) $t04_rkas03_list->Pager = new cPrevNextPager($t04_rkas03_list->StartRec, $t04_rkas03_list->DisplayRecs, $t04_rkas03_list->TotalRecs, $t04_rkas03_list->AutoHidePager) ?>
+<?php if ($t04_rkas03_list->Pager->RecordCount > 0 && $t04_rkas03_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t97_userlevels_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t97_userlevels_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t97_userlevels_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rkas03_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t97_userlevels_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t97_userlevels_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t97_userlevels_list->PageUrl() ?>start=<?php echo $t97_userlevels_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t04_rkas03_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rkas03_list->PageUrl() ?>start=<?php echo $t04_rkas03_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t97_userlevels_list->Pager->RecordCount > 0) { ?>
+<?php if ($t04_rkas03_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t97_userlevels_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t04_rkas03_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t97_userlevels_list->TotalRecs > 0 && (!$t97_userlevels_list->AutoHidePageSizeSelector || $t97_userlevels_list->Pager->Visible)) { ?>
+<?php if ($t04_rkas03_list->TotalRecs > 0 && (!$t04_rkas03_list->AutoHidePageSizeSelector || $t04_rkas03_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t97_userlevels">
+<input type="hidden" name="t" value="t04_rkas03">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t97_userlevels_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t97_userlevels_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t97_userlevels_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t97_userlevels_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t97_userlevels->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t04_rkas03_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t04_rkas03_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t04_rkas03_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t04_rkas03_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t04_rkas03->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2447,7 +2590,7 @@ if ($t97_userlevels_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t97_userlevels_list->OtherOptions as &$option)
+	foreach ($t04_rkas03_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -2456,10 +2599,10 @@ if ($t97_userlevels_list->Recordset)
 <?php } ?>
 </div>
 <?php } ?>
-<?php if ($t97_userlevels_list->TotalRecs == 0 && $t97_userlevels->CurrentAction == "") { // Show other options ?>
+<?php if ($t04_rkas03_list->TotalRecs == 0 && $t04_rkas03->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t97_userlevels_list->OtherOptions as &$option) {
+	foreach ($t04_rkas03_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -2467,19 +2610,19 @@ if ($t97_userlevels_list->Recordset)
 </div>
 <div class="clearfix"></div>
 <?php } ?>
-<?php if ($t97_userlevels->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <script type="text/javascript">
-ft97_userlevelslistsrch.FilterList = <?php echo $t97_userlevels_list->GetFilterList() ?>;
-ft97_userlevelslistsrch.Init();
-ft97_userlevelslist.Init();
+ft04_rkas03listsrch.FilterList = <?php echo $t04_rkas03_list->GetFilterList() ?>;
+ft04_rkas03listsrch.Init();
+ft04_rkas03list.Init();
 </script>
 <?php } ?>
 <?php
-$t97_userlevels_list->ShowPageFooter();
+$t04_rkas03_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t97_userlevels->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -2489,5 +2632,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t97_userlevels_list->Page_Terminate();
+$t04_rkas03_list->Page_Terminate();
 ?>
