@@ -7,9 +7,16 @@ $t04_rkas03 = NULL;
 // Table class for t04_rkas03
 //
 class ct04_rkas03 extends cTable {
+	var $AuditTrailOnAdd = TRUE;
+	var $AuditTrailOnEdit = TRUE;
+	var $AuditTrailOnDelete = TRUE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 	var $id;
 	var $lv1_id;
 	var $lv2_id;
+	var $no_urut;
 	var $keterangan;
 	var $jumlah;
 
@@ -63,6 +70,12 @@ class ct04_rkas03 extends cTable {
 		$this->lv2_id->Sortable = TRUE; // Allow sort
 		$this->lv2_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['lv2_id'] = &$this->lv2_id;
+
+		// no_urut
+		$this->no_urut = new cField('t04_rkas03', 't04_rkas03', 'x_no_urut', 'no_urut', '`no_urut`', '`no_urut`', 16, -1, FALSE, '`no_urut`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->no_urut->Sortable = TRUE; // Allow sort
+		$this->no_urut->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['no_urut'] = &$this->no_urut;
 
 		// keterangan
 		$this->keterangan = new cField('t04_rkas03', 't04_rkas03', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, -1, FALSE, '`keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
@@ -178,7 +191,7 @@ class ct04_rkas03 extends cTable {
 	function getSqlSelectList() { // Select for List page
 		$select = "";
 		$select = "SELECT * FROM (" .
-			"SELECT *, (select lv1_id from t03_rkas02 a where a.id = lv2_id) AS `lv1_id`, (SELECT `keterangan` FROM `t02_rkas01` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t04_rkas03`.`lv1_id` LIMIT 1) AS `EV__lv1_id`, (SELECT `keterangan` FROM `t03_rkas02` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t04_rkas03`.`lv2_id` LIMIT 1) AS `EV__lv2_id` FROM `t04_rkas03`" .
+			"SELECT *, (select lv1_id from t03_rkas02 a where a.id = lv2_id) AS `lv1_id`, (SELECT CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv1_id) . "',COALESCE(`keterangan`,'')) FROM `t02_rkas01` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t04_rkas03`.`lv1_id` LIMIT 1) AS `EV__lv1_id`, (SELECT CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv2_id) . "',COALESCE(`keterangan`,'')) FROM `t03_rkas02` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t04_rkas03`.`lv2_id` LIMIT 1) AS `EV__lv2_id` FROM `t04_rkas03`" .
 			") `EW_TMP_TABLE`";
 		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
 	}
@@ -235,7 +248,7 @@ class ct04_rkas03 extends cTable {
 	var $_SqlOrderBy = "";
 
 	function getSqlOrderBy() { // Order By
-		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "";
+		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`lv1_id` ASC,`lv2_id` ASC,`no_urut` ASC";
 	}
 
 	function SqlOrderBy() { // For backward compatibility
@@ -428,6 +441,8 @@ class ct04_rkas03 extends cTable {
 			// Get insert id if necessary
 			$this->id->setDbValue($conn->Insert_ID());
 			$rs['id'] = $this->id->DbValue;
+			if ($this->AuditTrailOnAdd)
+				$this->WriteAuditTrailOnAdd($rs);
 		}
 		return $bInsert;
 	}
@@ -454,6 +469,12 @@ class ct04_rkas03 extends cTable {
 	function Update(&$rs, $where = "", $rsold = NULL, $curfilter = TRUE) {
 		$conn = &$this->Connection();
 		$bUpdate = $conn->Execute($this->UpdateSQL($rs, $where, $curfilter));
+		if ($bUpdate && $this->AuditTrailOnEdit) {
+			$rsaudit = $rs;
+			$fldname = 'id';
+			if (!array_key_exists($fldname, $rsaudit)) $rsaudit[$fldname] = $rsold[$fldname];
+			$this->WriteAuditTrailOnEdit($rsold, $rsaudit);
+		}
 		return $bUpdate;
 	}
 
@@ -481,6 +502,8 @@ class ct04_rkas03 extends cTable {
 		$conn = &$this->Connection();
 		if ($bDelete)
 			$bDelete = $conn->Execute($this->DeleteSQL($rs, $where, $curfilter));
+		if ($bDelete && $this->AuditTrailOnDelete)
+			$this->WriteAuditTrailOnDelete($rs);
 		return $bDelete;
 	}
 
@@ -685,6 +708,7 @@ class ct04_rkas03 extends cTable {
 		$this->id->setDbValue($rs->fields('id'));
 		$this->lv1_id->setDbValue($rs->fields('lv1_id'));
 		$this->lv2_id->setDbValue($rs->fields('lv2_id'));
+		$this->no_urut->setDbValue($rs->fields('no_urut'));
 		$this->keterangan->setDbValue($rs->fields('keterangan'));
 		$this->jumlah->setDbValue($rs->fields('jumlah'));
 	}
@@ -700,6 +724,7 @@ class ct04_rkas03 extends cTable {
 		// id
 		// lv1_id
 		// lv2_id
+		// no_urut
 		// keterangan
 		// jumlah
 		// id
@@ -714,9 +739,9 @@ class ct04_rkas03 extends cTable {
 			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
 		if (strval($this->lv1_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
 		$sWhereWrk = "";
-		$this->lv1_id->LookupFilters = array("dx1" => '`keterangan`');
+		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -724,6 +749,7 @@ class ct04_rkas03 extends cTable {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
 				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
@@ -742,9 +768,9 @@ class ct04_rkas03 extends cTable {
 			$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
 		if (strval($this->lv2_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
 		$sWhereWrk = "";
-		$this->lv2_id->LookupFilters = array("dx1" => '`keterangan`');
+		$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -752,6 +778,7 @@ class ct04_rkas03 extends cTable {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
 				$this->lv2_id->ViewValue = $this->lv2_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
@@ -762,6 +789,10 @@ class ct04_rkas03 extends cTable {
 		}
 		}
 		$this->lv2_id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -787,6 +818,11 @@ class ct04_rkas03 extends cTable {
 		$this->lv2_id->LinkCustomAttributes = "";
 		$this->lv2_id->HrefValue = "";
 		$this->lv2_id->TooltipValue = "";
+
+		// no_urut
+		$this->no_urut->LinkCustomAttributes = "";
+		$this->no_urut->HrefValue = "";
+		$this->no_urut->TooltipValue = "";
 
 		// keterangan
 		$this->keterangan->LinkCustomAttributes = "";
@@ -830,6 +866,12 @@ class ct04_rkas03 extends cTable {
 		$this->lv2_id->EditValue = $this->lv2_id->CurrentValue;
 		$this->lv2_id->PlaceHolder = ew_RemoveHtml($this->lv2_id->FldCaption());
 
+		// no_urut
+		$this->no_urut->EditAttrs["class"] = "form-control";
+		$this->no_urut->EditCustomAttributes = "";
+		$this->no_urut->EditValue = $this->no_urut->CurrentValue;
+		$this->no_urut->PlaceHolder = ew_RemoveHtml($this->no_urut->FldCaption());
+
 		// keterangan
 		$this->keterangan->EditAttrs["class"] = "form-control";
 		$this->keterangan->EditCustomAttributes = "";
@@ -872,12 +914,14 @@ class ct04_rkas03 extends cTable {
 				if ($ExportPageType == "view") {
 					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
 					if ($this->lv2_id->Exportable) $Doc->ExportCaption($this->lv2_id);
+					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
 					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
 					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
 					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
 					if ($this->lv2_id->Exportable) $Doc->ExportCaption($this->lv2_id);
+					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
 					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
 					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
 				}
@@ -913,12 +957,14 @@ class ct04_rkas03 extends cTable {
 					if ($ExportPageType == "view") {
 						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
 						if ($this->lv2_id->Exportable) $Doc->ExportField($this->lv2_id);
+						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
 						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
 						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
 						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
 						if ($this->lv2_id->Exportable) $Doc->ExportField($this->lv2_id);
+						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
 						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
 						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
 					}
@@ -959,6 +1005,129 @@ class ct04_rkas03 extends cTable {
 			return ew_ArrayToJson($rsarr);
 		} else {
 			return FALSE;
+		}
+	}
+
+	// Write Audit Trail start/end for grid update
+	function WriteAuditTrailDummy($typ) {
+		$table = 't04_rkas03';
+		$usr = CurrentUserID();
+		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
+	}
+
+	// Write Audit Trail (add page)
+	function WriteAuditTrailOnAdd(&$rs) {
+		global $Language;
+		if (!$this->AuditTrailOnAdd) return;
+		$table = 't04_rkas03';
+
+		// Get key value
+		$key = "";
+		if ($key <> "") $key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['id'];
+
+		// Write Audit Trail
+		$dt = ew_StdCurrentDateTime();
+		$id = ew_ScriptName();
+		$usr = CurrentUserID();
+		foreach (array_keys($rs) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") {
+					$newvalue = $Language->Phrase("PasswordMask"); // Password Field
+				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) {
+					if (EW_AUDIT_TRAIL_TO_DATABASE)
+						$newvalue = $rs[$fldname];
+					else
+						$newvalue = "[MEMO]"; // Memo Field
+				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) {
+					$newvalue = "[XML]"; // XML Field
+				} else {
+					$newvalue = $rs[$fldname];
+				}
+				ew_WriteAuditTrail("log", $dt, $id, $usr, "A", $table, $fldname, $key, "", $newvalue);
+			}
+		}
+	}
+
+	// Write Audit Trail (edit page)
+	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
+		global $Language;
+		if (!$this->AuditTrailOnEdit) return;
+		$table = 't04_rkas03';
+
+		// Get key value
+		$key = "";
+		if ($key <> "") $key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rsold['id'];
+
+		// Write Audit Trail
+		$dt = ew_StdCurrentDateTime();
+		$id = ew_ScriptName();
+		$usr = CurrentUserID();
+		foreach (array_keys($rsnew) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && array_key_exists($fldname, $rsold) && $this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->FldDataType == EW_DATATYPE_DATE) { // DateTime field
+					$modified = (ew_FormatDateTime($rsold[$fldname], 0) <> ew_FormatDateTime($rsnew[$fldname], 0));
+				} else {
+					$modified = !ew_CompareValue($rsold[$fldname], $rsnew[$fldname]);
+				}
+				if ($modified) {
+					if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") { // Password Field
+						$oldvalue = $Language->Phrase("PasswordMask");
+						$newvalue = $Language->Phrase("PasswordMask");
+					} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) { // Memo field
+						if (EW_AUDIT_TRAIL_TO_DATABASE) {
+							$oldvalue = $rsold[$fldname];
+							$newvalue = $rsnew[$fldname];
+						} else {
+							$oldvalue = "[MEMO]";
+							$newvalue = "[MEMO]";
+						}
+					} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) { // XML field
+						$oldvalue = "[XML]";
+						$newvalue = "[XML]";
+					} else {
+						$oldvalue = $rsold[$fldname];
+						$newvalue = $rsnew[$fldname];
+					}
+					ew_WriteAuditTrail("log", $dt, $id, $usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
+				}
+			}
+		}
+	}
+
+	// Write Audit Trail (delete page)
+	function WriteAuditTrailOnDelete(&$rs) {
+		global $Language;
+		if (!$this->AuditTrailOnDelete) return;
+		$table = 't04_rkas03';
+
+		// Get key value
+		$key = "";
+		if ($key <> "")
+			$key .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
+		$key .= $rs['id'];
+
+		// Write Audit Trail
+		$dt = ew_StdCurrentDateTime();
+		$id = ew_ScriptName();
+		$curUser = CurrentUserID();
+		foreach (array_keys($rs) as $fldname) {
+			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->FldDataType <> EW_DATATYPE_BLOB) { // Ignore BLOB fields
+				if ($this->fields[$fldname]->FldHtmlTag == "PASSWORD") {
+					$oldvalue = $Language->Phrase("PasswordMask"); // Password Field
+				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_MEMO) {
+					if (EW_AUDIT_TRAIL_TO_DATABASE)
+						$oldvalue = $rs[$fldname];
+					else
+						$oldvalue = "[MEMO]"; // Memo field
+				} elseif ($this->fields[$fldname]->FldDataType == EW_DATATYPE_XML) {
+					$oldvalue = "[XML]"; // XML field
+				} else {
+					$oldvalue = $rs[$fldname];
+				}
+				ew_WriteAuditTrail("log", $dt, $id, $curUser, "D", $table, $fldname, $key, $oldvalue, "");
+			}
 		}
 	}
 

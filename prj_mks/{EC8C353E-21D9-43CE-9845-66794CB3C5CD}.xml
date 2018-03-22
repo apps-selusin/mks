@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <configuration date="2018/03/22" author="e.World Technology Ltd.">
-  <project id="{EC8C353E-21D9-43CE-9845-66794CB3C5CD}" file="C:\xampp\htdocs\mks\prj_mks.pmp" name="prj_mks" product="PHPMaker" version="14.0" datetime="2018/03/22 16:00:04" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+  <project id="{EC8C353E-21D9-43CE-9845-66794CB3C5CD}" file="D:\xampp4\htdocs\mks\prj_mks.pmp" name="prj_mks" product="PHPMaker" version="14.0" datetime="2018/03/22 22:12:13" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="cf01_home_php" name="cf01_home.php" caption="Beranda" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t01_master_sekolah" name="t01_master_sekolah" caption="Identitas Sekolah" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t02_rkas01" name="t02_rkas01" caption="RKAS Level-1" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t03_rkas02" name="t03_rkas02" caption="RKAS Level-2" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t04_rkas03" name="t04_rkas03" caption="RKAS Level-3" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t05_rkas04" name="t05_rkas04" caption="RKAS Level-4" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t96_employees" name="t96_employees" caption="Pengguna" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t97_userlevels" name="t97_userlevels" caption="Hak Akses Pengguna" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t98_userlevelpermissions" name="t98_userlevelpermissions" caption="t 98 userlevelpermissions" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />

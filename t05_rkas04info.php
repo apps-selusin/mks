@@ -1,12 +1,12 @@
 <?php
 
 // Global variable for table object
-$t02_rkas01 = NULL;
+$t05_rkas04 = NULL;
 
 //
-// Table class for t02_rkas01
+// Table class for t05_rkas04
 //
-class ct02_rkas01 extends cTable {
+class ct05_rkas04 extends cTable {
 	var $AuditTrailOnAdd = TRUE;
 	var $AuditTrailOnEdit = TRUE;
 	var $AuditTrailOnDelete = TRUE;
@@ -14,6 +14,9 @@ class ct02_rkas01 extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
+	var $lv1_id;
+	var $lv2_id;
+	var $lv3_id;
 	var $no_urut;
 	var $keterangan;
 	var $jumlah;
@@ -26,12 +29,12 @@ class ct02_rkas01 extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 't02_rkas01';
-		$this->TableName = 't02_rkas01';
+		$this->TableVar = 't05_rkas04';
+		$this->TableName = 't05_rkas04';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`t02_rkas01`";
+		$this->UpdateTable = "`t05_rkas04`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -51,24 +54,44 @@ class ct02_rkas01 extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// id
-		$this->id = new cField('t02_rkas01', 't02_rkas01', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->id = new cField('t05_rkas04', 't05_rkas04', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->id->Sortable = TRUE; // Allow sort
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
+		// lv1_id
+		$this->lv1_id = new cField('t05_rkas04', 't05_rkas04', 'x_lv1_id', 'lv1_id', '(select lv1_id from t03_rkas02 a where a.id = (select lv2_id from t04_rkas03 a where a.id = lv3_id))', '(select lv1_id from t03_rkas02 a where a.id = (select lv2_id from t04_rkas03 a where a.id = lv3_id))', 3, -1, FALSE, '`EV__lv1_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->lv1_id->FldIsCustom = TRUE; // Custom field
+		$this->lv1_id->Sortable = TRUE; // Allow sort
+		$this->lv1_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['lv1_id'] = &$this->lv1_id;
+
+		// lv2_id
+		$this->lv2_id = new cField('t05_rkas04', 't05_rkas04', 'x_lv2_id', 'lv2_id', '(select lv2_id from t04_rkas03 a where a.id = lv3_id)', '(select lv2_id from t04_rkas03 a where a.id = lv3_id)', 3, -1, FALSE, '`EV__lv2_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->lv2_id->FldIsCustom = TRUE; // Custom field
+		$this->lv2_id->Sortable = TRUE; // Allow sort
+		$this->lv2_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['lv2_id'] = &$this->lv2_id;
+
+		// lv3_id
+		$this->lv3_id = new cField('t05_rkas04', 't05_rkas04', 'x_lv3_id', 'lv3_id', '`lv3_id`', '`lv3_id`', 3, -1, FALSE, '`EV__lv3_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->lv3_id->Sortable = TRUE; // Allow sort
+		$this->lv3_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['lv3_id'] = &$this->lv3_id;
+
 		// no_urut
-		$this->no_urut = new cField('t02_rkas01', 't02_rkas01', 'x_no_urut', 'no_urut', '`no_urut`', '`no_urut`', 16, -1, FALSE, '`no_urut`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->no_urut = new cField('t05_rkas04', 't05_rkas04', 'x_no_urut', 'no_urut', '`no_urut`', '`no_urut`', 16, -1, FALSE, '`no_urut`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->no_urut->Sortable = TRUE; // Allow sort
 		$this->no_urut->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['no_urut'] = &$this->no_urut;
 
 		// keterangan
-		$this->keterangan = new cField('t02_rkas01', 't02_rkas01', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, -1, FALSE, '`keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->keterangan = new cField('t05_rkas04', 't05_rkas04', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, -1, FALSE, '`keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->keterangan->Sortable = TRUE; // Allow sort
 		$this->fields['keterangan'] = &$this->keterangan;
 
 		// jumlah
-		$this->jumlah = new cField('t02_rkas01', 't02_rkas01', 'x_jumlah', 'jumlah', '`jumlah`', '`jumlah`', 4, -1, FALSE, '`jumlah`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->jumlah = new cField('t05_rkas04', 't05_rkas04', 'x_jumlah', 'jumlah', '`jumlah`', '`jumlah`', 4, -1, FALSE, '`jumlah`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->jumlah->Sortable = TRUE; // Allow sort
 		$this->jumlah->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
 		$this->fields['jumlah'] = &$this->jumlah;
@@ -117,16 +140,38 @@ class ct02_rkas01 extends cTable {
 			} else {
 				$this->setSessionOrderBy($sSortField . " " . $sThisSort); // Save to Session
 			}
+			$sSortFieldList = ($ofld->FldVirtualExpression <> "") ? $ofld->FldVirtualExpression : $sSortField;
+			if ($ctrl) {
+				$sOrderByList = $this->getSessionOrderByList();
+				if (strpos($sOrderByList, $sSortFieldList . " " . $sLastSort) !== FALSE) {
+					$sOrderByList = str_replace($sSortFieldList . " " . $sLastSort, $sSortFieldList . " " . $sThisSort, $sOrderByList);
+				} else {
+					if ($sOrderByList <> "") $sOrderByList .= ", ";
+					$sOrderByList .= $sSortFieldList . " " . $sThisSort;
+				}
+				$this->setSessionOrderByList($sOrderByList); // Save to Session
+			} else {
+				$this->setSessionOrderByList($sSortFieldList . " " . $sThisSort); // Save to Session
+			}
 		} else {
 			if (!$ctrl) $ofld->setSort("");
 		}
+	}
+
+	// Session ORDER BY for List page
+	function getSessionOrderByList() {
+		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST];
+	}
+
+	function setSessionOrderByList($v) {
+		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST] = $v;
 	}
 
 	// Table level SQL
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t02_rkas01`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t05_rkas04`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -139,7 +184,7 @@ class ct02_rkas01 extends cTable {
 	var $_SqlSelect = "";
 
 	function getSqlSelect() { // Select
-		return ($this->_SqlSelect <> "") ? $this->_SqlSelect : "SELECT * FROM " . $this->getSqlFrom();
+		return ($this->_SqlSelect <> "") ? $this->_SqlSelect : "SELECT *, (select lv1_id from t03_rkas02 a where a.id = (select lv2_id from t04_rkas03 a where a.id = lv3_id)) AS `lv1_id`, (select lv2_id from t04_rkas03 a where a.id = lv3_id) AS `lv2_id` FROM " . $this->getSqlFrom();
 	}
 
 	function SqlSelect() { // For backward compatibility
@@ -148,6 +193,23 @@ class ct02_rkas01 extends cTable {
 
 	function setSqlSelect($v) {
 		$this->_SqlSelect = $v;
+	}
+	var $_SqlSelectList = "";
+
+	function getSqlSelectList() { // Select for List page
+		$select = "";
+		$select = "SELECT * FROM (" .
+			"SELECT *, (select lv1_id from t03_rkas02 a where a.id = (select lv2_id from t04_rkas03 a where a.id = lv3_id)) AS `lv1_id`, (select lv2_id from t04_rkas03 a where a.id = lv3_id) AS `lv2_id`, (SELECT CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv1_id) . "',COALESCE(`keterangan`,'')) FROM `t02_rkas01` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t05_rkas04`.`lv1_id` LIMIT 1) AS `EV__lv1_id`, (SELECT CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv2_id) . "',COALESCE(`keterangan`,'')) FROM `t03_rkas02` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t05_rkas04`.`lv2_id` LIMIT 1) AS `EV__lv2_id`, (SELECT CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv3_id) . "',COALESCE(`keterangan`,'')) FROM `t04_rkas03` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t05_rkas04`.`lv3_id` LIMIT 1) AS `EV__lv3_id` FROM `t05_rkas04`" .
+			") `EW_TMP_TABLE`";
+		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
+	}
+
+	function SqlSelectList() { // For backward compatibility
+		return $this->getSqlSelectList();
+	}
+
+	function setSqlSelectList($v) {
+		$this->_SqlSelectList = $v;
 	}
 	var $_SqlWhere = "";
 
@@ -194,7 +256,7 @@ class ct02_rkas01 extends cTable {
 	var $_SqlOrderBy = "";
 
 	function getSqlOrderBy() { // Order By
-		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`no_urut` ASC";
+		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`lv1_id` ASC,`lv2_id` ASC,`lv3_id` ASC,`no_urut` ASC";
 	}
 
 	function SqlOrderBy() { // For backward compatibility
@@ -260,16 +322,50 @@ class ct02_rkas01 extends cTable {
 		ew_AddFilter($sFilter, $this->CurrentFilter);
 		$sFilter = $this->ApplyUserIDFilters($sFilter);
 		$this->Recordset_Selecting($sFilter);
-		$sSelect = $this->getSqlSelect();
-		$sSort = $this->UseSessionForListSQL ? $this->getSessionOrderBy() : "";
+		if ($this->UseVirtualFields()) {
+			$sSelect = $this->getSqlSelectList();
+			$sSort = $this->UseSessionForListSQL ? $this->getSessionOrderByList() : "";
+		} else {
+			$sSelect = $this->getSqlSelect();
+			$sSort = $this->UseSessionForListSQL ? $this->getSessionOrderBy() : "";
+		}
 		return ew_BuildSelectSql($sSelect, $this->getSqlWhere(), $this->getSqlGroupBy(),
 			$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
 	}
 
 	// Get ORDER BY clause
 	function GetOrderBy() {
-		$sSort = $this->getSessionOrderBy();
+		$sSort = ($this->UseVirtualFields()) ? $this->getSessionOrderByList() : $this->getSessionOrderBy();
 		return ew_BuildSelectSql("", "", "", "", $this->getSqlOrderBy(), "", $sSort);
+	}
+
+	// Check if virtual fields is used in SQL
+	function UseVirtualFields() {
+		$sWhere = $this->UseSessionForListSQL ? $this->getSessionWhere() : $this->CurrentFilter;
+		$sOrderBy = $this->UseSessionForListSQL ? $this->getSessionOrderByList() : "";
+		if ($sWhere <> "")
+			$sWhere = " " . str_replace(array("(",")"), array("",""), $sWhere) . " ";
+		if ($sOrderBy <> "")
+			$sOrderBy = " " . str_replace(array("(",")"), array("",""), $sOrderBy) . " ";
+		if ($this->lv1_id->AdvancedSearch->SearchValue <> "" ||
+			$this->lv1_id->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->lv1_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->lv1_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if ($this->lv2_id->AdvancedSearch->SearchValue <> "" ||
+			$this->lv2_id->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->lv2_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->lv2_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if ($this->lv3_id->AdvancedSearch->SearchValue <> "" ||
+			$this->lv3_id->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->lv3_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->lv3_id->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		return FALSE;
 	}
 
 	// Try to get record count
@@ -320,7 +416,10 @@ class ct02_rkas01 extends cTable {
 		$select = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlSelect() : "SELECT * FROM " . $this->getSqlFrom();
 		$groupBy = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlGroupBy() : "";
 		$having = $this->TableType == 'CUSTOMVIEW' ? $this->getSqlHaving() : "";
-		$sql = ew_BuildSelectSql($select, $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
+		if ($this->UseVirtualFields())
+			$sql = ew_BuildSelectSql($this->getSqlSelectList(), $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
+		else
+			$sql = ew_BuildSelectSql($select, $this->getSqlWhere(), $groupBy, $having, "", $filter, "");
 		$cnt = $this->TryGetRecordCount($sql);
 		if ($cnt == -1) {
 			$conn = &$this->Connection();
@@ -449,7 +548,7 @@ class ct02_rkas01 extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "t02_rkas01list.php";
+			return "t05_rkas04list.php";
 		}
 	}
 
@@ -460,11 +559,11 @@ class ct02_rkas01 extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "t02_rkas01view.php")
+		if ($pageName == "t05_rkas04view.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "t02_rkas01edit.php")
+		elseif ($pageName == "t05_rkas04edit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "t02_rkas01add.php")
+		elseif ($pageName == "t05_rkas04add.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -472,30 +571,30 @@ class ct02_rkas01 extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "t02_rkas01list.php";
+		return "t05_rkas04list.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("t02_rkas01view.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("t05_rkas04view.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("t02_rkas01view.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("t05_rkas04view.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "t02_rkas01add.php?" . $this->UrlParm($parm);
+			$url = "t05_rkas04add.php?" . $this->UrlParm($parm);
 		else
-			$url = "t02_rkas01add.php";
+			$url = "t05_rkas04add.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("t02_rkas01edit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t05_rkas04edit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -507,7 +606,7 @@ class ct02_rkas01 extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("t02_rkas01add.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t05_rkas04add.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -519,7 +618,7 @@ class ct02_rkas01 extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("t02_rkas01delete.php", $this->UrlParm());
+		return $this->KeyUrl("t05_rkas04delete.php", $this->UrlParm());
 	}
 
 	// Add master url
@@ -621,6 +720,9 @@ class ct02_rkas01 extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
+		$this->lv1_id->setDbValue($rs->fields('lv1_id'));
+		$this->lv2_id->setDbValue($rs->fields('lv2_id'));
+		$this->lv3_id->setDbValue($rs->fields('lv3_id'));
 		$this->no_urut->setDbValue($rs->fields('no_urut'));
 		$this->keterangan->setDbValue($rs->fields('keterangan'));
 		$this->jumlah->setDbValue($rs->fields('jumlah'));
@@ -635,6 +737,9 @@ class ct02_rkas01 extends cTable {
 
 	// Common render codes
 		// id
+		// lv1_id
+		// lv2_id
+		// lv3_id
 		// no_urut
 		// keterangan
 		// jumlah
@@ -642,6 +747,93 @@ class ct02_rkas01 extends cTable {
 
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
+
+		// lv1_id
+		if ($this->lv1_id->VirtualValue <> "") {
+			$this->lv1_id->ViewValue = $this->lv1_id->VirtualValue;
+		} else {
+			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+		if (strval($this->lv1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sWhereWrk = "";
+		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+			}
+		} else {
+			$this->lv1_id->ViewValue = NULL;
+		}
+		}
+		$this->lv1_id->ViewCustomAttributes = "";
+
+		// lv2_id
+		if ($this->lv2_id->VirtualValue <> "") {
+			$this->lv2_id->ViewValue = $this->lv2_id->VirtualValue;
+		} else {
+			$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
+		if (strval($this->lv2_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+		$sWhereWrk = "";
+		$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv2_id->ViewValue = $this->lv2_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
+			}
+		} else {
+			$this->lv2_id->ViewValue = NULL;
+		}
+		}
+		$this->lv2_id->ViewCustomAttributes = "";
+
+		// lv3_id
+		if ($this->lv3_id->VirtualValue <> "") {
+			$this->lv3_id->ViewValue = $this->lv3_id->VirtualValue;
+		} else {
+			$this->lv3_id->ViewValue = $this->lv3_id->CurrentValue;
+		if (strval($this->lv3_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv3_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rkas03`";
+		$sWhereWrk = "";
+		$this->lv3_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv3_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv3_id->ViewValue = $this->lv3_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv3_id->ViewValue = $this->lv3_id->CurrentValue;
+			}
+		} else {
+			$this->lv3_id->ViewValue = NULL;
+		}
+		}
+		$this->lv3_id->ViewCustomAttributes = "";
 
 		// no_urut
 		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
@@ -661,6 +853,21 @@ class ct02_rkas01 extends cTable {
 		$this->id->LinkCustomAttributes = "";
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
+
+		// lv1_id
+		$this->lv1_id->LinkCustomAttributes = "";
+		$this->lv1_id->HrefValue = "";
+		$this->lv1_id->TooltipValue = "";
+
+		// lv2_id
+		$this->lv2_id->LinkCustomAttributes = "";
+		$this->lv2_id->HrefValue = "";
+		$this->lv2_id->TooltipValue = "";
+
+		// lv3_id
+		$this->lv3_id->LinkCustomAttributes = "";
+		$this->lv3_id->HrefValue = "";
+		$this->lv3_id->TooltipValue = "";
 
 		// no_urut
 		$this->no_urut->LinkCustomAttributes = "";
@@ -696,6 +903,24 @@ class ct02_rkas01 extends cTable {
 		$this->id->EditCustomAttributes = "";
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
+
+		// lv1_id
+		$this->lv1_id->EditAttrs["class"] = "form-control";
+		$this->lv1_id->EditCustomAttributes = "";
+		$this->lv1_id->EditValue = $this->lv1_id->CurrentValue;
+		$this->lv1_id->PlaceHolder = ew_RemoveHtml($this->lv1_id->FldCaption());
+
+		// lv2_id
+		$this->lv2_id->EditAttrs["class"] = "form-control";
+		$this->lv2_id->EditCustomAttributes = "";
+		$this->lv2_id->EditValue = $this->lv2_id->CurrentValue;
+		$this->lv2_id->PlaceHolder = ew_RemoveHtml($this->lv2_id->FldCaption());
+
+		// lv3_id
+		$this->lv3_id->EditAttrs["class"] = "form-control";
+		$this->lv3_id->EditCustomAttributes = "";
+		$this->lv3_id->EditValue = $this->lv3_id->CurrentValue;
+		$this->lv3_id->PlaceHolder = ew_RemoveHtml($this->lv3_id->FldCaption());
 
 		// no_urut
 		$this->no_urut->EditAttrs["class"] = "form-control";
@@ -743,11 +968,17 @@ class ct02_rkas01 extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
+					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
+					if ($this->lv2_id->Exportable) $Doc->ExportCaption($this->lv2_id);
+					if ($this->lv3_id->Exportable) $Doc->ExportCaption($this->lv3_id);
 					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
 					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
 					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
+					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
+					if ($this->lv2_id->Exportable) $Doc->ExportCaption($this->lv2_id);
+					if ($this->lv3_id->Exportable) $Doc->ExportCaption($this->lv3_id);
 					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
 					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
 					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
@@ -782,11 +1013,17 @@ class ct02_rkas01 extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
+						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
+						if ($this->lv2_id->Exportable) $Doc->ExportField($this->lv2_id);
+						if ($this->lv3_id->Exportable) $Doc->ExportField($this->lv3_id);
 						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
 						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
 						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
+						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
+						if ($this->lv2_id->Exportable) $Doc->ExportField($this->lv2_id);
+						if ($this->lv3_id->Exportable) $Doc->ExportField($this->lv3_id);
 						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
 						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
 						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
@@ -833,7 +1070,7 @@ class ct02_rkas01 extends cTable {
 
 	// Write Audit Trail start/end for grid update
 	function WriteAuditTrailDummy($typ) {
-		$table = 't02_rkas01';
+		$table = 't05_rkas04';
 		$usr = CurrentUserID();
 		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
@@ -842,7 +1079,7 @@ class ct02_rkas01 extends cTable {
 	function WriteAuditTrailOnAdd(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnAdd) return;
-		$table = 't02_rkas01';
+		$table = 't05_rkas04';
 
 		// Get key value
 		$key = "";
@@ -876,7 +1113,7 @@ class ct02_rkas01 extends cTable {
 	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
 		global $Language;
 		if (!$this->AuditTrailOnEdit) return;
-		$table = 't02_rkas01';
+		$table = 't05_rkas04';
 
 		// Get key value
 		$key = "";
@@ -923,7 +1160,7 @@ class ct02_rkas01 extends cTable {
 	function WriteAuditTrailOnDelete(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnDelete) return;
-		$table = 't02_rkas01';
+		$table = 't05_rkas04';
 
 		// Get key value
 		$key = "";

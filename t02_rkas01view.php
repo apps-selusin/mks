@@ -431,6 +431,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 
 		// Setup export options
 		$this->SetupExportOptions();
+		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
 
@@ -763,6 +764,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 			return;
 		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->id->setDbValue($row['id']);
+		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
 	}
@@ -771,6 +773,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
+		$row['no_urut'] = NULL;
 		$row['keterangan'] = NULL;
 		$row['jumlah'] = NULL;
 		return $row;
@@ -782,6 +785,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
+		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
 	}
@@ -807,6 +811,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 
 		// Common render codes for all row types
 		// id
+		// no_urut
 		// keterangan
 		// jumlah
 
@@ -815,6 +820,10 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -825,6 +834,11 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
 		$this->jumlah->CellCssStyle .= "text-align: right;";
 		$this->jumlah->ViewCustomAttributes = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
 
 			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
@@ -1307,6 +1321,17 @@ $t02_rkas01_view->ShowMessage();
 <input type="hidden" name="t" value="t02_rkas01">
 <input type="hidden" name="modal" value="<?php echo intval($t02_rkas01_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
+<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
+	<tr id="r_no_urut">
+		<td class="col-sm-2"><span id="elh_t02_rkas01_no_urut"><?php echo $t02_rkas01->no_urut->FldCaption() ?></span></td>
+		<td data-name="no_urut"<?php echo $t02_rkas01->no_urut->CellAttributes() ?>>
+<span id="el_t02_rkas01_no_urut">
+<span<?php echo $t02_rkas01->no_urut->ViewAttributes() ?>>
+<?php echo $t02_rkas01->no_urut->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
 <?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
 	<tr id="r_keterangan">
 		<td class="col-sm-2"><span id="elh_t02_rkas01_keterangan"><?php echo $t02_rkas01->keterangan->FldCaption() ?></span></td>

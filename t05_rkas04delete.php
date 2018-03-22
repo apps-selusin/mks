@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t04_rkas03info.php" ?>
+<?php include_once "t05_rkas04info.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t04_rkas03_delete = NULL; // Initialize page object first
+$t05_rkas04_delete = NULL; // Initialize page object first
 
-class ct04_rkas03_delete extends ct04_rkas03 {
+class ct05_rkas04_delete extends ct05_rkas04 {
 
 	// Page ID
 	var $PageID = 'delete';
@@ -25,10 +25,10 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't04_rkas03';
+	var $TableName = 't05_rkas04';
 
 	// Page object name
-	var $PageObjName = 't04_rkas03_delete';
+	var $PageObjName = 't05_rkas04_delete';
 
 	// Page headings
 	var $Heading = '';
@@ -256,10 +256,10 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t04_rkas03)
-		if (!isset($GLOBALS["t04_rkas03"]) || get_class($GLOBALS["t04_rkas03"]) == "ct04_rkas03") {
-			$GLOBALS["t04_rkas03"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t04_rkas03"];
+		// Table object (t05_rkas04)
+		if (!isset($GLOBALS["t05_rkas04"]) || get_class($GLOBALS["t05_rkas04"]) == "ct05_rkas04") {
+			$GLOBALS["t05_rkas04"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t05_rkas04"];
 		}
 
 		// Table object (t96_employees)
@@ -271,7 +271,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't04_rkas03', TRUE);
+			define("EW_TABLE_NAME", 't05_rkas04', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -310,7 +310,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t04_rkas03list.php"));
+				$this->Page_Terminate(ew_GetUrl("t05_rkas04list.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -328,6 +328,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
 		$this->lv1_id->SetVisibility();
 		$this->lv2_id->SetVisibility();
+		$this->lv3_id->SetVisibility();
 		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
@@ -362,13 +363,13 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t04_rkas03;
+		global $EW_EXPORT, $t05_rkas04;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t04_rkas03);
+				$doc = new $class($t05_rkas04);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -415,10 +416,10 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		$this->RecKeys = $this->GetRecordKeys(); // Load record keys
 		$sFilter = $this->GetKeyFilter();
 		if ($sFilter == "")
-			$this->Page_Terminate("t04_rkas03list.php"); // Prevent SQL injection, return to list
+			$this->Page_Terminate("t05_rkas04list.php"); // Prevent SQL injection, return to list
 
 		// Set up filter (SQL WHHERE clause) and get return SQL
-		// SQL constructor in t04_rkas03 class, t04_rkas03info.php
+		// SQL constructor in t05_rkas04 class, t05_rkas04info.php
 
 		$this->CurrentFilter = $sFilter;
 
@@ -446,7 +447,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 			if ($this->TotalRecs <= 0) { // No record found, exit
 				if ($this->Recordset)
 					$this->Recordset->Close();
-				$this->Page_Terminate("t04_rkas03list.php"); // Return to list
+				$this->Page_Terminate("t05_rkas04list.php"); // Return to list
 			}
 		}
 	}
@@ -523,6 +524,12 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		} else {
 			$this->lv2_id->VirtualValue = ""; // Clear value
 		}
+		$this->lv3_id->setDbValue($row['lv3_id']);
+		if (array_key_exists('EV__lv3_id', $rs->fields)) {
+			$this->lv3_id->VirtualValue = $rs->fields('EV__lv3_id'); // Set up virtual field value
+		} else {
+			$this->lv3_id->VirtualValue = ""; // Clear value
+		}
 		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
@@ -534,6 +541,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		$row['id'] = NULL;
 		$row['lv1_id'] = NULL;
 		$row['lv2_id'] = NULL;
+		$row['lv3_id'] = NULL;
 		$row['no_urut'] = NULL;
 		$row['keterangan'] = NULL;
 		$row['jumlah'] = NULL;
@@ -548,6 +556,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		$this->id->DbValue = $row['id'];
 		$this->lv1_id->DbValue = $row['lv1_id'];
 		$this->lv2_id->DbValue = $row['lv2_id'];
+		$this->lv3_id->DbValue = $row['lv3_id'];
 		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
@@ -570,6 +579,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		// id
 		// lv1_id
 		// lv2_id
+		// lv3_id
 		// no_urut
 		// keterangan
 		// jumlah
@@ -638,6 +648,35 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		}
 		$this->lv2_id->ViewCustomAttributes = "";
 
+		// lv3_id
+		if ($this->lv3_id->VirtualValue <> "") {
+			$this->lv3_id->ViewValue = $this->lv3_id->VirtualValue;
+		} else {
+			$this->lv3_id->ViewValue = $this->lv3_id->CurrentValue;
+		if (strval($this->lv3_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv3_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rkas03`";
+		$sWhereWrk = "";
+		$this->lv3_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv3_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv3_id->ViewValue = $this->lv3_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv3_id->ViewValue = $this->lv3_id->CurrentValue;
+			}
+		} else {
+			$this->lv3_id->ViewValue = NULL;
+		}
+		}
+		$this->lv3_id->ViewCustomAttributes = "";
+
 		// no_urut
 		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
 		$this->no_urut->ViewCustomAttributes = "";
@@ -661,6 +700,11 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 			$this->lv2_id->LinkCustomAttributes = "";
 			$this->lv2_id->HrefValue = "";
 			$this->lv2_id->TooltipValue = "";
+
+			// lv3_id
+			$this->lv3_id->LinkCustomAttributes = "";
+			$this->lv3_id->HrefValue = "";
+			$this->lv3_id->TooltipValue = "";
 
 			// no_urut
 			$this->no_urut->LinkCustomAttributes = "";
@@ -771,7 +815,7 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t04_rkas03list.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t05_rkas04list.php"), "", $this->TableVar, TRUE);
 		$PageId = "delete";
 		$Breadcrumb->Add("delete", $PageId, $url);
 	}
@@ -857,29 +901,29 @@ class ct04_rkas03_delete extends ct04_rkas03 {
 <?php
 
 // Create page object
-if (!isset($t04_rkas03_delete)) $t04_rkas03_delete = new ct04_rkas03_delete();
+if (!isset($t05_rkas04_delete)) $t05_rkas04_delete = new ct05_rkas04_delete();
 
 // Page init
-$t04_rkas03_delete->Page_Init();
+$t05_rkas04_delete->Page_Init();
 
 // Page main
-$t04_rkas03_delete->Page_Main();
+$t05_rkas04_delete->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t04_rkas03_delete->Page_Render();
+$t05_rkas04_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "delete";
-var CurrentForm = ft04_rkas03delete = new ew_Form("ft04_rkas03delete", "delete");
+var CurrentForm = ft05_rkas04delete = new ew_Form("ft05_rkas04delete", "delete");
 
 // Form_CustomValidate event
-ft04_rkas03delete.Form_CustomValidate = 
+ft05_rkas04delete.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -887,15 +931,18 @@ ft04_rkas03delete.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft04_rkas03delete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft05_rkas04delete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ft04_rkas03delete.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
-ft04_rkas03delete.Lists["x_lv1_id"].Data = "<?php echo $t04_rkas03_delete->lv1_id->LookupFilterQuery(FALSE, "delete") ?>";
-ft04_rkas03delete.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_delete->lv1_id->LookupFilterQuery(TRUE, "delete"))) ?>;
-ft04_rkas03delete.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
-ft04_rkas03delete.Lists["x_lv2_id"].Data = "<?php echo $t04_rkas03_delete->lv2_id->LookupFilterQuery(FALSE, "delete") ?>";
-ft04_rkas03delete.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_delete->lv2_id->LookupFilterQuery(TRUE, "delete"))) ?>;
+ft05_rkas04delete.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
+ft05_rkas04delete.Lists["x_lv1_id"].Data = "<?php echo $t05_rkas04_delete->lv1_id->LookupFilterQuery(FALSE, "delete") ?>";
+ft05_rkas04delete.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t05_rkas04_delete->lv1_id->LookupFilterQuery(TRUE, "delete"))) ?>;
+ft05_rkas04delete.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":["x_lv3_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
+ft05_rkas04delete.Lists["x_lv2_id"].Data = "<?php echo $t05_rkas04_delete->lv2_id->LookupFilterQuery(FALSE, "delete") ?>";
+ft05_rkas04delete.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t05_rkas04_delete->lv2_id->LookupFilterQuery(TRUE, "delete"))) ?>;
+ft05_rkas04delete.Lists["x_lv3_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_rkas03"};
+ft05_rkas04delete.Lists["x_lv3_id"].Data = "<?php echo $t05_rkas04_delete->lv3_id->LookupFilterQuery(FALSE, "delete") ?>";
+ft05_rkas04delete.AutoSuggests["x_lv3_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t05_rkas04_delete->lv3_id->LookupFilterQuery(TRUE, "delete"))) ?>;
 
 // Form object for search
 </script>
@@ -903,17 +950,17 @@ ft04_rkas03delete.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data"
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $t04_rkas03_delete->ShowPageHeader(); ?>
+<?php $t05_rkas04_delete->ShowPageHeader(); ?>
 <?php
-$t04_rkas03_delete->ShowMessage();
+$t05_rkas04_delete->ShowMessage();
 ?>
-<form name="ft04_rkas03delete" id="ft04_rkas03delete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t04_rkas03_delete->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_rkas03_delete->Token ?>">
+<form name="ft05_rkas04delete" id="ft05_rkas04delete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t05_rkas04_delete->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t05_rkas04_delete->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t04_rkas03">
+<input type="hidden" name="t" value="t05_rkas04">
 <input type="hidden" name="a_delete" id="a_delete" value="D">
-<?php foreach ($t04_rkas03_delete->RecKeys as $key) { ?>
+<?php foreach ($t05_rkas04_delete->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
@@ -922,87 +969,98 @@ $t04_rkas03_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($t04_rkas03->lv1_id->Visible) { // lv1_id ?>
-		<th class="<?php echo $t04_rkas03->lv1_id->HeaderCellClass() ?>"><span id="elh_t04_rkas03_lv1_id" class="t04_rkas03_lv1_id"><?php echo $t04_rkas03->lv1_id->FldCaption() ?></span></th>
+<?php if ($t05_rkas04->lv1_id->Visible) { // lv1_id ?>
+		<th class="<?php echo $t05_rkas04->lv1_id->HeaderCellClass() ?>"><span id="elh_t05_rkas04_lv1_id" class="t05_rkas04_lv1_id"><?php echo $t05_rkas04->lv1_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t04_rkas03->lv2_id->Visible) { // lv2_id ?>
-		<th class="<?php echo $t04_rkas03->lv2_id->HeaderCellClass() ?>"><span id="elh_t04_rkas03_lv2_id" class="t04_rkas03_lv2_id"><?php echo $t04_rkas03->lv2_id->FldCaption() ?></span></th>
+<?php if ($t05_rkas04->lv2_id->Visible) { // lv2_id ?>
+		<th class="<?php echo $t05_rkas04->lv2_id->HeaderCellClass() ?>"><span id="elh_t05_rkas04_lv2_id" class="t05_rkas04_lv2_id"><?php echo $t05_rkas04->lv2_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t04_rkas03->no_urut->Visible) { // no_urut ?>
-		<th class="<?php echo $t04_rkas03->no_urut->HeaderCellClass() ?>"><span id="elh_t04_rkas03_no_urut" class="t04_rkas03_no_urut"><?php echo $t04_rkas03->no_urut->FldCaption() ?></span></th>
+<?php if ($t05_rkas04->lv3_id->Visible) { // lv3_id ?>
+		<th class="<?php echo $t05_rkas04->lv3_id->HeaderCellClass() ?>"><span id="elh_t05_rkas04_lv3_id" class="t05_rkas04_lv3_id"><?php echo $t05_rkas04->lv3_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t04_rkas03->keterangan->Visible) { // keterangan ?>
-		<th class="<?php echo $t04_rkas03->keterangan->HeaderCellClass() ?>"><span id="elh_t04_rkas03_keterangan" class="t04_rkas03_keterangan"><?php echo $t04_rkas03->keterangan->FldCaption() ?></span></th>
+<?php if ($t05_rkas04->no_urut->Visible) { // no_urut ?>
+		<th class="<?php echo $t05_rkas04->no_urut->HeaderCellClass() ?>"><span id="elh_t05_rkas04_no_urut" class="t05_rkas04_no_urut"><?php echo $t05_rkas04->no_urut->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t04_rkas03->jumlah->Visible) { // jumlah ?>
-		<th class="<?php echo $t04_rkas03->jumlah->HeaderCellClass() ?>"><span id="elh_t04_rkas03_jumlah" class="t04_rkas03_jumlah"><?php echo $t04_rkas03->jumlah->FldCaption() ?></span></th>
+<?php if ($t05_rkas04->keterangan->Visible) { // keterangan ?>
+		<th class="<?php echo $t05_rkas04->keterangan->HeaderCellClass() ?>"><span id="elh_t05_rkas04_keterangan" class="t05_rkas04_keterangan"><?php echo $t05_rkas04->keterangan->FldCaption() ?></span></th>
+<?php } ?>
+<?php if ($t05_rkas04->jumlah->Visible) { // jumlah ?>
+		<th class="<?php echo $t05_rkas04->jumlah->HeaderCellClass() ?>"><span id="elh_t05_rkas04_jumlah" class="t05_rkas04_jumlah"><?php echo $t05_rkas04->jumlah->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-$t04_rkas03_delete->RecCnt = 0;
+$t05_rkas04_delete->RecCnt = 0;
 $i = 0;
-while (!$t04_rkas03_delete->Recordset->EOF) {
-	$t04_rkas03_delete->RecCnt++;
-	$t04_rkas03_delete->RowCnt++;
+while (!$t05_rkas04_delete->Recordset->EOF) {
+	$t05_rkas04_delete->RecCnt++;
+	$t05_rkas04_delete->RowCnt++;
 
 	// Set row properties
-	$t04_rkas03->ResetAttrs();
-	$t04_rkas03->RowType = EW_ROWTYPE_VIEW; // View
+	$t05_rkas04->ResetAttrs();
+	$t05_rkas04->RowType = EW_ROWTYPE_VIEW; // View
 
 	// Get the field contents
-	$t04_rkas03_delete->LoadRowValues($t04_rkas03_delete->Recordset);
+	$t05_rkas04_delete->LoadRowValues($t05_rkas04_delete->Recordset);
 
 	// Render row
-	$t04_rkas03_delete->RenderRow();
+	$t05_rkas04_delete->RenderRow();
 ?>
-	<tr<?php echo $t04_rkas03->RowAttributes() ?>>
-<?php if ($t04_rkas03->lv1_id->Visible) { // lv1_id ?>
-		<td<?php echo $t04_rkas03->lv1_id->CellAttributes() ?>>
-<span id="el<?php echo $t04_rkas03_delete->RowCnt ?>_t04_rkas03_lv1_id" class="t04_rkas03_lv1_id">
-<span<?php echo $t04_rkas03->lv1_id->ViewAttributes() ?>>
-<?php echo $t04_rkas03->lv1_id->ListViewValue() ?></span>
+	<tr<?php echo $t05_rkas04->RowAttributes() ?>>
+<?php if ($t05_rkas04->lv1_id->Visible) { // lv1_id ?>
+		<td<?php echo $t05_rkas04->lv1_id->CellAttributes() ?>>
+<span id="el<?php echo $t05_rkas04_delete->RowCnt ?>_t05_rkas04_lv1_id" class="t05_rkas04_lv1_id">
+<span<?php echo $t05_rkas04->lv1_id->ViewAttributes() ?>>
+<?php echo $t05_rkas04->lv1_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t04_rkas03->lv2_id->Visible) { // lv2_id ?>
-		<td<?php echo $t04_rkas03->lv2_id->CellAttributes() ?>>
-<span id="el<?php echo $t04_rkas03_delete->RowCnt ?>_t04_rkas03_lv2_id" class="t04_rkas03_lv2_id">
-<span<?php echo $t04_rkas03->lv2_id->ViewAttributes() ?>>
-<?php echo $t04_rkas03->lv2_id->ListViewValue() ?></span>
+<?php if ($t05_rkas04->lv2_id->Visible) { // lv2_id ?>
+		<td<?php echo $t05_rkas04->lv2_id->CellAttributes() ?>>
+<span id="el<?php echo $t05_rkas04_delete->RowCnt ?>_t05_rkas04_lv2_id" class="t05_rkas04_lv2_id">
+<span<?php echo $t05_rkas04->lv2_id->ViewAttributes() ?>>
+<?php echo $t05_rkas04->lv2_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t04_rkas03->no_urut->Visible) { // no_urut ?>
-		<td<?php echo $t04_rkas03->no_urut->CellAttributes() ?>>
-<span id="el<?php echo $t04_rkas03_delete->RowCnt ?>_t04_rkas03_no_urut" class="t04_rkas03_no_urut">
-<span<?php echo $t04_rkas03->no_urut->ViewAttributes() ?>>
-<?php echo $t04_rkas03->no_urut->ListViewValue() ?></span>
+<?php if ($t05_rkas04->lv3_id->Visible) { // lv3_id ?>
+		<td<?php echo $t05_rkas04->lv3_id->CellAttributes() ?>>
+<span id="el<?php echo $t05_rkas04_delete->RowCnt ?>_t05_rkas04_lv3_id" class="t05_rkas04_lv3_id">
+<span<?php echo $t05_rkas04->lv3_id->ViewAttributes() ?>>
+<?php echo $t05_rkas04->lv3_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t04_rkas03->keterangan->Visible) { // keterangan ?>
-		<td<?php echo $t04_rkas03->keterangan->CellAttributes() ?>>
-<span id="el<?php echo $t04_rkas03_delete->RowCnt ?>_t04_rkas03_keterangan" class="t04_rkas03_keterangan">
-<span<?php echo $t04_rkas03->keterangan->ViewAttributes() ?>>
-<?php echo $t04_rkas03->keterangan->ListViewValue() ?></span>
+<?php if ($t05_rkas04->no_urut->Visible) { // no_urut ?>
+		<td<?php echo $t05_rkas04->no_urut->CellAttributes() ?>>
+<span id="el<?php echo $t05_rkas04_delete->RowCnt ?>_t05_rkas04_no_urut" class="t05_rkas04_no_urut">
+<span<?php echo $t05_rkas04->no_urut->ViewAttributes() ?>>
+<?php echo $t05_rkas04->no_urut->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t04_rkas03->jumlah->Visible) { // jumlah ?>
-		<td<?php echo $t04_rkas03->jumlah->CellAttributes() ?>>
-<span id="el<?php echo $t04_rkas03_delete->RowCnt ?>_t04_rkas03_jumlah" class="t04_rkas03_jumlah">
-<span<?php echo $t04_rkas03->jumlah->ViewAttributes() ?>>
-<?php echo $t04_rkas03->jumlah->ListViewValue() ?></span>
+<?php if ($t05_rkas04->keterangan->Visible) { // keterangan ?>
+		<td<?php echo $t05_rkas04->keterangan->CellAttributes() ?>>
+<span id="el<?php echo $t05_rkas04_delete->RowCnt ?>_t05_rkas04_keterangan" class="t05_rkas04_keterangan">
+<span<?php echo $t05_rkas04->keterangan->ViewAttributes() ?>>
+<?php echo $t05_rkas04->keterangan->ListViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($t05_rkas04->jumlah->Visible) { // jumlah ?>
+		<td<?php echo $t05_rkas04->jumlah->CellAttributes() ?>>
+<span id="el<?php echo $t05_rkas04_delete->RowCnt ?>_t05_rkas04_jumlah" class="t05_rkas04_jumlah">
+<span<?php echo $t05_rkas04->jumlah->ViewAttributes() ?>>
+<?php echo $t05_rkas04->jumlah->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
 	</tr>
 <?php
-	$t04_rkas03_delete->Recordset->MoveNext();
+	$t05_rkas04_delete->Recordset->MoveNext();
 }
-$t04_rkas03_delete->Recordset->Close();
+$t05_rkas04_delete->Recordset->Close();
 ?>
 </tbody>
 </table>
@@ -1010,14 +1068,14 @@ $t04_rkas03_delete->Recordset->Close();
 </div>
 <div>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("DeleteBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t04_rkas03_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t05_rkas04_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 </div>
 </form>
 <script type="text/javascript">
-ft04_rkas03delete.Init();
+ft05_rkas04delete.Init();
 </script>
 <?php
-$t04_rkas03_delete->ShowPageFooter();
+$t05_rkas04_delete->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1029,5 +1087,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$t04_rkas03_delete->Page_Terminate();
+$t05_rkas04_delete->Page_Terminate();
 ?>

@@ -331,6 +331,7 @@ class ct02_rkas01_add extends ct02_rkas01 {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
+		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
 
@@ -536,6 +537,7 @@ class ct02_rkas01_add extends ct02_rkas01 {
 	function LoadDefaultValues() {
 		$this->id->CurrentValue = NULL;
 		$this->id->OldValue = $this->id->CurrentValue;
+		$this->no_urut->CurrentValue = 0;
 		$this->keterangan->CurrentValue = NULL;
 		$this->keterangan->OldValue = $this->keterangan->CurrentValue;
 		$this->jumlah->CurrentValue = 0.00;
@@ -546,6 +548,9 @@ class ct02_rkas01_add extends ct02_rkas01 {
 
 		// Load from form
 		global $objForm;
+		if (!$this->no_urut->FldIsDetailKey) {
+			$this->no_urut->setFormValue($objForm->GetValue("x_no_urut"));
+		}
 		if (!$this->keterangan->FldIsDetailKey) {
 			$this->keterangan->setFormValue($objForm->GetValue("x_keterangan"));
 		}
@@ -557,6 +562,7 @@ class ct02_rkas01_add extends ct02_rkas01 {
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
+		$this->no_urut->CurrentValue = $this->no_urut->FormValue;
 		$this->keterangan->CurrentValue = $this->keterangan->FormValue;
 		$this->jumlah->CurrentValue = $this->jumlah->FormValue;
 	}
@@ -595,6 +601,7 @@ class ct02_rkas01_add extends ct02_rkas01 {
 		if (!$rs || $rs->EOF)
 			return;
 		$this->id->setDbValue($row['id']);
+		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
 	}
@@ -604,6 +611,7 @@ class ct02_rkas01_add extends ct02_rkas01 {
 		$this->LoadDefaultValues();
 		$row = array();
 		$row['id'] = $this->id->CurrentValue;
+		$row['no_urut'] = $this->no_urut->CurrentValue;
 		$row['keterangan'] = $this->keterangan->CurrentValue;
 		$row['jumlah'] = $this->jumlah->CurrentValue;
 		return $row;
@@ -615,6 +623,7 @@ class ct02_rkas01_add extends ct02_rkas01 {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
+		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
 	}
@@ -656,6 +665,7 @@ class ct02_rkas01_add extends ct02_rkas01 {
 
 		// Common render codes for all row types
 		// id
+		// no_urut
 		// keterangan
 		// jumlah
 
@@ -664,6 +674,10 @@ class ct02_rkas01_add extends ct02_rkas01 {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -675,6 +689,11 @@ class ct02_rkas01_add extends ct02_rkas01 {
 		$this->jumlah->CellCssStyle .= "text-align: right;";
 		$this->jumlah->ViewCustomAttributes = "";
 
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
+
 			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
 			$this->keterangan->HrefValue = "";
@@ -685,6 +704,12 @@ class ct02_rkas01_add extends ct02_rkas01 {
 			$this->jumlah->HrefValue = "";
 			$this->jumlah->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
+
+			// no_urut
+			$this->no_urut->EditAttrs["class"] = "form-control";
+			$this->no_urut->EditCustomAttributes = "";
+			$this->no_urut->EditValue = ew_HtmlEncode($this->no_urut->CurrentValue);
+			$this->no_urut->PlaceHolder = ew_RemoveHtml($this->no_urut->FldCaption());
 
 			// keterangan
 			$this->keterangan->EditAttrs["class"] = "form-control";
@@ -700,8 +725,12 @@ class ct02_rkas01_add extends ct02_rkas01 {
 			if (strval($this->jumlah->EditValue) <> "" && is_numeric($this->jumlah->EditValue)) $this->jumlah->EditValue = ew_FormatNumber($this->jumlah->EditValue, -2, -2, -2, -2);
 
 			// Add refer script
-			// keterangan
+			// no_urut
 
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+
+			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
 			$this->keterangan->HrefValue = "";
 
@@ -727,6 +756,9 @@ class ct02_rkas01_add extends ct02_rkas01 {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
+		if (!ew_CheckInteger($this->no_urut->FormValue)) {
+			ew_AddMessage($gsFormError, $this->no_urut->FldErrMsg());
+		}
 		if (!$this->keterangan->FldIsDetailKey && !is_null($this->keterangan->FormValue) && $this->keterangan->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->keterangan->FldCaption(), $this->keterangan->ReqErrMsg));
 		}
@@ -756,6 +788,9 @@ class ct02_rkas01_add extends ct02_rkas01 {
 		if ($rsold) {
 		}
 		$rsnew = array();
+
+		// no_urut
+		$this->no_urut->SetDbValueDef($rsnew, $this->no_urut->CurrentValue, 0, strval($this->no_urut->CurrentValue) == "");
 
 		// keterangan
 		$this->keterangan->SetDbValueDef($rsnew, $this->keterangan->CurrentValue, "", FALSE);
@@ -927,6 +962,9 @@ ft02_rkas01add.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
+			elm = this.GetElements("x" + infix + "_no_urut");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t02_rkas01->no_urut->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_keterangan");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t02_rkas01->keterangan->FldCaption(), $t02_rkas01->keterangan->ReqErrMsg)) ?>");
@@ -981,6 +1019,16 @@ $t02_rkas01_add->ShowMessage();
 <input type="hidden" name="a_add" id="a_add" value="A">
 <input type="hidden" name="modal" value="<?php echo intval($t02_rkas01_add->IsModal) ?>">
 <div class="ewAddDiv"><!-- page* -->
+<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
+	<div id="r_no_urut" class="form-group">
+		<label id="elh_t02_rkas01_no_urut" for="x_no_urut" class="<?php echo $t02_rkas01_add->LeftColumnClass ?>"><?php echo $t02_rkas01->no_urut->FldCaption() ?></label>
+		<div class="<?php echo $t02_rkas01_add->RightColumnClass ?>"><div<?php echo $t02_rkas01->no_urut->CellAttributes() ?>>
+<span id="el_t02_rkas01_no_urut">
+<input type="text" data-table="t02_rkas01" data-field="x_no_urut" name="x_no_urut" id="x_no_urut" size="30" placeholder="<?php echo ew_HtmlEncode($t02_rkas01->no_urut->getPlaceHolder()) ?>" value="<?php echo $t02_rkas01->no_urut->EditValue ?>"<?php echo $t02_rkas01->no_urut->EditAttributes() ?>>
+</span>
+<?php echo $t02_rkas01->no_urut->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
 <?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
 	<div id="r_keterangan" class="form-group">
 		<label id="elh_t02_rkas01_keterangan" for="x_keterangan" class="<?php echo $t02_rkas01_add->LeftColumnClass ?>"><?php echo $t02_rkas01->keterangan->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>

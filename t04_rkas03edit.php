@@ -65,6 +65,12 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		if ($this->UseTokenInUrl) $PageUrl .= "t=" . $this->TableVar . "&"; // Add page token
 		return $PageUrl;
 	}
+	var $AuditTrailOnAdd = TRUE;
+	var $AuditTrailOnEdit = TRUE;
+	var $AuditTrailOnDelete = TRUE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -327,6 +333,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
 		$this->lv1_id->SetVisibility();
 		$this->lv2_id->SetVisibility();
+		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
 
@@ -619,6 +626,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		if (!$this->lv2_id->FldIsDetailKey) {
 			$this->lv2_id->setFormValue($objForm->GetValue("x_lv2_id"));
 		}
+		if (!$this->no_urut->FldIsDetailKey) {
+			$this->no_urut->setFormValue($objForm->GetValue("x_no_urut"));
+		}
 		if (!$this->keterangan->FldIsDetailKey) {
 			$this->keterangan->setFormValue($objForm->GetValue("x_keterangan"));
 		}
@@ -635,6 +645,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		$this->id->CurrentValue = $this->id->FormValue;
 		$this->lv1_id->CurrentValue = $this->lv1_id->FormValue;
 		$this->lv2_id->CurrentValue = $this->lv2_id->FormValue;
+		$this->no_urut->CurrentValue = $this->no_urut->FormValue;
 		$this->keterangan->CurrentValue = $this->keterangan->FormValue;
 		$this->jumlah->CurrentValue = $this->jumlah->FormValue;
 	}
@@ -711,6 +722,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		} else {
 			$this->lv2_id->VirtualValue = ""; // Clear value
 		}
+		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
 	}
@@ -721,6 +733,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		$row['id'] = NULL;
 		$row['lv1_id'] = NULL;
 		$row['lv2_id'] = NULL;
+		$row['no_urut'] = NULL;
 		$row['keterangan'] = NULL;
 		$row['jumlah'] = NULL;
 		return $row;
@@ -734,6 +747,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		$this->id->DbValue = $row['id'];
 		$this->lv1_id->DbValue = $row['lv1_id'];
 		$this->lv2_id->DbValue = $row['lv2_id'];
+		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
 	}
@@ -777,6 +791,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		// id
 		// lv1_id
 		// lv2_id
+		// no_urut
 		// keterangan
 		// jumlah
 
@@ -793,9 +808,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
 		if (strval($this->lv1_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
 		$sWhereWrk = "";
-		$this->lv1_id->LookupFilters = array("dx1" => '`keterangan`');
+		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -803,6 +818,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
 				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
@@ -821,9 +837,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
 		if (strval($this->lv2_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
 		$sWhereWrk = "";
-		$this->lv2_id->LookupFilters = array("dx1" => '`keterangan`');
+		$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -831,6 +847,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
 				$this->lv2_id->ViewValue = $this->lv2_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
@@ -841,6 +858,10 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		}
 		}
 		$this->lv2_id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -862,6 +883,11 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			$this->lv2_id->HrefValue = "";
 			$this->lv2_id->TooltipValue = "";
 
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
+
 			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
 			$this->keterangan->HrefValue = "";
@@ -879,9 +905,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			$this->lv1_id->EditValue = ew_HtmlEncode($this->lv1_id->CurrentValue);
 			if (strval($this->lv1_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
 			$sWhereWrk = "";
-			$this->lv1_id->LookupFilters = array("dx1" => '`keterangan`');
+			$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -889,6 +915,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
 					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
 					$this->lv1_id->EditValue = $this->lv1_id->DisplayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -905,9 +932,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			$this->lv2_id->EditValue = ew_HtmlEncode($this->lv2_id->CurrentValue);
 			if (strval($this->lv2_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
 			$sWhereWrk = "";
-			$this->lv2_id->LookupFilters = array("dx1" => '`keterangan`');
+			$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -915,6 +942,7 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = array();
 					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
 					$this->lv2_id->EditValue = $this->lv2_id->DisplayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -924,6 +952,12 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 				$this->lv2_id->EditValue = NULL;
 			}
 			$this->lv2_id->PlaceHolder = ew_RemoveHtml($this->lv2_id->FldCaption());
+
+			// no_urut
+			$this->no_urut->EditAttrs["class"] = "form-control";
+			$this->no_urut->EditCustomAttributes = "";
+			$this->no_urut->EditValue = ew_HtmlEncode($this->no_urut->CurrentValue);
+			$this->no_urut->PlaceHolder = ew_RemoveHtml($this->no_urut->FldCaption());
 
 			// keterangan
 			$this->keterangan->EditAttrs["class"] = "form-control";
@@ -947,6 +981,10 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			// lv2_id
 			$this->lv2_id->LinkCustomAttributes = "";
 			$this->lv2_id->HrefValue = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
 
 			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
@@ -976,6 +1014,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			return ($gsFormError == "");
 		if (!$this->lv2_id->FldIsDetailKey && !is_null($this->lv2_id->FormValue) && $this->lv2_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->lv2_id->FldCaption(), $this->lv2_id->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->no_urut->FormValue)) {
+			ew_AddMessage($gsFormError, $this->no_urut->FldErrMsg());
 		}
 		if (!$this->keterangan->FldIsDetailKey && !is_null($this->keterangan->FormValue) && $this->keterangan->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->keterangan->FldCaption(), $this->keterangan->ReqErrMsg));
@@ -1024,6 +1065,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 
 			// lv2_id
 			$this->lv2_id->SetDbValueDef($rsnew, $this->lv2_id->CurrentValue, 0, $this->lv2_id->ReadOnly);
+
+			// no_urut
+			$this->no_urut->SetDbValueDef($rsnew, $this->no_urut->CurrentValue, 0, $this->no_urut->ReadOnly);
 
 			// keterangan
 			$this->keterangan->SetDbValueDef($rsnew, $this->keterangan->CurrentValue, "", $this->keterangan->ReadOnly);
@@ -1080,9 +1124,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		switch ($fld->FldVar) {
 		case "x_lv1_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id` AS `LinkFld`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
 			$sWhereWrk = "{filter}";
-			$fld->LookupFilters = array("dx1" => '`keterangan`');
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` IN ({filter_value})', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
@@ -1092,9 +1136,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			break;
 		case "x_lv2_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id` AS `LinkFld`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
 			$sWhereWrk = "{filter}";
-			$fld->LookupFilters = array("dx1" => '`keterangan`');
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` IN ({filter_value})', "t0" => "3", "fn0" => "", "f1" => '`lv1_id` IN ({filter_value})', "t1" => "3", "fn1" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
@@ -1112,9 +1156,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 		switch ($fld->FldVar) {
 		case "x_lv1_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld` FROM `t02_rkas01`";
-			$sWhereWrk = "`keterangan` LIKE '{query_value}%'";
-			$fld->LookupFilters = array("dx1" => '`keterangan`');
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld` FROM `t02_rkas01`";
+			$sWhereWrk = "`no_urut` LIKE '{query_value}%' OR CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv1_id) . "',COALESCE(`keterangan`,'')) LIKE '{query_value}%'";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
@@ -1124,9 +1168,9 @@ class ct04_rkas03_edit extends ct04_rkas03 {
 			break;
 		case "x_lv2_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld` FROM `t03_rkas02`";
-			$sWhereWrk = "(`keterangan` LIKE '{query_value}%') AND ({filter})";
-			$fld->LookupFilters = array("dx1" => '`keterangan`');
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld` FROM `t03_rkas02`";
+			$sWhereWrk = "(`no_urut` LIKE '{query_value}%' OR CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv2_id) . "',COALESCE(`keterangan`,'')) LIKE '{query_value}%') AND ({filter})";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f1" => "`lv1_id` IN ({filter_value})", "t1" => "3", "fn1" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
@@ -1248,6 +1292,9 @@ ft04_rkas03edit.Validate = function() {
 			elm = this.GetElements("x" + infix + "_lv2_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t04_rkas03->lv2_id->FldCaption(), $t04_rkas03->lv2_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_no_urut");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t04_rkas03->no_urut->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_keterangan");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t04_rkas03->keterangan->FldCaption(), $t04_rkas03->keterangan->ReqErrMsg)) ?>");
@@ -1283,10 +1330,10 @@ ft04_rkas03edit.Form_CustomValidate =
 ft04_rkas03edit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ft04_rkas03edit.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_keterangan","","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
+ft04_rkas03edit.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
 ft04_rkas03edit.Lists["x_lv1_id"].Data = "<?php echo $t04_rkas03_edit->lv1_id->LookupFilterQuery(FALSE, "edit") ?>";
 ft04_rkas03edit.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_edit->lv1_id->LookupFilterQuery(TRUE, "edit"))) ?>;
-ft04_rkas03edit.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_keterangan","","",""],"ParentFields":["x_lv1_id"],"ChildFields":[],"FilterFields":["x_lv1_id"],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
+ft04_rkas03edit.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":["x_lv1_id"],"ChildFields":[],"FilterFields":["x_lv1_id"],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
 ft04_rkas03edit.Lists["x_lv2_id"].Data = "<?php echo $t04_rkas03_edit->lv2_id->LookupFilterQuery(FALSE, "edit") ?>";
 ft04_rkas03edit.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_edit->lv2_id->LookupFilterQuery(TRUE, "edit"))) ?>;
 
@@ -1395,6 +1442,16 @@ ft04_rkas03edit.CreateAutoSuggest({"id":"x_lv2_id","forceSelect":true});
 <button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t04_rkas03->lv2_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_lv2_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"<?php echo (($t04_rkas03->lv2_id->ReadOnly || $t04_rkas03->lv2_id->Disabled) ? " disabled" : "")?>><span class="glyphicon glyphicon-search ewIcon"></span></button>
 </span>
 <?php echo $t04_rkas03->lv2_id->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t04_rkas03->no_urut->Visible) { // no_urut ?>
+	<div id="r_no_urut" class="form-group">
+		<label id="elh_t04_rkas03_no_urut" for="x_no_urut" class="<?php echo $t04_rkas03_edit->LeftColumnClass ?>"><?php echo $t04_rkas03->no_urut->FldCaption() ?></label>
+		<div class="<?php echo $t04_rkas03_edit->RightColumnClass ?>"><div<?php echo $t04_rkas03->no_urut->CellAttributes() ?>>
+<span id="el_t04_rkas03_no_urut">
+<input type="text" data-table="t04_rkas03" data-field="x_no_urut" name="x_no_urut" id="x_no_urut" size="30" placeholder="<?php echo ew_HtmlEncode($t04_rkas03->no_urut->getPlaceHolder()) ?>" value="<?php echo $t04_rkas03->no_urut->EditValue ?>"<?php echo $t04_rkas03->no_urut->EditAttributes() ?>>
+</span>
+<?php echo $t04_rkas03->no_urut->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($t04_rkas03->keterangan->Visible) { // keterangan ?>

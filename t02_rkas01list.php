@@ -455,6 +455,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 
 		// Setup export options
 		$this->SetupExportOptions();
+		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
 
@@ -809,7 +810,12 @@ class ct02_rkas01_list extends ct02_rkas01 {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
+
+		// Load server side filters
+		if (EW_SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
+			$sSavedFilterList = $UserProfile->GetSearchFilters(CurrentUserName(), "ft02_rkas01listsrch");
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJson(), ","); // Field id
+		$sFilterList = ew_Concat($sFilterList, $this->no_urut->AdvancedSearch->ToJson(), ","); // Field no_urut
 		$sFilterList = ew_Concat($sFilterList, $this->keterangan->AdvancedSearch->ToJson(), ","); // Field keterangan
 		$sFilterList = ew_Concat($sFilterList, $this->jumlah->AdvancedSearch->ToJson(), ","); // Field jumlah
 		if ($this->BasicSearch->Keyword <> "") {
@@ -863,6 +869,14 @@ class ct02_rkas01_list extends ct02_rkas01 {
 		$this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
 		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
 		$this->id->AdvancedSearch->Save();
+
+		// Field no_urut
+		$this->no_urut->AdvancedSearch->SearchValue = @$filter["x_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchOperator = @$filter["z_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchCondition = @$filter["v_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchValue2 = @$filter["y_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchOperator2 = @$filter["w_no_urut"];
+		$this->no_urut->AdvancedSearch->Save();
 
 		// Field keterangan
 		$this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
@@ -1036,6 +1050,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
+			$this->UpdateSort($this->no_urut, $bCtrl); // no_urut
 			$this->UpdateSort($this->keterangan, $bCtrl); // keterangan
 			$this->UpdateSort($this->jumlah, $bCtrl); // jumlah
 			$this->setStartRecordNumber(1); // Reset start position
@@ -1049,6 +1064,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 			if ($this->getSqlOrderBy() <> "") {
 				$sOrderBy = $this->getSqlOrderBy();
 				$this->setSessionOrderBy($sOrderBy);
+				$this->no_urut->setSort("ASC");
 			}
 		}
 	}
@@ -1070,6 +1086,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
+				$this->no_urut->setSort("");
 				$this->keterangan->setSort("");
 				$this->jumlah->setSort("");
 			}
@@ -1531,6 +1548,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 		if (!$rs || $rs->EOF)
 			return;
 		$this->id->setDbValue($row['id']);
+		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
 	}
@@ -1539,6 +1557,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
+		$row['no_urut'] = NULL;
 		$row['keterangan'] = NULL;
 		$row['jumlah'] = NULL;
 		return $row;
@@ -1550,6 +1569,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
+		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
 	}
@@ -1597,6 +1617,7 @@ class ct02_rkas01_list extends ct02_rkas01 {
 
 		// Common render codes for all row types
 		// id
+		// no_urut
 		// keterangan
 		// jumlah
 
@@ -1605,6 +1626,10 @@ class ct02_rkas01_list extends ct02_rkas01 {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -1615,6 +1640,11 @@ class ct02_rkas01_list extends ct02_rkas01 {
 		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
 		$this->jumlah->CellCssStyle .= "text-align: right;";
 		$this->jumlah->ViewCustomAttributes = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
 
 			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
@@ -2276,6 +2306,15 @@ $t02_rkas01_list->RenderListOptions();
 // Render list options (header, left)
 $t02_rkas01_list->ListOptions->Render("header", "left");
 ?>
+<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
+	<?php if ($t02_rkas01->SortUrl($t02_rkas01->no_urut) == "") { ?>
+		<th data-name="no_urut" class="<?php echo $t02_rkas01->no_urut->HeaderCellClass() ?>"><div id="elh_t02_rkas01_no_urut" class="t02_rkas01_no_urut"><div class="ewTableHeaderCaption"><?php echo $t02_rkas01->no_urut->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="no_urut" class="<?php echo $t02_rkas01->no_urut->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas01->SortUrl($t02_rkas01->no_urut) ?>',2);"><div id="elh_t02_rkas01_no_urut" class="t02_rkas01_no_urut">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas01->no_urut->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas01->no_urut->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas01->no_urut->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
 	<?php if ($t02_rkas01->SortUrl($t02_rkas01->keterangan) == "") { ?>
 		<th data-name="keterangan" class="<?php echo $t02_rkas01->keterangan->HeaderCellClass() ?>"><div id="elh_t02_rkas01_keterangan" class="t02_rkas01_keterangan"><div class="ewTableHeaderCaption"><?php echo $t02_rkas01->keterangan->FldCaption() ?></div></div></th>
@@ -2359,6 +2398,14 @@ while ($t02_rkas01_list->RecCnt < $t02_rkas01_list->StopRec) {
 // Render list options (body, left)
 $t02_rkas01_list->ListOptions->Render("body", "left", $t02_rkas01_list->RowCnt);
 ?>
+	<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
+		<td data-name="no_urut"<?php echo $t02_rkas01->no_urut->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas01_list->RowCnt ?>_t02_rkas01_no_urut" class="t02_rkas01_no_urut">
+<span<?php echo $t02_rkas01->no_urut->ViewAttributes() ?>>
+<?php echo $t02_rkas01->no_urut->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
 	<?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
 		<td data-name="keterangan"<?php echo $t02_rkas01->keterangan->CellAttributes() ?>>
 <span id="el<?php echo $t02_rkas01_list->RowCnt ?>_t02_rkas01_keterangan" class="t02_rkas01_keterangan">

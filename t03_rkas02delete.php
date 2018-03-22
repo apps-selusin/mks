@@ -327,6 +327,7 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
 		$this->lv1_id->SetVisibility();
+		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
 
@@ -515,6 +516,7 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 		} else {
 			$this->lv1_id->VirtualValue = ""; // Clear value
 		}
+		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
 	}
@@ -524,6 +526,7 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 		$row = array();
 		$row['id'] = NULL;
 		$row['lv1_id'] = NULL;
+		$row['no_urut'] = NULL;
 		$row['keterangan'] = NULL;
 		$row['jumlah'] = NULL;
 		return $row;
@@ -536,6 +539,7 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
 		$this->lv1_id->DbValue = $row['lv1_id'];
+		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
 	}
@@ -556,6 +560,7 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 		// Common render codes for all row types
 		// id
 		// lv1_id
+		// no_urut
 		// keterangan
 		// jumlah
 
@@ -572,9 +577,9 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
 		if (strval($this->lv1_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
 		$sWhereWrk = "";
-		$this->lv1_id->LookupFilters = array("dx1" => '`keterangan`');
+		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -582,6 +587,7 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
 				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
@@ -592,6 +598,10 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 		}
 		}
 		$this->lv1_id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -607,6 +617,11 @@ class ct03_rkas02_delete extends ct03_rkas02 {
 			$this->lv1_id->LinkCustomAttributes = "";
 			$this->lv1_id->HrefValue = "";
 			$this->lv1_id->TooltipValue = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
 
 			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
@@ -831,7 +846,7 @@ ft03_rkas02delete.Form_CustomValidate =
 ft03_rkas02delete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ft03_rkas02delete.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_keterangan","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
+ft03_rkas02delete.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
 ft03_rkas02delete.Lists["x_lv1_id"].Data = "<?php echo $t03_rkas02_delete->lv1_id->LookupFilterQuery(FALSE, "delete") ?>";
 ft03_rkas02delete.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t03_rkas02_delete->lv1_id->LookupFilterQuery(TRUE, "delete"))) ?>;
 
@@ -862,6 +877,9 @@ $t03_rkas02_delete->ShowMessage();
 	<tr class="ewTableHeader">
 <?php if ($t03_rkas02->lv1_id->Visible) { // lv1_id ?>
 		<th class="<?php echo $t03_rkas02->lv1_id->HeaderCellClass() ?>"><span id="elh_t03_rkas02_lv1_id" class="t03_rkas02_lv1_id"><?php echo $t03_rkas02->lv1_id->FldCaption() ?></span></th>
+<?php } ?>
+<?php if ($t03_rkas02->no_urut->Visible) { // no_urut ?>
+		<th class="<?php echo $t03_rkas02->no_urut->HeaderCellClass() ?>"><span id="elh_t03_rkas02_no_urut" class="t03_rkas02_no_urut"><?php echo $t03_rkas02->no_urut->FldCaption() ?></span></th>
 <?php } ?>
 <?php if ($t03_rkas02->keterangan->Visible) { // keterangan ?>
 		<th class="<?php echo $t03_rkas02->keterangan->HeaderCellClass() ?>"><span id="elh_t03_rkas02_keterangan" class="t03_rkas02_keterangan"><?php echo $t03_rkas02->keterangan->FldCaption() ?></span></th>
@@ -895,6 +913,14 @@ while (!$t03_rkas02_delete->Recordset->EOF) {
 <span id="el<?php echo $t03_rkas02_delete->RowCnt ?>_t03_rkas02_lv1_id" class="t03_rkas02_lv1_id">
 <span<?php echo $t03_rkas02->lv1_id->ViewAttributes() ?>>
 <?php echo $t03_rkas02->lv1_id->ListViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($t03_rkas02->no_urut->Visible) { // no_urut ?>
+		<td<?php echo $t03_rkas02->no_urut->CellAttributes() ?>>
+<span id="el<?php echo $t03_rkas02_delete->RowCnt ?>_t03_rkas02_no_urut" class="t03_rkas02_no_urut">
+<span<?php echo $t03_rkas02->no_urut->ViewAttributes() ?>>
+<?php echo $t03_rkas02->no_urut->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

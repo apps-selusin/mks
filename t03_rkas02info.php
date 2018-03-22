@@ -15,6 +15,7 @@ class ct03_rkas02 extends cTable {
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
 	var $lv1_id;
+	var $no_urut;
 	var $keterangan;
 	var $jumlah;
 
@@ -61,6 +62,12 @@ class ct03_rkas02 extends cTable {
 		$this->lv1_id->Sortable = TRUE; // Allow sort
 		$this->lv1_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['lv1_id'] = &$this->lv1_id;
+
+		// no_urut
+		$this->no_urut = new cField('t03_rkas02', 't03_rkas02', 'x_no_urut', 'no_urut', '`no_urut`', '`no_urut`', 16, -1, FALSE, '`no_urut`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->no_urut->Sortable = TRUE; // Allow sort
+		$this->no_urut->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['no_urut'] = &$this->no_urut;
 
 		// keterangan
 		$this->keterangan = new cField('t03_rkas02', 't03_rkas02', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, -1, FALSE, '`keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
@@ -176,7 +183,7 @@ class ct03_rkas02 extends cTable {
 	function getSqlSelectList() { // Select for List page
 		$select = "";
 		$select = "SELECT * FROM (" .
-			"SELECT *, (SELECT `keterangan` FROM `t02_rkas01` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t03_rkas02`.`lv1_id` LIMIT 1) AS `EV__lv1_id` FROM `t03_rkas02`" .
+			"SELECT *, (SELECT CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv1_id) . "',COALESCE(`keterangan`,'')) FROM `t02_rkas01` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t03_rkas02`.`lv1_id` LIMIT 1) AS `EV__lv1_id` FROM `t03_rkas02`" .
 			") `EW_TMP_TABLE`";
 		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
 	}
@@ -233,7 +240,7 @@ class ct03_rkas02 extends cTable {
 	var $_SqlOrderBy = "";
 
 	function getSqlOrderBy() { // Order By
-		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "";
+		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`lv1_id` ASC,`no_urut` ASC";
 	}
 
 	function SqlOrderBy() { // For backward compatibility
@@ -686,6 +693,7 @@ class ct03_rkas02 extends cTable {
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
 		$this->lv1_id->setDbValue($rs->fields('lv1_id'));
+		$this->no_urut->setDbValue($rs->fields('no_urut'));
 		$this->keterangan->setDbValue($rs->fields('keterangan'));
 		$this->jumlah->setDbValue($rs->fields('jumlah'));
 	}
@@ -700,6 +708,7 @@ class ct03_rkas02 extends cTable {
 	// Common render codes
 		// id
 		// lv1_id
+		// no_urut
 		// keterangan
 		// jumlah
 		// id
@@ -714,9 +723,9 @@ class ct03_rkas02 extends cTable {
 			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
 		if (strval($this->lv1_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `keterangan` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
 		$sWhereWrk = "";
-		$this->lv1_id->LookupFilters = array("dx1" => '`keterangan`');
+		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -724,6 +733,7 @@ class ct03_rkas02 extends cTable {
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
 				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
@@ -734,6 +744,10 @@ class ct03_rkas02 extends cTable {
 		}
 		}
 		$this->lv1_id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -754,6 +768,11 @@ class ct03_rkas02 extends cTable {
 		$this->lv1_id->LinkCustomAttributes = "";
 		$this->lv1_id->HrefValue = "";
 		$this->lv1_id->TooltipValue = "";
+
+		// no_urut
+		$this->no_urut->LinkCustomAttributes = "";
+		$this->no_urut->HrefValue = "";
+		$this->no_urut->TooltipValue = "";
 
 		// keterangan
 		$this->keterangan->LinkCustomAttributes = "";
@@ -790,6 +809,12 @@ class ct03_rkas02 extends cTable {
 		$this->lv1_id->EditCustomAttributes = "";
 		$this->lv1_id->EditValue = $this->lv1_id->CurrentValue;
 		$this->lv1_id->PlaceHolder = ew_RemoveHtml($this->lv1_id->FldCaption());
+
+		// no_urut
+		$this->no_urut->EditAttrs["class"] = "form-control";
+		$this->no_urut->EditCustomAttributes = "";
+		$this->no_urut->EditValue = $this->no_urut->CurrentValue;
+		$this->no_urut->PlaceHolder = ew_RemoveHtml($this->no_urut->FldCaption());
 
 		// keterangan
 		$this->keterangan->EditAttrs["class"] = "form-control";
@@ -832,11 +857,13 @@ class ct03_rkas02 extends cTable {
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
 					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
+					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
 					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
 					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
 					if ($this->lv1_id->Exportable) $Doc->ExportCaption($this->lv1_id);
+					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
 					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
 					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
 				}
@@ -871,11 +898,13 @@ class ct03_rkas02 extends cTable {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
 						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
+						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
 						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
 						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
 						if ($this->lv1_id->Exportable) $Doc->ExportField($this->lv1_id);
+						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
 						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
 						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
 					}

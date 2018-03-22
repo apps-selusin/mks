@@ -326,6 +326,7 @@ class ct02_rkas01_delete extends ct02_rkas01 {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
+		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
 
@@ -508,6 +509,7 @@ class ct02_rkas01_delete extends ct02_rkas01 {
 		if (!$rs || $rs->EOF)
 			return;
 		$this->id->setDbValue($row['id']);
+		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
 	}
@@ -516,6 +518,7 @@ class ct02_rkas01_delete extends ct02_rkas01 {
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
+		$row['no_urut'] = NULL;
 		$row['keterangan'] = NULL;
 		$row['jumlah'] = NULL;
 		return $row;
@@ -527,6 +530,7 @@ class ct02_rkas01_delete extends ct02_rkas01 {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
+		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
 	}
@@ -546,6 +550,7 @@ class ct02_rkas01_delete extends ct02_rkas01 {
 
 		// Common render codes for all row types
 		// id
+		// no_urut
 		// keterangan
 		// jumlah
 
@@ -554,6 +559,10 @@ class ct02_rkas01_delete extends ct02_rkas01 {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
+
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -564,6 +573,11 @@ class ct02_rkas01_delete extends ct02_rkas01 {
 		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
 		$this->jumlah->CellCssStyle .= "text-align: right;";
 		$this->jumlah->ViewCustomAttributes = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
 
 			// keterangan
 			$this->keterangan->LinkCustomAttributes = "";
@@ -814,6 +828,9 @@ $t02_rkas01_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
+<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
+		<th class="<?php echo $t02_rkas01->no_urut->HeaderCellClass() ?>"><span id="elh_t02_rkas01_no_urut" class="t02_rkas01_no_urut"><?php echo $t02_rkas01->no_urut->FldCaption() ?></span></th>
+<?php } ?>
 <?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
 		<th class="<?php echo $t02_rkas01->keterangan->HeaderCellClass() ?>"><span id="elh_t02_rkas01_keterangan" class="t02_rkas01_keterangan"><?php echo $t02_rkas01->keterangan->FldCaption() ?></span></th>
 <?php } ?>
@@ -841,6 +858,14 @@ while (!$t02_rkas01_delete->Recordset->EOF) {
 	$t02_rkas01_delete->RenderRow();
 ?>
 	<tr<?php echo $t02_rkas01->RowAttributes() ?>>
+<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
+		<td<?php echo $t02_rkas01->no_urut->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas01_delete->RowCnt ?>_t02_rkas01_no_urut" class="t02_rkas01_no_urut">
+<span<?php echo $t02_rkas01->no_urut->ViewAttributes() ?>>
+<?php echo $t02_rkas01->no_urut->ListViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
 		<td<?php echo $t02_rkas01->keterangan->CellAttributes() ?>>
 <span id="el<?php echo $t02_rkas01_delete->RowCnt ?>_t02_rkas01_keterangan" class="t02_rkas01_keterangan">

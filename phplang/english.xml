@@ -660,6 +660,9 @@
     <menu id="32">
       <phrase id="menutext" value="RKAS Level-3" />
     </menu>
+    <menu id="33">
+      <phrase id="menutext" value="RKAS Level-4" />
+    </menu>
     <menu id="5">
       <phrase id="menutext" value="Pengguna" />
     </menu>
@@ -711,6 +714,9 @@
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
+      <field id="no_urut">
+        <phrase id="fldcaption" value="No. Urut" />
+      </field>
       <field id="keterangan">
         <phrase id="fldcaption" value="Keterangan" />
       </field>
@@ -725,6 +731,9 @@
       </field>
       <field id="lv1_id">
         <phrase id="fldcaption" value="Level-1" />
+      </field>
+      <field id="no_urut">
+        <phrase id="fldcaption" value="No. Urut" />
       </field>
       <field id="keterangan">
         <phrase id="fldcaption" value="Keterangan" />
@@ -743,6 +752,33 @@
       </field>
       <field id="lv2_id">
         <phrase id="fldcaption" value="Level-2" />
+      </field>
+      <field id="no_urut">
+        <phrase id="fldcaption" value="No. Urut" />
+      </field>
+      <field id="keterangan">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="jumlah">
+        <phrase id="fldcaption" value="Jumlah" />
+      </field>
+    </table>
+    <table id="t05_rkas04">
+      <phrase id="tblcaption" value="RKAS Level-4" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="lv1_id">
+        <phrase id="fldcaption" value="Level-1" />
+      </field>
+      <field id="lv2_id">
+        <phrase id="fldcaption" value="Level-2" />
+      </field>
+      <field id="lv3_id">
+        <phrase id="fldcaption" value="Level-3" />
+      </field>
+      <field id="no_urut">
+        <phrase id="fldcaption" value="No. Urut" />
       </field>
       <field id="keterangan">
         <phrase id="fldcaption" value="Keterangan" />
