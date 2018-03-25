@@ -814,8 +814,6 @@ class ct05_rkas04_list extends ct05_rkas04 {
 		$sFilterList = "";
 		$sSavedFilterList = "";
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJson(), ","); // Field id
-		$sFilterList = ew_Concat($sFilterList, $this->lv1_id->AdvancedSearch->ToJson(), ","); // Field lv1_id
-		$sFilterList = ew_Concat($sFilterList, $this->lv2_id->AdvancedSearch->ToJson(), ","); // Field lv2_id
 		$sFilterList = ew_Concat($sFilterList, $this->lv3_id->AdvancedSearch->ToJson(), ","); // Field lv3_id
 		$sFilterList = ew_Concat($sFilterList, $this->no_urut->AdvancedSearch->ToJson(), ","); // Field no_urut
 		$sFilterList = ew_Concat($sFilterList, $this->keterangan->AdvancedSearch->ToJson(), ","); // Field keterangan
@@ -871,22 +869,6 @@ class ct05_rkas04_list extends ct05_rkas04 {
 		$this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
 		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
 		$this->id->AdvancedSearch->Save();
-
-		// Field lv1_id
-		$this->lv1_id->AdvancedSearch->SearchValue = @$filter["x_lv1_id"];
-		$this->lv1_id->AdvancedSearch->SearchOperator = @$filter["z_lv1_id"];
-		$this->lv1_id->AdvancedSearch->SearchCondition = @$filter["v_lv1_id"];
-		$this->lv1_id->AdvancedSearch->SearchValue2 = @$filter["y_lv1_id"];
-		$this->lv1_id->AdvancedSearch->SearchOperator2 = @$filter["w_lv1_id"];
-		$this->lv1_id->AdvancedSearch->Save();
-
-		// Field lv2_id
-		$this->lv2_id->AdvancedSearch->SearchValue = @$filter["x_lv2_id"];
-		$this->lv2_id->AdvancedSearch->SearchOperator = @$filter["z_lv2_id"];
-		$this->lv2_id->AdvancedSearch->SearchCondition = @$filter["v_lv2_id"];
-		$this->lv2_id->AdvancedSearch->SearchValue2 = @$filter["y_lv2_id"];
-		$this->lv2_id->AdvancedSearch->SearchOperator2 = @$filter["w_lv2_id"];
-		$this->lv2_id->AdvancedSearch->Save();
 
 		// Field lv3_id
 		$this->lv3_id->AdvancedSearch->SearchValue = @$filter["x_lv3_id"];
