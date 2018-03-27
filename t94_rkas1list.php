@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t98_userlevelpermissionsinfo.php" ?>
+<?php include_once "t94_rkas1info.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t98_userlevelpermissions_list = NULL; // Initialize page object first
+$t94_rkas1_list = NULL; // Initialize page object first
 
-class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
+class ct94_rkas1_list extends ct94_rkas1 {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +25,13 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't98_userlevelpermissions';
+	var $TableName = 't94_rkas1';
 
 	// Page object name
-	var $PageObjName = 't98_userlevelpermissions_list';
+	var $PageObjName = 't94_rkas1_list';
 
 	// Grid form hidden field names
-	var $FormName = 'ft98_userlevelpermissionslist';
+	var $FormName = 'ft94_rkas1list';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -105,12 +105,6 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
-	var $AuditTrailOnAdd = TRUE;
-	var $AuditTrailOnEdit = TRUE;
-	var $AuditTrailOnDelete = TRUE;
-	var $AuditTrailOnView = FALSE;
-	var $AuditTrailOnViewData = FALSE;
-	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -296,10 +290,10 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t98_userlevelpermissions)
-		if (!isset($GLOBALS["t98_userlevelpermissions"]) || get_class($GLOBALS["t98_userlevelpermissions"]) == "ct98_userlevelpermissions") {
-			$GLOBALS["t98_userlevelpermissions"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t98_userlevelpermissions"];
+		// Table object (t94_rkas1)
+		if (!isset($GLOBALS["t94_rkas1"]) || get_class($GLOBALS["t94_rkas1"]) == "ct94_rkas1") {
+			$GLOBALS["t94_rkas1"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t94_rkas1"];
 		}
 
 		// Initialize URLs
@@ -310,12 +304,12 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "t98_userlevelpermissionsadd.php";
+		$this->AddUrl = "t94_rkas1add.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "t98_userlevelpermissionsdelete.php";
-		$this->MultiUpdateUrl = "t98_userlevelpermissionsupdate.php";
+		$this->MultiDeleteUrl = "t94_rkas1delete.php";
+		$this->MultiUpdateUrl = "t94_rkas1update.php";
 
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
@@ -326,7 +320,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't98_userlevelpermissions', TRUE);
+			define("EW_TABLE_NAME", 't94_rkas1', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -368,7 +362,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption ft98_userlevelpermissionslistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption ft94_rkas1listsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -389,9 +383,10 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
 		$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName);
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
-		if (!$Security->CanAdmin()) {
+		if (!$Security->CanList()) {
 			$Security->SaveLastUrl();
-			$this->Page_Terminate(ew_GetUrl("login.php"));
+			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
+			$this->Page_Terminate(ew_GetUrl("index.php"));
 		}
 		if ($Security->IsLoggedIn()) {
 			$Security->UserID_Loading();
@@ -454,9 +449,16 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->userlevelid->SetVisibility();
-		$this->_tablename->SetVisibility();
-		$this->permission->SetVisibility();
+		$this->id->SetVisibility();
+		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
+			$this->id->Visible = FALSE;
+		$this->no_urut->SetVisibility();
+		$this->keterangan->SetVisibility();
+		$this->jumlah->SetVisibility();
+		$this->no_keyfield->SetVisibility();
+		$this->no_level->SetVisibility();
+		$this->nama_tabel->SetVisibility();
+		$this->id_data->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -517,13 +519,13 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t98_userlevelpermissions;
+		global $EW_EXPORT, $t94_rkas1;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t98_userlevelpermissions);
+				$doc = new $class($t94_rkas1);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -794,11 +796,10 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 	// Set up key values
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
-		if (count($arrKeyFlds) >= 2) {
-			$this->userlevelid->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->userlevelid->FormValue))
+		if (count($arrKeyFlds) >= 1) {
+			$this->id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->id->FormValue))
 				return FALSE;
-			$this->_tablename->setFormValue($arrKeyFlds[1]);
 		}
 		return TRUE;
 	}
@@ -813,10 +814,15 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// Load server side filters
 		if (EW_SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
-			$sSavedFilterList = $UserProfile->GetSearchFilters(CurrentUserName(), "ft98_userlevelpermissionslistsrch");
-		$sFilterList = ew_Concat($sFilterList, $this->userlevelid->AdvancedSearch->ToJson(), ","); // Field userlevelid
-		$sFilterList = ew_Concat($sFilterList, $this->_tablename->AdvancedSearch->ToJson(), ","); // Field tablename
-		$sFilterList = ew_Concat($sFilterList, $this->permission->AdvancedSearch->ToJson(), ","); // Field permission
+			$sSavedFilterList = $UserProfile->GetSearchFilters(CurrentUserName(), "ft94_rkas1listsrch");
+		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJson(), ","); // Field id
+		$sFilterList = ew_Concat($sFilterList, $this->no_urut->AdvancedSearch->ToJson(), ","); // Field no_urut
+		$sFilterList = ew_Concat($sFilterList, $this->keterangan->AdvancedSearch->ToJson(), ","); // Field keterangan
+		$sFilterList = ew_Concat($sFilterList, $this->jumlah->AdvancedSearch->ToJson(), ","); // Field jumlah
+		$sFilterList = ew_Concat($sFilterList, $this->no_keyfield->AdvancedSearch->ToJson(), ","); // Field no_keyfield
+		$sFilterList = ew_Concat($sFilterList, $this->no_level->AdvancedSearch->ToJson(), ","); // Field no_level
+		$sFilterList = ew_Concat($sFilterList, $this->nama_tabel->AdvancedSearch->ToJson(), ","); // Field nama_tabel
+		$sFilterList = ew_Concat($sFilterList, $this->id_data->AdvancedSearch->ToJson(), ","); // Field id_data
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -839,7 +845,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = @$_POST["filters"];
-			$UserProfile->SetSearchFilters(CurrentUserName(), "ft98_userlevelpermissionslistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "ft94_rkas1listsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -861,29 +867,69 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		$filter = json_decode(@$_POST["filter"], TRUE);
 		$this->Command = "search";
 
-		// Field userlevelid
-		$this->userlevelid->AdvancedSearch->SearchValue = @$filter["x_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchOperator = @$filter["z_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchCondition = @$filter["v_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchValue2 = @$filter["y_userlevelid"];
-		$this->userlevelid->AdvancedSearch->SearchOperator2 = @$filter["w_userlevelid"];
-		$this->userlevelid->AdvancedSearch->Save();
+		// Field id
+		$this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+		$this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+		$this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+		$this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+		$this->id->AdvancedSearch->Save();
 
-		// Field tablename
-		$this->_tablename->AdvancedSearch->SearchValue = @$filter["x__tablename"];
-		$this->_tablename->AdvancedSearch->SearchOperator = @$filter["z__tablename"];
-		$this->_tablename->AdvancedSearch->SearchCondition = @$filter["v__tablename"];
-		$this->_tablename->AdvancedSearch->SearchValue2 = @$filter["y__tablename"];
-		$this->_tablename->AdvancedSearch->SearchOperator2 = @$filter["w__tablename"];
-		$this->_tablename->AdvancedSearch->Save();
+		// Field no_urut
+		$this->no_urut->AdvancedSearch->SearchValue = @$filter["x_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchOperator = @$filter["z_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchCondition = @$filter["v_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchValue2 = @$filter["y_no_urut"];
+		$this->no_urut->AdvancedSearch->SearchOperator2 = @$filter["w_no_urut"];
+		$this->no_urut->AdvancedSearch->Save();
 
-		// Field permission
-		$this->permission->AdvancedSearch->SearchValue = @$filter["x_permission"];
-		$this->permission->AdvancedSearch->SearchOperator = @$filter["z_permission"];
-		$this->permission->AdvancedSearch->SearchCondition = @$filter["v_permission"];
-		$this->permission->AdvancedSearch->SearchValue2 = @$filter["y_permission"];
-		$this->permission->AdvancedSearch->SearchOperator2 = @$filter["w_permission"];
-		$this->permission->AdvancedSearch->Save();
+		// Field keterangan
+		$this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
+		$this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
+		$this->keterangan->AdvancedSearch->Save();
+
+		// Field jumlah
+		$this->jumlah->AdvancedSearch->SearchValue = @$filter["x_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchOperator = @$filter["z_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchCondition = @$filter["v_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchValue2 = @$filter["y_jumlah"];
+		$this->jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_jumlah"];
+		$this->jumlah->AdvancedSearch->Save();
+
+		// Field no_keyfield
+		$this->no_keyfield->AdvancedSearch->SearchValue = @$filter["x_no_keyfield"];
+		$this->no_keyfield->AdvancedSearch->SearchOperator = @$filter["z_no_keyfield"];
+		$this->no_keyfield->AdvancedSearch->SearchCondition = @$filter["v_no_keyfield"];
+		$this->no_keyfield->AdvancedSearch->SearchValue2 = @$filter["y_no_keyfield"];
+		$this->no_keyfield->AdvancedSearch->SearchOperator2 = @$filter["w_no_keyfield"];
+		$this->no_keyfield->AdvancedSearch->Save();
+
+		// Field no_level
+		$this->no_level->AdvancedSearch->SearchValue = @$filter["x_no_level"];
+		$this->no_level->AdvancedSearch->SearchOperator = @$filter["z_no_level"];
+		$this->no_level->AdvancedSearch->SearchCondition = @$filter["v_no_level"];
+		$this->no_level->AdvancedSearch->SearchValue2 = @$filter["y_no_level"];
+		$this->no_level->AdvancedSearch->SearchOperator2 = @$filter["w_no_level"];
+		$this->no_level->AdvancedSearch->Save();
+
+		// Field nama_tabel
+		$this->nama_tabel->AdvancedSearch->SearchValue = @$filter["x_nama_tabel"];
+		$this->nama_tabel->AdvancedSearch->SearchOperator = @$filter["z_nama_tabel"];
+		$this->nama_tabel->AdvancedSearch->SearchCondition = @$filter["v_nama_tabel"];
+		$this->nama_tabel->AdvancedSearch->SearchValue2 = @$filter["y_nama_tabel"];
+		$this->nama_tabel->AdvancedSearch->SearchOperator2 = @$filter["w_nama_tabel"];
+		$this->nama_tabel->AdvancedSearch->Save();
+
+		// Field id_data
+		$this->id_data->AdvancedSearch->SearchValue = @$filter["x_id_data"];
+		$this->id_data->AdvancedSearch->SearchOperator = @$filter["z_id_data"];
+		$this->id_data->AdvancedSearch->SearchCondition = @$filter["v_id_data"];
+		$this->id_data->AdvancedSearch->SearchValue2 = @$filter["y_id_data"];
+		$this->id_data->AdvancedSearch->SearchOperator2 = @$filter["w_id_data"];
+		$this->id_data->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -891,7 +937,10 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->_tablename, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->no_urut, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->keterangan, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->no_keyfield, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->nama_tabel, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -1041,9 +1090,14 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->userlevelid, $bCtrl); // userlevelid
-			$this->UpdateSort($this->_tablename, $bCtrl); // tablename
-			$this->UpdateSort($this->permission, $bCtrl); // permission
+			$this->UpdateSort($this->id, $bCtrl); // id
+			$this->UpdateSort($this->no_urut, $bCtrl); // no_urut
+			$this->UpdateSort($this->keterangan, $bCtrl); // keterangan
+			$this->UpdateSort($this->jumlah, $bCtrl); // jumlah
+			$this->UpdateSort($this->no_keyfield, $bCtrl); // no_keyfield
+			$this->UpdateSort($this->no_level, $bCtrl); // no_level
+			$this->UpdateSort($this->nama_tabel, $bCtrl); // nama_tabel
+			$this->UpdateSort($this->id_data, $bCtrl); // id_data
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1076,9 +1130,14 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->userlevelid->setSort("");
-				$this->_tablename->setSort("");
-				$this->permission->setSort("");
+				$this->id->setSort("");
+				$this->no_urut->setSort("");
+				$this->keterangan->setSort("");
+				$this->jumlah->setSort("");
+				$this->no_keyfield->setSort("");
+				$this->no_level->setSort("");
+				$this->nama_tabel->setSort("");
+				$this->id_data->setSort("");
 			}
 
 			// Reset start position
@@ -1132,14 +1191,6 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		$item->ShowInDropDown = FALSE;
 		$item->ShowInButtonGroup = FALSE;
 
-		// "sequence"
-		$item = &$this->ListOptions->Add("sequence");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = TRUE;
-		$item->OnLeft = TRUE; // Always on left
-		$item->ShowInDropDown = FALSE;
-		$item->ShowInButtonGroup = FALSE;
-
 		// Drop down button for ListOptions
 		$this->ListOptions->UseImageAndText = TRUE;
 		$this->ListOptions->UseDropDownButton = TRUE;
@@ -1163,10 +1214,6 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// Call ListOptions_Rendering event
 		$this->ListOptions_Rendering();
-
-		// "sequence"
-		$oListOpt = &$this->ListOptions->Items["sequence"];
-		$oListOpt->Body = ew_FormatSeqNo($this->RecCnt);
 
 		// "view"
 		$oListOpt = &$this->ListOptions->Items["view"];
@@ -1226,7 +1273,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->userlevelid->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->_tablename->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1248,7 +1295,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft98_userlevelpermissionslist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft94_rkas1list,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = ($Security->CanDelete());
 
 		// Set up options default
@@ -1267,10 +1314,10 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft98_userlevelpermissionslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft94_rkas1listsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft98_userlevelpermissionslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft94_rkas1listsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1294,7 +1341,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft98_userlevelpermissionslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft94_rkas1list}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1398,7 +1445,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft98_userlevelpermissionslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft94_rkas1listsrch\">" . $Language->Phrase("SearchLink") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1537,17 +1584,27 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->userlevelid->setDbValue($row['userlevelid']);
-		$this->_tablename->setDbValue($row['tablename']);
-		$this->permission->setDbValue($row['permission']);
+		$this->id->setDbValue($row['id']);
+		$this->no_urut->setDbValue($row['no_urut']);
+		$this->keterangan->setDbValue($row['keterangan']);
+		$this->jumlah->setDbValue($row['jumlah']);
+		$this->no_keyfield->setDbValue($row['no_keyfield']);
+		$this->no_level->setDbValue($row['no_level']);
+		$this->nama_tabel->setDbValue($row['nama_tabel']);
+		$this->id_data->setDbValue($row['id_data']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['userlevelid'] = NULL;
-		$row['tablename'] = NULL;
-		$row['permission'] = NULL;
+		$row['id'] = NULL;
+		$row['no_urut'] = NULL;
+		$row['keterangan'] = NULL;
+		$row['jumlah'] = NULL;
+		$row['no_keyfield'] = NULL;
+		$row['no_level'] = NULL;
+		$row['nama_tabel'] = NULL;
+		$row['id_data'] = NULL;
 		return $row;
 	}
 
@@ -1556,9 +1613,14 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->userlevelid->DbValue = $row['userlevelid'];
-		$this->_tablename->DbValue = $row['tablename'];
-		$this->permission->DbValue = $row['permission'];
+		$this->id->DbValue = $row['id'];
+		$this->no_urut->DbValue = $row['no_urut'];
+		$this->keterangan->DbValue = $row['keterangan'];
+		$this->jumlah->DbValue = $row['jumlah'];
+		$this->no_keyfield->DbValue = $row['no_keyfield'];
+		$this->no_level->DbValue = $row['no_level'];
+		$this->nama_tabel->DbValue = $row['nama_tabel'];
+		$this->id_data->DbValue = $row['id_data'];
 	}
 
 	// Load old record
@@ -1566,12 +1628,8 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("userlevelid")) <> "")
-			$this->userlevelid->CurrentValue = $this->getKey("userlevelid"); // userlevelid
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("_tablename")) <> "")
-			$this->_tablename->CurrentValue = $this->getKey("_tablename"); // tablename
+		if (strval($this->getKey("id")) <> "")
+			$this->id->CurrentValue = $this->getKey("id"); // id
 		else
 			$bValidKey = FALSE;
 
@@ -1599,42 +1657,96 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		$this->InlineCopyUrl = $this->GetInlineCopyUrl();
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
+		// Convert decimal values if posted back
+		if ($this->jumlah->FormValue == $this->jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->jumlah->CurrentValue)))
+			$this->jumlah->CurrentValue = ew_StrToFloat($this->jumlah->CurrentValue);
+
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// userlevelid
-		// tablename
-		// permission
+		// id
+		// no_urut
+		// keterangan
+		// jumlah
+		// no_keyfield
+		// no_level
+		// nama_tabel
+		// id_data
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// userlevelid
-		$this->userlevelid->ViewValue = $this->userlevelid->CurrentValue;
-		$this->userlevelid->ViewCustomAttributes = "";
+		// id
+		$this->id->ViewValue = $this->id->CurrentValue;
+		$this->id->ViewCustomAttributes = "";
 
-		// tablename
-		$this->_tablename->ViewValue = $this->_tablename->CurrentValue;
-		$this->_tablename->ViewCustomAttributes = "";
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
-		// permission
-		$this->permission->ViewValue = $this->permission->CurrentValue;
-		$this->permission->ViewCustomAttributes = "";
+		// keterangan
+		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+		$this->keterangan->ViewCustomAttributes = "";
 
-			// userlevelid
-			$this->userlevelid->LinkCustomAttributes = "";
-			$this->userlevelid->HrefValue = "";
-			$this->userlevelid->TooltipValue = "";
+		// jumlah
+		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
+		$this->jumlah->ViewCustomAttributes = "";
 
-			// tablename
-			$this->_tablename->LinkCustomAttributes = "";
-			$this->_tablename->HrefValue = "";
-			$this->_tablename->TooltipValue = "";
+		// no_keyfield
+		$this->no_keyfield->ViewValue = $this->no_keyfield->CurrentValue;
+		$this->no_keyfield->ViewCustomAttributes = "";
 
-			// permission
-			$this->permission->LinkCustomAttributes = "";
-			$this->permission->HrefValue = "";
-			$this->permission->TooltipValue = "";
+		// no_level
+		$this->no_level->ViewValue = $this->no_level->CurrentValue;
+		$this->no_level->ViewCustomAttributes = "";
+
+		// nama_tabel
+		$this->nama_tabel->ViewValue = $this->nama_tabel->CurrentValue;
+		$this->nama_tabel->ViewCustomAttributes = "";
+
+		// id_data
+		$this->id_data->ViewValue = $this->id_data->CurrentValue;
+		$this->id_data->ViewCustomAttributes = "";
+
+			// id
+			$this->id->LinkCustomAttributes = "";
+			$this->id->HrefValue = "";
+			$this->id->TooltipValue = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
+
+			// keterangan
+			$this->keterangan->LinkCustomAttributes = "";
+			$this->keterangan->HrefValue = "";
+			$this->keterangan->TooltipValue = "";
+
+			// jumlah
+			$this->jumlah->LinkCustomAttributes = "";
+			$this->jumlah->HrefValue = "";
+			$this->jumlah->TooltipValue = "";
+
+			// no_keyfield
+			$this->no_keyfield->LinkCustomAttributes = "";
+			$this->no_keyfield->HrefValue = "";
+			$this->no_keyfield->TooltipValue = "";
+
+			// no_level
+			$this->no_level->LinkCustomAttributes = "";
+			$this->no_level->HrefValue = "";
+			$this->no_level->TooltipValue = "";
+
+			// nama_tabel
+			$this->nama_tabel->LinkCustomAttributes = "";
+			$this->nama_tabel->HrefValue = "";
+			$this->nama_tabel->TooltipValue = "";
+
+			// id_data
+			$this->id_data->LinkCustomAttributes = "";
+			$this->id_data->HrefValue = "";
+			$this->id_data->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1684,7 +1796,7 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t98_userlevelpermissions\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t98_userlevelpermissions',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft98_userlevelpermissionslist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t94_rkas1\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t94_rkas1',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft94_rkas1list,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -2065,31 +2177,31 @@ class ct98_userlevelpermissions_list extends ct98_userlevelpermissions {
 <?php
 
 // Create page object
-if (!isset($t98_userlevelpermissions_list)) $t98_userlevelpermissions_list = new ct98_userlevelpermissions_list();
+if (!isset($t94_rkas1_list)) $t94_rkas1_list = new ct94_rkas1_list();
 
 // Page init
-$t98_userlevelpermissions_list->Page_Init();
+$t94_rkas1_list->Page_Init();
 
 // Page main
-$t98_userlevelpermissions_list->Page_Main();
+$t94_rkas1_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t98_userlevelpermissions_list->Page_Render();
+$t94_rkas1_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<?php if ($t94_rkas1->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = ft98_userlevelpermissionslist = new ew_Form("ft98_userlevelpermissionslist", "list");
-ft98_userlevelpermissionslist.FormKeyCountName = '<?php echo $t98_userlevelpermissions_list->FormKeyCountName ?>';
+var CurrentForm = ft94_rkas1list = new ew_Form("ft94_rkas1list", "list");
+ft94_rkas1list.FormKeyCountName = '<?php echo $t94_rkas1_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-ft98_userlevelpermissionslist.Form_CustomValidate = 
+ft94_rkas1list.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -2097,86 +2209,79 @@ ft98_userlevelpermissionslist.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft98_userlevelpermissionslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft94_rkas1list.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
 
-var CurrentSearchForm = ft98_userlevelpermissionslistsrch = new ew_Form("ft98_userlevelpermissionslistsrch");
+var CurrentSearchForm = ft94_rkas1listsrch = new ew_Form("ft94_rkas1listsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<?php if ($t94_rkas1->Export == "") { ?>
 <div class="ewToolbar">
-<?php if ($t98_userlevelpermissions_list->TotalRecs > 0 && $t98_userlevelpermissions_list->ExportOptions->Visible()) { ?>
-<?php $t98_userlevelpermissions_list->ExportOptions->Render("body") ?>
+<?php if ($t94_rkas1_list->TotalRecs > 0 && $t94_rkas1_list->ExportOptions->Visible()) { ?>
+<?php $t94_rkas1_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t98_userlevelpermissions_list->SearchOptions->Visible()) { ?>
-<?php $t98_userlevelpermissions_list->SearchOptions->Render("body") ?>
+<?php if ($t94_rkas1_list->SearchOptions->Visible()) { ?>
+<?php $t94_rkas1_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t98_userlevelpermissions_list->FilterOptions->Visible()) { ?>
-<?php $t98_userlevelpermissions_list->FilterOptions->Render("body") ?>
+<?php if ($t94_rkas1_list->FilterOptions->Visible()) { ?>
+<?php $t94_rkas1_list->FilterOptions->Render("body") ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
-	$bSelectLimit = $t98_userlevelpermissions_list->UseSelectLimit;
+	$bSelectLimit = $t94_rkas1_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($t98_userlevelpermissions_list->TotalRecs <= 0)
-			$t98_userlevelpermissions_list->TotalRecs = $t98_userlevelpermissions->ListRecordCount();
+		if ($t94_rkas1_list->TotalRecs <= 0)
+			$t94_rkas1_list->TotalRecs = $t94_rkas1->ListRecordCount();
 	} else {
-		if (!$t98_userlevelpermissions_list->Recordset && ($t98_userlevelpermissions_list->Recordset = $t98_userlevelpermissions_list->LoadRecordset()))
-			$t98_userlevelpermissions_list->TotalRecs = $t98_userlevelpermissions_list->Recordset->RecordCount();
+		if (!$t94_rkas1_list->Recordset && ($t94_rkas1_list->Recordset = $t94_rkas1_list->LoadRecordset()))
+			$t94_rkas1_list->TotalRecs = $t94_rkas1_list->Recordset->RecordCount();
 	}
-	$t98_userlevelpermissions_list->StartRec = 1;
-	if ($t98_userlevelpermissions_list->DisplayRecs <= 0 || ($t98_userlevelpermissions->Export <> "" && $t98_userlevelpermissions->ExportAll)) // Display all records
-		$t98_userlevelpermissions_list->DisplayRecs = $t98_userlevelpermissions_list->TotalRecs;
-	if (!($t98_userlevelpermissions->Export <> "" && $t98_userlevelpermissions->ExportAll))
-		$t98_userlevelpermissions_list->SetupStartRec(); // Set up start record position
+	$t94_rkas1_list->StartRec = 1;
+	if ($t94_rkas1_list->DisplayRecs <= 0 || ($t94_rkas1->Export <> "" && $t94_rkas1->ExportAll)) // Display all records
+		$t94_rkas1_list->DisplayRecs = $t94_rkas1_list->TotalRecs;
+	if (!($t94_rkas1->Export <> "" && $t94_rkas1->ExportAll))
+		$t94_rkas1_list->SetupStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$t98_userlevelpermissions_list->Recordset = $t98_userlevelpermissions_list->LoadRecordset($t98_userlevelpermissions_list->StartRec-1, $t98_userlevelpermissions_list->DisplayRecs);
+		$t94_rkas1_list->Recordset = $t94_rkas1_list->LoadRecordset($t94_rkas1_list->StartRec-1, $t94_rkas1_list->DisplayRecs);
 
 	// Set no record found message
-	if ($t98_userlevelpermissions->CurrentAction == "" && $t98_userlevelpermissions_list->TotalRecs == 0) {
+	if ($t94_rkas1->CurrentAction == "" && $t94_rkas1_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$t98_userlevelpermissions_list->setWarningMessage(ew_DeniedMsg());
-		if ($t98_userlevelpermissions_list->SearchWhere == "0=101")
-			$t98_userlevelpermissions_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$t94_rkas1_list->setWarningMessage(ew_DeniedMsg());
+		if ($t94_rkas1_list->SearchWhere == "0=101")
+			$t94_rkas1_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$t98_userlevelpermissions_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$t94_rkas1_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
-
-	// Audit trail on search
-	if ($t98_userlevelpermissions_list->AuditTrailOnSearch && $t98_userlevelpermissions_list->Command == "search" && !$t98_userlevelpermissions_list->RestoreSearch) {
-		$searchparm = ew_ServerVar("QUERY_STRING");
-		$searchsql = $t98_userlevelpermissions_list->getSessionWhere();
-		$t98_userlevelpermissions_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
-	}
-$t98_userlevelpermissions_list->RenderOtherOptions();
+$t94_rkas1_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($t98_userlevelpermissions->Export == "" && $t98_userlevelpermissions->CurrentAction == "") { ?>
-<form name="ft98_userlevelpermissionslistsrch" id="ft98_userlevelpermissionslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($t98_userlevelpermissions_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="ft98_userlevelpermissionslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($t94_rkas1->Export == "" && $t94_rkas1->CurrentAction == "") { ?>
+<form name="ft94_rkas1listsrch" id="ft94_rkas1listsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($t94_rkas1_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="ft94_rkas1listsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="t98_userlevelpermissions">
+<input type="hidden" name="t" value="t94_rkas1">
 	<div class="ewBasicSearch">
 <div id="xsr_1" class="ewRow">
 	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t98_userlevelpermissions_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t98_userlevelpermissions_list->BasicSearch->getType()) ?>">
+	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t94_rkas1_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
+	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t94_rkas1_list->BasicSearch->getType()) ?>">
 	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t98_userlevelpermissions_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t94_rkas1_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
 		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($t98_userlevelpermissions_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($t98_userlevelpermissions_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($t98_userlevelpermissions_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($t98_userlevelpermissions_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
+			<li<?php if ($t94_rkas1_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
+			<li<?php if ($t94_rkas1_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
+			<li<?php if ($t94_rkas1_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
+			<li<?php if ($t94_rkas1_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
 		</ul>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("SearchBtn") ?></button>
 	</div>
@@ -2187,70 +2292,70 @@ $t98_userlevelpermissions_list->RenderOtherOptions();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $t98_userlevelpermissions_list->ShowPageHeader(); ?>
+<?php $t94_rkas1_list->ShowPageHeader(); ?>
 <?php
-$t98_userlevelpermissions_list->ShowMessage();
+$t94_rkas1_list->ShowMessage();
 ?>
-<?php if ($t98_userlevelpermissions_list->TotalRecs > 0 || $t98_userlevelpermissions->CurrentAction <> "") { ?>
-<div class="box ewBox ewGrid<?php if ($t98_userlevelpermissions_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t98_userlevelpermissions">
-<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<?php if ($t94_rkas1_list->TotalRecs > 0 || $t94_rkas1->CurrentAction <> "") { ?>
+<div class="box ewBox ewGrid<?php if ($t94_rkas1_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t94_rkas1">
+<?php if ($t94_rkas1->Export == "") { ?>
 <div class="box-header ewGridUpperPanel">
-<?php if ($t98_userlevelpermissions->CurrentAction <> "gridadd" && $t98_userlevelpermissions->CurrentAction <> "gridedit") { ?>
+<?php if ($t94_rkas1->CurrentAction <> "gridadd" && $t94_rkas1->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t98_userlevelpermissions_list->Pager)) $t98_userlevelpermissions_list->Pager = new cPrevNextPager($t98_userlevelpermissions_list->StartRec, $t98_userlevelpermissions_list->DisplayRecs, $t98_userlevelpermissions_list->TotalRecs, $t98_userlevelpermissions_list->AutoHidePager) ?>
-<?php if ($t98_userlevelpermissions_list->Pager->RecordCount > 0 && $t98_userlevelpermissions_list->Pager->Visible) { ?>
+<?php if (!isset($t94_rkas1_list->Pager)) $t94_rkas1_list->Pager = new cPrevNextPager($t94_rkas1_list->StartRec, $t94_rkas1_list->DisplayRecs, $t94_rkas1_list->TotalRecs, $t94_rkas1_list->AutoHidePager) ?>
+<?php if ($t94_rkas1_list->Pager->RecordCount > 0 && $t94_rkas1_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t98_userlevelpermissions_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t94_rkas1_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t98_userlevelpermissions_list->Pager->RecordCount > 0) { ?>
+<?php if ($t94_rkas1_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t98_userlevelpermissions_list->TotalRecs > 0 && (!$t98_userlevelpermissions_list->AutoHidePageSizeSelector || $t98_userlevelpermissions_list->Pager->Visible)) { ?>
+<?php if ($t94_rkas1_list->TotalRecs > 0 && (!$t94_rkas1_list->AutoHidePageSizeSelector || $t94_rkas1_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t98_userlevelpermissions">
+<input type="hidden" name="t" value="t94_rkas1">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t98_userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t94_rkas1_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t94_rkas1_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t94_rkas1_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t94_rkas1_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t94_rkas1->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2258,166 +2363,251 @@ $t98_userlevelpermissions_list->ShowMessage();
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t98_userlevelpermissions_list->OtherOptions as &$option)
+	foreach ($t94_rkas1_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<form name="ft98_userlevelpermissionslist" id="ft98_userlevelpermissionslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t98_userlevelpermissions_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t98_userlevelpermissions_list->Token ?>">
+<form name="ft94_rkas1list" id="ft94_rkas1list" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t94_rkas1_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t94_rkas1_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t98_userlevelpermissions">
-<div id="gmp_t98_userlevelpermissions" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
-<?php if ($t98_userlevelpermissions_list->TotalRecs > 0 || $t98_userlevelpermissions->CurrentAction == "gridedit") { ?>
-<table id="tbl_t98_userlevelpermissionslist" class="table ewTable">
+<input type="hidden" name="t" value="t94_rkas1">
+<div id="gmp_t94_rkas1" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
+<?php if ($t94_rkas1_list->TotalRecs > 0 || $t94_rkas1->CurrentAction == "gridedit") { ?>
+<table id="tbl_t94_rkas1list" class="table ewTable">
 <thead>
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$t98_userlevelpermissions_list->RowType = EW_ROWTYPE_HEADER;
+$t94_rkas1_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$t98_userlevelpermissions_list->RenderListOptions();
+$t94_rkas1_list->RenderListOptions();
 
 // Render list options (header, left)
-$t98_userlevelpermissions_list->ListOptions->Render("header", "left");
+$t94_rkas1_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($t98_userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-	<?php if ($t98_userlevelpermissions->SortUrl($t98_userlevelpermissions->userlevelid) == "") { ?>
-		<th data-name="userlevelid" class="<?php echo $t98_userlevelpermissions->userlevelid->HeaderCellClass() ?>"><div id="elh_t98_userlevelpermissions_userlevelid" class="t98_userlevelpermissions_userlevelid"><div class="ewTableHeaderCaption"><?php echo $t98_userlevelpermissions->userlevelid->FldCaption() ?></div></div></th>
+<?php if ($t94_rkas1->id->Visible) { // id ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->id) == "") { ?>
+		<th data-name="id" class="<?php echo $t94_rkas1->id->HeaderCellClass() ?>"><div id="elh_t94_rkas1_id" class="t94_rkas1_id"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="userlevelid" class="<?php echo $t98_userlevelpermissions->userlevelid->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t98_userlevelpermissions->SortUrl($t98_userlevelpermissions->userlevelid) ?>',2);"><div id="elh_t98_userlevelpermissions_userlevelid" class="t98_userlevelpermissions_userlevelid">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t98_userlevelpermissions->userlevelid->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t98_userlevelpermissions->userlevelid->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t98_userlevelpermissions->userlevelid->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="id" class="<?php echo $t94_rkas1->id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->id) ?>',2);"><div id="elh_t94_rkas1_id" class="t94_rkas1_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t98_userlevelpermissions->_tablename->Visible) { // tablename ?>
-	<?php if ($t98_userlevelpermissions->SortUrl($t98_userlevelpermissions->_tablename) == "") { ?>
-		<th data-name="_tablename" class="<?php echo $t98_userlevelpermissions->_tablename->HeaderCellClass() ?>"><div id="elh_t98_userlevelpermissions__tablename" class="t98_userlevelpermissions__tablename"><div class="ewTableHeaderCaption"><?php echo $t98_userlevelpermissions->_tablename->FldCaption() ?></div></div></th>
+<?php if ($t94_rkas1->no_urut->Visible) { // no_urut ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->no_urut) == "") { ?>
+		<th data-name="no_urut" class="<?php echo $t94_rkas1->no_urut->HeaderCellClass() ?>"><div id="elh_t94_rkas1_no_urut" class="t94_rkas1_no_urut"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->no_urut->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="_tablename" class="<?php echo $t98_userlevelpermissions->_tablename->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t98_userlevelpermissions->SortUrl($t98_userlevelpermissions->_tablename) ?>',2);"><div id="elh_t98_userlevelpermissions__tablename" class="t98_userlevelpermissions__tablename">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t98_userlevelpermissions->_tablename->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t98_userlevelpermissions->_tablename->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t98_userlevelpermissions->_tablename->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="no_urut" class="<?php echo $t94_rkas1->no_urut->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->no_urut) ?>',2);"><div id="elh_t94_rkas1_no_urut" class="t94_rkas1_no_urut">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->no_urut->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->no_urut->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->no_urut->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t98_userlevelpermissions->permission->Visible) { // permission ?>
-	<?php if ($t98_userlevelpermissions->SortUrl($t98_userlevelpermissions->permission) == "") { ?>
-		<th data-name="permission" class="<?php echo $t98_userlevelpermissions->permission->HeaderCellClass() ?>"><div id="elh_t98_userlevelpermissions_permission" class="t98_userlevelpermissions_permission"><div class="ewTableHeaderCaption"><?php echo $t98_userlevelpermissions->permission->FldCaption() ?></div></div></th>
+<?php if ($t94_rkas1->keterangan->Visible) { // keterangan ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->keterangan) == "") { ?>
+		<th data-name="keterangan" class="<?php echo $t94_rkas1->keterangan->HeaderCellClass() ?>"><div id="elh_t94_rkas1_keterangan" class="t94_rkas1_keterangan"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->keterangan->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="permission" class="<?php echo $t98_userlevelpermissions->permission->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t98_userlevelpermissions->SortUrl($t98_userlevelpermissions->permission) ?>',2);"><div id="elh_t98_userlevelpermissions_permission" class="t98_userlevelpermissions_permission">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t98_userlevelpermissions->permission->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t98_userlevelpermissions->permission->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t98_userlevelpermissions->permission->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="keterangan" class="<?php echo $t94_rkas1->keterangan->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->keterangan) ?>',2);"><div id="elh_t94_rkas1_keterangan" class="t94_rkas1_keterangan">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->keterangan->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->keterangan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->keterangan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t94_rkas1->jumlah->Visible) { // jumlah ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->jumlah) == "") { ?>
+		<th data-name="jumlah" class="<?php echo $t94_rkas1->jumlah->HeaderCellClass() ?>"><div id="elh_t94_rkas1_jumlah" class="t94_rkas1_jumlah"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->jumlah->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="jumlah" class="<?php echo $t94_rkas1->jumlah->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->jumlah) ?>',2);"><div id="elh_t94_rkas1_jumlah" class="t94_rkas1_jumlah">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->jumlah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->jumlah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->jumlah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t94_rkas1->no_keyfield->Visible) { // no_keyfield ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->no_keyfield) == "") { ?>
+		<th data-name="no_keyfield" class="<?php echo $t94_rkas1->no_keyfield->HeaderCellClass() ?>"><div id="elh_t94_rkas1_no_keyfield" class="t94_rkas1_no_keyfield"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->no_keyfield->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="no_keyfield" class="<?php echo $t94_rkas1->no_keyfield->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->no_keyfield) ?>',2);"><div id="elh_t94_rkas1_no_keyfield" class="t94_rkas1_no_keyfield">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->no_keyfield->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->no_keyfield->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->no_keyfield->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t94_rkas1->no_level->Visible) { // no_level ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->no_level) == "") { ?>
+		<th data-name="no_level" class="<?php echo $t94_rkas1->no_level->HeaderCellClass() ?>"><div id="elh_t94_rkas1_no_level" class="t94_rkas1_no_level"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->no_level->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="no_level" class="<?php echo $t94_rkas1->no_level->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->no_level) ?>',2);"><div id="elh_t94_rkas1_no_level" class="t94_rkas1_no_level">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->no_level->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->no_level->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->no_level->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t94_rkas1->nama_tabel->Visible) { // nama_tabel ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->nama_tabel) == "") { ?>
+		<th data-name="nama_tabel" class="<?php echo $t94_rkas1->nama_tabel->HeaderCellClass() ?>"><div id="elh_t94_rkas1_nama_tabel" class="t94_rkas1_nama_tabel"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->nama_tabel->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="nama_tabel" class="<?php echo $t94_rkas1->nama_tabel->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->nama_tabel) ?>',2);"><div id="elh_t94_rkas1_nama_tabel" class="t94_rkas1_nama_tabel">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->nama_tabel->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->nama_tabel->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->nama_tabel->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t94_rkas1->id_data->Visible) { // id_data ?>
+	<?php if ($t94_rkas1->SortUrl($t94_rkas1->id_data) == "") { ?>
+		<th data-name="id_data" class="<?php echo $t94_rkas1->id_data->HeaderCellClass() ?>"><div id="elh_t94_rkas1_id_data" class="t94_rkas1_id_data"><div class="ewTableHeaderCaption"><?php echo $t94_rkas1->id_data->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="id_data" class="<?php echo $t94_rkas1->id_data->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t94_rkas1->SortUrl($t94_rkas1->id_data) ?>',2);"><div id="elh_t94_rkas1_id_data" class="t94_rkas1_id_data">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t94_rkas1->id_data->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t94_rkas1->id_data->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t94_rkas1->id_data->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php
 
 // Render list options (header, right)
-$t98_userlevelpermissions_list->ListOptions->Render("header", "right");
+$t94_rkas1_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($t98_userlevelpermissions->ExportAll && $t98_userlevelpermissions->Export <> "") {
-	$t98_userlevelpermissions_list->StopRec = $t98_userlevelpermissions_list->TotalRecs;
+if ($t94_rkas1->ExportAll && $t94_rkas1->Export <> "") {
+	$t94_rkas1_list->StopRec = $t94_rkas1_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($t98_userlevelpermissions_list->TotalRecs > $t98_userlevelpermissions_list->StartRec + $t98_userlevelpermissions_list->DisplayRecs - 1)
-		$t98_userlevelpermissions_list->StopRec = $t98_userlevelpermissions_list->StartRec + $t98_userlevelpermissions_list->DisplayRecs - 1;
+	if ($t94_rkas1_list->TotalRecs > $t94_rkas1_list->StartRec + $t94_rkas1_list->DisplayRecs - 1)
+		$t94_rkas1_list->StopRec = $t94_rkas1_list->StartRec + $t94_rkas1_list->DisplayRecs - 1;
 	else
-		$t98_userlevelpermissions_list->StopRec = $t98_userlevelpermissions_list->TotalRecs;
+		$t94_rkas1_list->StopRec = $t94_rkas1_list->TotalRecs;
 }
-$t98_userlevelpermissions_list->RecCnt = $t98_userlevelpermissions_list->StartRec - 1;
-if ($t98_userlevelpermissions_list->Recordset && !$t98_userlevelpermissions_list->Recordset->EOF) {
-	$t98_userlevelpermissions_list->Recordset->MoveFirst();
-	$bSelectLimit = $t98_userlevelpermissions_list->UseSelectLimit;
-	if (!$bSelectLimit && $t98_userlevelpermissions_list->StartRec > 1)
-		$t98_userlevelpermissions_list->Recordset->Move($t98_userlevelpermissions_list->StartRec - 1);
-} elseif (!$t98_userlevelpermissions->AllowAddDeleteRow && $t98_userlevelpermissions_list->StopRec == 0) {
-	$t98_userlevelpermissions_list->StopRec = $t98_userlevelpermissions->GridAddRowCount;
+$t94_rkas1_list->RecCnt = $t94_rkas1_list->StartRec - 1;
+if ($t94_rkas1_list->Recordset && !$t94_rkas1_list->Recordset->EOF) {
+	$t94_rkas1_list->Recordset->MoveFirst();
+	$bSelectLimit = $t94_rkas1_list->UseSelectLimit;
+	if (!$bSelectLimit && $t94_rkas1_list->StartRec > 1)
+		$t94_rkas1_list->Recordset->Move($t94_rkas1_list->StartRec - 1);
+} elseif (!$t94_rkas1->AllowAddDeleteRow && $t94_rkas1_list->StopRec == 0) {
+	$t94_rkas1_list->StopRec = $t94_rkas1->GridAddRowCount;
 }
 
 // Initialize aggregate
-$t98_userlevelpermissions->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$t98_userlevelpermissions->ResetAttrs();
-$t98_userlevelpermissions_list->RenderRow();
-while ($t98_userlevelpermissions_list->RecCnt < $t98_userlevelpermissions_list->StopRec) {
-	$t98_userlevelpermissions_list->RecCnt++;
-	if (intval($t98_userlevelpermissions_list->RecCnt) >= intval($t98_userlevelpermissions_list->StartRec)) {
-		$t98_userlevelpermissions_list->RowCnt++;
+$t94_rkas1->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$t94_rkas1->ResetAttrs();
+$t94_rkas1_list->RenderRow();
+while ($t94_rkas1_list->RecCnt < $t94_rkas1_list->StopRec) {
+	$t94_rkas1_list->RecCnt++;
+	if (intval($t94_rkas1_list->RecCnt) >= intval($t94_rkas1_list->StartRec)) {
+		$t94_rkas1_list->RowCnt++;
 
 		// Set up key count
-		$t98_userlevelpermissions_list->KeyCount = $t98_userlevelpermissions_list->RowIndex;
+		$t94_rkas1_list->KeyCount = $t94_rkas1_list->RowIndex;
 
 		// Init row class and style
-		$t98_userlevelpermissions->ResetAttrs();
-		$t98_userlevelpermissions->CssClass = "";
-		if ($t98_userlevelpermissions->CurrentAction == "gridadd") {
+		$t94_rkas1->ResetAttrs();
+		$t94_rkas1->CssClass = "";
+		if ($t94_rkas1->CurrentAction == "gridadd") {
 		} else {
-			$t98_userlevelpermissions_list->LoadRowValues($t98_userlevelpermissions_list->Recordset); // Load row values
+			$t94_rkas1_list->LoadRowValues($t94_rkas1_list->Recordset); // Load row values
 		}
-		$t98_userlevelpermissions->RowType = EW_ROWTYPE_VIEW; // Render view
+		$t94_rkas1->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$t98_userlevelpermissions->RowAttrs = array_merge($t98_userlevelpermissions->RowAttrs, array('data-rowindex'=>$t98_userlevelpermissions_list->RowCnt, 'id'=>'r' . $t98_userlevelpermissions_list->RowCnt . '_t98_userlevelpermissions', 'data-rowtype'=>$t98_userlevelpermissions->RowType));
+		$t94_rkas1->RowAttrs = array_merge($t94_rkas1->RowAttrs, array('data-rowindex'=>$t94_rkas1_list->RowCnt, 'id'=>'r' . $t94_rkas1_list->RowCnt . '_t94_rkas1', 'data-rowtype'=>$t94_rkas1->RowType));
 
 		// Render row
-		$t98_userlevelpermissions_list->RenderRow();
+		$t94_rkas1_list->RenderRow();
 
 		// Render list options
-		$t98_userlevelpermissions_list->RenderListOptions();
+		$t94_rkas1_list->RenderListOptions();
 ?>
-	<tr<?php echo $t98_userlevelpermissions->RowAttributes() ?>>
+	<tr<?php echo $t94_rkas1->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$t98_userlevelpermissions_list->ListOptions->Render("body", "left", $t98_userlevelpermissions_list->RowCnt);
+$t94_rkas1_list->ListOptions->Render("body", "left", $t94_rkas1_list->RowCnt);
 ?>
-	<?php if ($t98_userlevelpermissions->userlevelid->Visible) { // userlevelid ?>
-		<td data-name="userlevelid"<?php echo $t98_userlevelpermissions->userlevelid->CellAttributes() ?>>
-<span id="el<?php echo $t98_userlevelpermissions_list->RowCnt ?>_t98_userlevelpermissions_userlevelid" class="t98_userlevelpermissions_userlevelid">
-<span<?php echo $t98_userlevelpermissions->userlevelid->ViewAttributes() ?>>
-<?php echo $t98_userlevelpermissions->userlevelid->ListViewValue() ?></span>
+	<?php if ($t94_rkas1->id->Visible) { // id ?>
+		<td data-name="id"<?php echo $t94_rkas1->id->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_id" class="t94_rkas1_id">
+<span<?php echo $t94_rkas1->id->ViewAttributes() ?>>
+<?php echo $t94_rkas1->id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t98_userlevelpermissions->_tablename->Visible) { // tablename ?>
-		<td data-name="_tablename"<?php echo $t98_userlevelpermissions->_tablename->CellAttributes() ?>>
-<span id="el<?php echo $t98_userlevelpermissions_list->RowCnt ?>_t98_userlevelpermissions__tablename" class="t98_userlevelpermissions__tablename">
-<span<?php echo $t98_userlevelpermissions->_tablename->ViewAttributes() ?>>
-<?php echo $t98_userlevelpermissions->_tablename->ListViewValue() ?></span>
+	<?php if ($t94_rkas1->no_urut->Visible) { // no_urut ?>
+		<td data-name="no_urut"<?php echo $t94_rkas1->no_urut->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_no_urut" class="t94_rkas1_no_urut">
+<span<?php echo $t94_rkas1->no_urut->ViewAttributes() ?>>
+<?php echo $t94_rkas1->no_urut->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t98_userlevelpermissions->permission->Visible) { // permission ?>
-		<td data-name="permission"<?php echo $t98_userlevelpermissions->permission->CellAttributes() ?>>
-<span id="el<?php echo $t98_userlevelpermissions_list->RowCnt ?>_t98_userlevelpermissions_permission" class="t98_userlevelpermissions_permission">
-<span<?php echo $t98_userlevelpermissions->permission->ViewAttributes() ?>>
-<?php echo $t98_userlevelpermissions->permission->ListViewValue() ?></span>
+	<?php if ($t94_rkas1->keterangan->Visible) { // keterangan ?>
+		<td data-name="keterangan"<?php echo $t94_rkas1->keterangan->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_keterangan" class="t94_rkas1_keterangan">
+<span<?php echo $t94_rkas1->keterangan->ViewAttributes() ?>>
+<?php echo $t94_rkas1->keterangan->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t94_rkas1->jumlah->Visible) { // jumlah ?>
+		<td data-name="jumlah"<?php echo $t94_rkas1->jumlah->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_jumlah" class="t94_rkas1_jumlah">
+<span<?php echo $t94_rkas1->jumlah->ViewAttributes() ?>>
+<?php echo $t94_rkas1->jumlah->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t94_rkas1->no_keyfield->Visible) { // no_keyfield ?>
+		<td data-name="no_keyfield"<?php echo $t94_rkas1->no_keyfield->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_no_keyfield" class="t94_rkas1_no_keyfield">
+<span<?php echo $t94_rkas1->no_keyfield->ViewAttributes() ?>>
+<?php echo $t94_rkas1->no_keyfield->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t94_rkas1->no_level->Visible) { // no_level ?>
+		<td data-name="no_level"<?php echo $t94_rkas1->no_level->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_no_level" class="t94_rkas1_no_level">
+<span<?php echo $t94_rkas1->no_level->ViewAttributes() ?>>
+<?php echo $t94_rkas1->no_level->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t94_rkas1->nama_tabel->Visible) { // nama_tabel ?>
+		<td data-name="nama_tabel"<?php echo $t94_rkas1->nama_tabel->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_nama_tabel" class="t94_rkas1_nama_tabel">
+<span<?php echo $t94_rkas1->nama_tabel->ViewAttributes() ?>>
+<?php echo $t94_rkas1->nama_tabel->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t94_rkas1->id_data->Visible) { // id_data ?>
+		<td data-name="id_data"<?php echo $t94_rkas1->id_data->CellAttributes() ?>>
+<span id="el<?php echo $t94_rkas1_list->RowCnt ?>_t94_rkas1_id_data" class="t94_rkas1_id_data">
+<span<?php echo $t94_rkas1->id_data->ViewAttributes() ?>>
+<?php echo $t94_rkas1->id_data->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$t98_userlevelpermissions_list->ListOptions->Render("body", "right", $t98_userlevelpermissions_list->RowCnt);
+$t94_rkas1_list->ListOptions->Render("body", "right", $t94_rkas1_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($t98_userlevelpermissions->CurrentAction <> "gridadd")
-		$t98_userlevelpermissions_list->Recordset->MoveNext();
+	if ($t94_rkas1->CurrentAction <> "gridadd")
+		$t94_rkas1_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($t98_userlevelpermissions->CurrentAction == "") { ?>
+<?php if ($t94_rkas1->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -2425,67 +2615,67 @@ $t98_userlevelpermissions_list->ListOptions->Render("body", "right", $t98_userle
 <?php
 
 // Close recordset
-if ($t98_userlevelpermissions_list->Recordset)
-	$t98_userlevelpermissions_list->Recordset->Close();
+if ($t94_rkas1_list->Recordset)
+	$t94_rkas1_list->Recordset->Close();
 ?>
-<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<?php if ($t94_rkas1->Export == "") { ?>
 <div class="box-footer ewGridLowerPanel">
-<?php if ($t98_userlevelpermissions->CurrentAction <> "gridadd" && $t98_userlevelpermissions->CurrentAction <> "gridedit") { ?>
+<?php if ($t94_rkas1->CurrentAction <> "gridadd" && $t94_rkas1->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t98_userlevelpermissions_list->Pager)) $t98_userlevelpermissions_list->Pager = new cPrevNextPager($t98_userlevelpermissions_list->StartRec, $t98_userlevelpermissions_list->DisplayRecs, $t98_userlevelpermissions_list->TotalRecs, $t98_userlevelpermissions_list->AutoHidePager) ?>
-<?php if ($t98_userlevelpermissions_list->Pager->RecordCount > 0 && $t98_userlevelpermissions_list->Pager->Visible) { ?>
+<?php if (!isset($t94_rkas1_list->Pager)) $t94_rkas1_list->Pager = new cPrevNextPager($t94_rkas1_list->StartRec, $t94_rkas1_list->DisplayRecs, $t94_rkas1_list->TotalRecs, $t94_rkas1_list->AutoHidePager) ?>
+<?php if ($t94_rkas1_list->Pager->RecordCount > 0 && $t94_rkas1_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t98_userlevelpermissions_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t94_rkas1_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t98_userlevelpermissions_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t98_userlevelpermissions_list->PageUrl() ?>start=<?php echo $t98_userlevelpermissions_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t94_rkas1_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t94_rkas1_list->PageUrl() ?>start=<?php echo $t94_rkas1_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t98_userlevelpermissions_list->Pager->RecordCount > 0) { ?>
+<?php if ($t94_rkas1_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t98_userlevelpermissions_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t94_rkas1_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t98_userlevelpermissions_list->TotalRecs > 0 && (!$t98_userlevelpermissions_list->AutoHidePageSizeSelector || $t98_userlevelpermissions_list->Pager->Visible)) { ?>
+<?php if ($t94_rkas1_list->TotalRecs > 0 && (!$t94_rkas1_list->AutoHidePageSizeSelector || $t94_rkas1_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t98_userlevelpermissions">
+<input type="hidden" name="t" value="t94_rkas1">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t98_userlevelpermissions_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t98_userlevelpermissions->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t94_rkas1_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t94_rkas1_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t94_rkas1_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t94_rkas1_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t94_rkas1->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2493,7 +2683,7 @@ if ($t98_userlevelpermissions_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t98_userlevelpermissions_list->OtherOptions as &$option)
+	foreach ($t94_rkas1_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -2502,10 +2692,10 @@ if ($t98_userlevelpermissions_list->Recordset)
 <?php } ?>
 </div>
 <?php } ?>
-<?php if ($t98_userlevelpermissions_list->TotalRecs == 0 && $t98_userlevelpermissions->CurrentAction == "") { // Show other options ?>
+<?php if ($t94_rkas1_list->TotalRecs == 0 && $t94_rkas1->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t98_userlevelpermissions_list->OtherOptions as &$option) {
+	foreach ($t94_rkas1_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -2513,19 +2703,19 @@ if ($t98_userlevelpermissions_list->Recordset)
 </div>
 <div class="clearfix"></div>
 <?php } ?>
-<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<?php if ($t94_rkas1->Export == "") { ?>
 <script type="text/javascript">
-ft98_userlevelpermissionslistsrch.FilterList = <?php echo $t98_userlevelpermissions_list->GetFilterList() ?>;
-ft98_userlevelpermissionslistsrch.Init();
-ft98_userlevelpermissionslist.Init();
+ft94_rkas1listsrch.FilterList = <?php echo $t94_rkas1_list->GetFilterList() ?>;
+ft94_rkas1listsrch.Init();
+ft94_rkas1list.Init();
 </script>
 <?php } ?>
 <?php
-$t98_userlevelpermissions_list->ShowPageFooter();
+$t94_rkas1_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t98_userlevelpermissions->Export == "") { ?>
+<?php if ($t94_rkas1->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -2535,5 +2725,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t98_userlevelpermissions_list->Page_Terminate();
+$t94_rkas1_list->Page_Terminate();
 ?>

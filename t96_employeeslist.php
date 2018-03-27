@@ -825,6 +825,10 @@ class ct96_employees_list extends ct96_employees {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
+
+		// Load server side filters
+		if (EW_SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
+			$sSavedFilterList = $UserProfile->GetSearchFilters(CurrentUserName(), "ft96_employeeslistsrch");
 		$sFilterList = ew_Concat($sFilterList, $this->EmployeeID->AdvancedSearch->ToJson(), ","); // Field EmployeeID
 		$sFilterList = ew_Concat($sFilterList, $this->LastName->AdvancedSearch->ToJson(), ","); // Field LastName
 		$sFilterList = ew_Concat($sFilterList, $this->FirstName->AdvancedSearch->ToJson(), ","); // Field FirstName
