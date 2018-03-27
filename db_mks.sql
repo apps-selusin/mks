@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 27, 2018 at 11:54 AM
+-- Generation Time: Mar 27, 2018 at 08:25 PM
 -- Server version: 5.6.14
 -- PHP Version: 5.5.6
 
@@ -187,36 +187,104 @@ INSERT INTO `t05_rkas04` (`id`, `no_urut`, `keterangan`, `jumlah`, `lv3_id`) VAL
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t95_rkas`
+-- Table structure for table `t94_rkas1`
 --
 
-CREATE TABLE IF NOT EXISTS `t95_rkas` (
+CREATE TABLE IF NOT EXISTS `t94_rkas1` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `kiri_tabel` varchar(25) NOT NULL,
-  `kiri_id` int(11) NOT NULL,
-  `kiri_lv2` varchar(50) NOT NULL,
-  `kiri_lv3` varchar(50) NOT NULL,
-  `kiri_lv4` varchar(50) NOT NULL,
-  `kiri_jumlah` float(15,2) NOT NULL DEFAULT '0.00',
-  `kanan_tabel` varchar(25) NOT NULL,
-  `kanan_id` int(11) NOT NULL,
-  `kanan_lv2` varchar(50) NOT NULL,
-  `kanan_lv3` varchar(50) NOT NULL,
-  `kanan_lv4` varchar(50) NOT NULL,
-  `kanan_jumlah` float(15,2) NOT NULL DEFAULT '0.00',
+  `no_urut` varchar(12) NOT NULL,
+  `keterangan` varchar(50) NOT NULL,
+  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
+  `no_keyfield` varchar(8) NOT NULL,
+  `no_level` tinyint(4) NOT NULL,
+  `nama_tabel` varchar(10) NOT NULL,
+  `id_data` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
--- Dumping data for table `t95_rkas`
+-- Dumping data for table `t94_rkas1`
 --
 
-INSERT INTO `t95_rkas` (`id`, `kiri_tabel`, `kiri_id`, `kiri_lv2`, `kiri_lv3`, `kiri_lv4`, `kiri_jumlah`, `kanan_tabel`, `kanan_id`, `kanan_lv2`, `kanan_lv3`, `kanan_lv4`, `kanan_jumlah`) VALUES
-(1, 't03_rkas02', 1, 'Dana Rutin', '', '', 1.00, 't03_rkas02', 6, 'Dana Rutin', '', '', 0.00),
-(2, 't03_rkas02', 2, 'Dana Bantuan', '', '', 0.00, 't03_rkas02', 7, 'Dana Bantuan', '', '', 0.00),
-(3, 't03_rkas02', 3, 'Dana Komite', '', '', 0.00, 't03_rkas02', 8, 'Dana Komite', '', '', 0.00),
-(4, 't03_rkas02', 4, 'Dana Hibah', '', '', 0.00, 't03_rkas02', 9, 'Dana Hibah', '', '', 0.00),
-(5, 't03_rkas02', 5, 'Dana DAK', '', '', 0.00, 't03_rkas02', 10, 'Dana DAK', '', '', 0.00);
+INSERT INTO `t94_rkas1` (`id`, `no_urut`, `keterangan`, `jumlah`, `no_keyfield`, `no_level`, `nama_tabel`, `id_data`) VALUES
+(1, '1.', 'Sumber Dana', 0.00, '01000000', 1, 't02_rkas01', 1),
+(2, '1.1.', 'Dana Rutin', 1.00, '01010000', 2, 't03_rkas02', 1),
+(3, '1.1.1.', 'Gaji', 0.00, '01010100', 3, 't04_rkas03', 1),
+(4, '1.1.2.', 'Tunjangan Profesi', 0.00, '01010200', 3, 't04_rkas03', 2),
+(5, '1.1.3.', 'Kesra', 0.00, '01010300', 3, 't04_rkas03', 3),
+(6, '1.2.', 'Dana Bantuan', 0.00, '01020000', 2, 't03_rkas02', 2),
+(7, '1.2.1.', 'Dana BOS', 0.00, '01020100', 3, 't04_rkas03', 4),
+(8, '1.2.2.', 'Dana DOS', 0.00, '01020200', 3, 't04_rkas03', 5),
+(9, '1.3.', 'Dana Komite', 0.00, '01030000', 2, 't03_rkas02', 3),
+(10, '1.4.', 'Dana Hibah', 0.00, '01040000', 2, 't03_rkas02', 4),
+(11, '1.5.', 'Dana DAK', 0.00, '01050000', 2, 't03_rkas02', 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `t95_rkas2`
+--
+
+CREATE TABLE IF NOT EXISTS `t95_rkas2` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `no_urut` varchar(12) NOT NULL,
+  `keterangan` varchar(50) NOT NULL,
+  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
+  `no_keyfield` varchar(8) NOT NULL,
+  `no_level` tinyint(4) NOT NULL,
+  `nama_tabel` varchar(10) NOT NULL,
+  `id_data` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
+
+--
+-- Dumping data for table `t95_rkas2`
+--
+
+INSERT INTO `t95_rkas2` (`id`, `no_urut`, `keterangan`, `jumlah`, `no_keyfield`, `no_level`, `nama_tabel`, `id_data`) VALUES
+(1, '2.', 'Penggunaan', 0.00, '01000000', 1, 't02_rkas01', 2),
+(2, '2.1.', 'Dana Rutin', 0.00, '01010000', 2, 't03_rkas02', 6),
+(3, '2.1.1.', 'Gaji Guru / Pegawai', 0.00, '01010100', 3, 't04_rkas03', 6),
+(4, '2.1.2.', 'Tunjangan Profesional Guru', 0.00, '01010200', 3, 't04_rkas03', 7),
+(5, '2.1.3.', 'Kesra Guru / Pegawai', 0.00, '01010300', 3, 't04_rkas03', 8),
+(6, '2.2.', 'Dana Bantuan', 0.00, '01020000', 2, 't03_rkas02', 7),
+(7, '2.2.1.', 'Dana BOS', 0.00, '01020100', 3, 't04_rkas03', 9),
+(8, '2.2.1.1.', 'Pembiayaan Penerimaan Siswa Baru', 0.00, '01020101', 4, 't05_rkas04', 1),
+(9, '2.2.1.2.', 'Pembelian Buku Perpustakaan', 0.00, '01020102', 4, 't05_rkas04', 2),
+(10, '2.2.1.3.', 'Pembelian Buku Pelajaran', 0.00, '01020103', 4, 't05_rkas04', 3),
+(11, '2.2.1.4.', 'Pembiayaan Remidial (Ekstrakurikuler)', 0.00, '01020104', 4, 't05_rkas04', 4),
+(12, '2.2.1.5.', 'Pembiayaan Ulangan Semester dan UAS/UASBN', 0.00, '01020105', 4, 't05_rkas04', 5),
+(13, '2.2.1.6.', 'Pembiayaan Bahan Habis Pakai (ATK)', 0.00, '01020106', 4, 't05_rkas04', 6),
+(14, '2.2.1.7.', 'Pembiayaan Langganan Daya & Jasa', 0.00, '01020107', 4, 't05_rkas04', 7),
+(15, '2.2.1.8.', 'Pembiayaan Perawatan', 0.00, '01020108', 4, 't05_rkas04', 8),
+(16, '2.2.1.9.', 'Pembiayaan Honorarium GTT', 0.00, '01020109', 4, 't05_rkas04', 9),
+(17, '2.2.1.10.', 'Pengembangan Profesi Guru', 0.00, '01020110', 4, 't05_rkas04', 10),
+(18, '2.2.1.11.', 'Bantuan Transportasi Siswa Miskin', 0.00, '01020111', 4, 't05_rkas04', 11),
+(19, '2.2.1.12.', 'Pembiayaan Pengolahan & BOS', 0.00, '01020112', 4, 't05_rkas04', 12),
+(20, '2.2.1.13.', 'Pembelian Komputer', 0.00, '01020113', 4, 't05_rkas04', 13),
+(21, '2.2.1.14.', 'Pembelian ABP & Lain-lain', 0.00, '01020114', 4, 't05_rkas04', 14),
+(22, '2.2.1.15.', 'Pengeluaran Pajak', 0.00, '01020115', 4, 't05_rkas04', 15),
+(23, '2.2.2.', 'Dana DOS', 0.00, '01020200', 3, 't04_rkas03', 10),
+(24, '2.2.2.1.', 'Pelaksanaan Pelajaran', 0.00, '01020201', 4, 't05_rkas04', 16),
+(25, '2.2.2.2.', 'TU Sekolah', 0.00, '01020202', 4, 't05_rkas04', 17),
+(26, '2.2.2.3.', 'Belajar Barang', 0.00, '01020203', 4, 't05_rkas04', 18),
+(27, '2.2.2.4.', 'Pendataan / Pelaporan Sekolah', 0.00, '01020204', 4, 't05_rkas04', 19),
+(28, '2.2.2.5.', 'Honor Guru / Pegawai', 0.00, '01020205', 4, 't05_rkas04', 20),
+(29, '2.2.2.6.', 'Transport', 0.00, '01020206', 4, 't05_rkas04', 21),
+(30, '2.2.2.7.', 'Lain-lain', 0.00, '01020207', 4, 't05_rkas04', 22),
+(31, '2.2.2.8.', 'Pajak', 0.00, '01020208', 4, 't05_rkas04', 23),
+(32, '2.3.', 'Dana Komite', 0.00, '01030000', 2, 't03_rkas02', 8),
+(33, '2.3.1.', 'Pembiayaan Perawatan', 0.00, '01030100', 3, 't04_rkas03', 11),
+(34, '2.3.2.', 'Honorarium GTT', 0.00, '01030200', 3, 't04_rkas03', 12),
+(35, '2.3.3.', 'Penembokan Batas Halaman Sekolah', 0.00, '01030300', 3, 't04_rkas03', 13),
+(36, '2.3.4.', 'Pembangunan Mushalla Sekolah', 0.00, '01030400', 3, 't04_rkas03', 14),
+(37, '2.3.5.', 'Lain-lain', 0.00, '01030500', 3, 't04_rkas03', 15),
+(38, '2.4.', 'Dana Hibah', 0.00, '01040000', 2, 't03_rkas02', 9),
+(39, '2.5.', 'Dana DAK', 0.00, '01050000', 2, 't03_rkas02', 10),
+(40, '2.5.1.', 'Pembelian Bahan Bangunan', 0.00, '01050100', 3, 't04_rkas03', 16),
+(41, '2.5.2.', 'Ongkos Tukang', 0.00, '01050200', 3, 't04_rkas03', 17),
+(42, '2.5.3.', 'Pembiayaan Laporan', 0.00, '01050300', 3, 't04_rkas03', 18),
+(43, '2.5.4.', 'Pajak', 0.00, '01050400', 3, 't04_rkas03', 19);
 
 -- --------------------------------------------------------
 
