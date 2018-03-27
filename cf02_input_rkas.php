@@ -3,6 +3,7 @@ if (session_id() == "") session_start(); // Init session data
 ob_start(); // Turn on output buffering
 ?>
 <?php include_once "ewcfg14.php" ?>
+<?php $EW_ROOT_RELATIVE_PATH = ""; ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
@@ -13,18 +14,21 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$default = NULL; // Initialize page object first
+$cf02_input_rkas_php = NULL; // Initialize page object first
 
-class cdefault {
+class ccf02_input_rkas_php {
 
 	// Page ID
-	var $PageID = 'default';
+	var $PageID = 'custom';
 
 	// Project ID
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
+	// Table name
+	var $TableName = 'cf02_input_rkas.php';
+
 	// Page object name
-	var $PageObjName = 'default';
+	var $PageObjName = 'cf02_input_rkas_php';
 
 	// Page headings
 	var $Heading = '';
@@ -209,7 +213,11 @@ class cdefault {
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
-			define("EW_PAGE_ID", 'default', TRUE);
+			define("EW_PAGE_ID", 'custom', TRUE);
+
+		// Table name (for backward compatibility)
+		if (!defined("EW_TABLE_NAME"))
+			define("EW_TABLE_NAME", 'cf02_input_rkas.php', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -240,17 +248,31 @@ class cdefault {
 
 		// Security
 		$Security = new cAdvancedSecurity();
+		if (!$Security->IsLoggedIn()) $Security->AutoLogin();
+		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
+		$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName);
+		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
+		if (!$Security->CanReport()) {
+			$Security->SaveLastUrl();
+			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
+			$this->Page_Terminate(ew_GetUrl("index.php"));
+		}
+		if ($Security->IsLoggedIn()) {
+			$Security->UserID_Loading();
+			$Security->LoadUserID();
+			$Security->UserID_Loaded();
+		}
 
 		// NOTE: Security object may be needed in other part of the script, skip set to Nothing
 		// 
 		// Security = null;
 		// 
+
+		if (@$_GET["export"] <> "")
+			$gsExport = $_GET["export"]; // Get export parameter, used in header
+
 		// Global Page Loading event (in userfn*.php)
-
 		Page_Loading();
-
-		// Page Load event
-		$this->Page_Load();
 
 		// Check token
 		if (!$this->ValidPost()) {
@@ -269,16 +291,12 @@ class cdefault {
 	function Page_Terminate($url = "") {
 		global $gsExportFile, $gTmpImages;
 
-		// Page Unload event
-		$this->Page_Unload();
-
 		// Global Page Unloaded event (in userfn*.php)
 		Page_Unloaded();
 
 		// Export
-		$this->Page_Redirecting($url);
-
 		// Close connection
+
 		ew_CloseConn();
 
 		// Go to URL if specified
@@ -295,72 +313,18 @@ class cdefault {
 	// Page main
 	//
 	function Page_Main() {
-		global $Security, $Language, $Breadcrumb;
+
+		// Set up Breadcrumb
+		$this->SetupBreadcrumb();
+	}
+
+	// Set up Breadcrumb
+	function SetupBreadcrumb() {
+		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
-
-		// If session expired, show session expired message
-		if (@$_GET["expired"] == "1")
-			$this->setFailureMessage($Language->Phrase("SessionExpired"));
-		if (!$Security->IsLoggedIn()) $Security->AutoLogin();
-		$Security->LoadUserLevel(); // Load User Level
-		if ($Security->AllowList(CurrentProjectID() . 'cf01_home.php'))
-		$this->Page_Terminate("cf01_home.php"); // Exit and go to default page
-		if ($Security->AllowList(CurrentProjectID() . 't01_master_sekolah'))
-			$this->Page_Terminate("t01_master_sekolahlist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't02_rkas01'))
-			$this->Page_Terminate("t02_rkas01list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't03_rkas02'))
-			$this->Page_Terminate("t03_rkas02list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't04_rkas03'))
-			$this->Page_Terminate("t04_rkas03list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't05_rkas04'))
-			$this->Page_Terminate("t05_rkas04list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't95_rkas'))
-			$this->Page_Terminate("t95_rkaslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't96_employees'))
-			$this->Page_Terminate("t96_employeeslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't97_userlevels'))
-			$this->Page_Terminate("t97_userlevelslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't98_userlevelpermissions'))
-			$this->Page_Terminate("t98_userlevelpermissionslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't99_audit_trail'))
-			$this->Page_Terminate("t99_audit_traillist.php");
-		if ($Security->AllowList(CurrentProjectID() . 'cf02_input_rkas.php'))
-			$this->Page_Terminate("cf02_input_rkas.php");
-		if ($Security->IsLoggedIn()) {
-			$this->setFailureMessage(ew_DeniedMsg() . "<br><br><a href=\"logout.php\">" . $Language->Phrase("BackToLogin") . "</a>");
-		} else {
-			$this->Page_Terminate("login.php"); // Exit and go to login page
-		}
-	}
-
-	// Page Load event
-	function Page_Load() {
-
-		//echo "Page Load";
-	}
-
-	// Page Unload event
-	function Page_Unload() {
-
-		//echo "Page Unload";
-	}
-
-	// Page Redirecting event
-	function Page_Redirecting(&$url) {
-
-		// Example:
-		//$url = "your URL";
-
-	}
-
-	// Message Showing event
-	// $type = ''|'success'|'failure'
-	function Message_Showing(&$msg, $type) {
-
-		// Example:
-		//if ($type == 'success') $msg = "your success message";
-
+		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
+		$Breadcrumb->Add("custom", "cf02_input_rkas_php", $url, "", "cf02_input_rkas_php", TRUE);
+		$this->Heading = $Language->TablePhrase("cf02_input_rkas_php", "TblCaption"); 
 	}
 }
 ?>
@@ -368,19 +332,24 @@ class cdefault {
 <?php
 
 // Create page object
-if (!isset($default)) $default = new cdefault();
+if (!isset($cf02_input_rkas_php)) $cf02_input_rkas_php = new ccf02_input_rkas_php();
 
 // Page init
-$default->Page_Init();
+$cf02_input_rkas_php->Page_Init();
 
 // Page main
-$default->Page_Main();
+$cf02_input_rkas_php->Page_Main();
+
+// Global Page Rendering event (in userfn*.php)
+Page_Rendering();
 ?>
 <?php include_once "header.php" ?>
-<?php
-$default->ShowMessage();
-?>
+<form name="form01" method="post" action="cf02_input_rkas02.php">
+	<div>Mohon klik tombol Proses di bawah ini untuk melanjutkan proses input data RKAS</div>
+	<input type="submit" value="Proses">
+</form>
+<?php if (EW_DEBUG_ENABLED) echo ew_DebugMsg(); ?>
 <?php include_once "footer.php" ?>
 <?php
-$default->Page_Terminate();
+$cf02_input_rkas_php->Page_Terminate();
 ?>

@@ -808,10 +808,6 @@ class ct97_userlevels_list extends ct97_userlevels {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-
-		// Load server side filters
-		if (EW_SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
-			$sSavedFilterList = $UserProfile->GetSearchFilters(CurrentUserName(), "ft97_userlevelslistsrch");
 		$sFilterList = ew_Concat($sFilterList, $this->userlevelid->AdvancedSearch->ToJson(), ","); // Field userlevelid
 		$sFilterList = ew_Concat($sFilterList, $this->userlevelname->AdvancedSearch->ToJson(), ","); // Field userlevelname
 		if ($this->BasicSearch->Keyword <> "") {

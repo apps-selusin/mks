@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2018 at 05:57 PM
+-- Generation Time: Mar 27, 2018 at 11:54 AM
 -- Server version: 5.6.14
 -- PHP Version: 5.5.6
 
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `t03_rkas02` (
 --
 
 INSERT INTO `t03_rkas02` (`id`, `no_urut`, `keterangan`, `jumlah`, `lv1_id`) VALUES
-(1, 1, 'Dana Rutin', 0.00, 1),
+(1, 1, 'Dana Rutin', 1.00, 1),
 (2, 2, 'Dana Bantuan', 0.00, 1),
 (3, 3, 'Dana Komite', 0.00, 1),
 (4, 4, 'Dana Hibah', 0.00, 1),
@@ -183,6 +183,40 @@ INSERT INTO `t05_rkas04` (`id`, `no_urut`, `keterangan`, `jumlah`, `lv3_id`) VAL
 (21, 6, 'Transport', 0.00, 10),
 (22, 7, 'Lain-lain', 0.00, 10),
 (23, 8, 'Pajak', 0.00, 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `t95_rkas`
+--
+
+CREATE TABLE IF NOT EXISTS `t95_rkas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `kiri_tabel` varchar(25) NOT NULL,
+  `kiri_id` int(11) NOT NULL,
+  `kiri_lv2` varchar(50) NOT NULL,
+  `kiri_lv3` varchar(50) NOT NULL,
+  `kiri_lv4` varchar(50) NOT NULL,
+  `kiri_jumlah` float(15,2) NOT NULL DEFAULT '0.00',
+  `kanan_tabel` varchar(25) NOT NULL,
+  `kanan_id` int(11) NOT NULL,
+  `kanan_lv2` varchar(50) NOT NULL,
+  `kanan_lv3` varchar(50) NOT NULL,
+  `kanan_lv4` varchar(50) NOT NULL,
+  `kanan_jumlah` float(15,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `t95_rkas`
+--
+
+INSERT INTO `t95_rkas` (`id`, `kiri_tabel`, `kiri_id`, `kiri_lv2`, `kiri_lv3`, `kiri_lv4`, `kiri_jumlah`, `kanan_tabel`, `kanan_id`, `kanan_lv2`, `kanan_lv3`, `kanan_lv4`, `kanan_jumlah`) VALUES
+(1, 't03_rkas02', 1, 'Dana Rutin', '', '', 1.00, 't03_rkas02', 6, 'Dana Rutin', '', '', 0.00),
+(2, 't03_rkas02', 2, 'Dana Bantuan', '', '', 0.00, 't03_rkas02', 7, 'Dana Bantuan', '', '', 0.00),
+(3, 't03_rkas02', 3, 'Dana Komite', '', '', 0.00, 't03_rkas02', 8, 'Dana Komite', '', '', 0.00),
+(4, 't03_rkas02', 4, 'Dana Hibah', '', '', 0.00, 't03_rkas02', 9, 'Dana Hibah', '', '', 0.00),
+(5, 't03_rkas02', 5, 'Dana DAK', '', '', 0.00, 't03_rkas02', 10, 'Dana DAK', '', '', 0.00);
 
 -- --------------------------------------------------------
 
@@ -294,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `t99_audit_trail` (
   `oldvalue` longtext,
   `newvalue` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=352 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=354 ;
 
 --
 -- Dumping data for table `t99_audit_trail`
@@ -651,7 +685,9 @@ INSERT INTO `t99_audit_trail` (`id`, `datetime`, `script`, `user`, `action`, `ta
 (348, '2018-03-22 21:16:14', '/mks/t04_rkas03add.php', '1', 'A', 't04_rkas03', 'no_urut', '19', '', '4'),
 (349, '2018-03-22 21:16:14', '/mks/t04_rkas03add.php', '1', 'A', 't04_rkas03', 'keterangan', '19', '', 'Pajak'),
 (350, '2018-03-22 21:16:14', '/mks/t04_rkas03add.php', '1', 'A', 't04_rkas03', 'jumlah', '19', '', '0.00'),
-(351, '2018-03-22 21:16:14', '/mks/t04_rkas03add.php', '1', 'A', 't04_rkas03', 'id', '19', '', '19');
+(351, '2018-03-22 21:16:14', '/mks/t04_rkas03add.php', '1', 'A', 't04_rkas03', 'id', '19', '', '19'),
+(352, '2018-03-27 11:05:43', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
+(353, '2018-03-27 13:26:03', '/mks/login.php', 'admin', 'login', '::1', '', '', '', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

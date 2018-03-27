@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t99_audit_trailinfo.php" ?>
+<?php include_once "t95_rkasinfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t99_audit_trail_list = NULL; // Initialize page object first
+$t95_rkas_list = NULL; // Initialize page object first
 
-class ct99_audit_trail_list extends ct99_audit_trail {
+class ct95_rkas_list extends ct95_rkas {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +25,13 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't99_audit_trail';
+	var $TableName = 't95_rkas';
 
 	// Page object name
-	var $PageObjName = 't99_audit_trail_list';
+	var $PageObjName = 't95_rkas_list';
 
 	// Grid form hidden field names
-	var $FormName = 'ft99_audit_traillist';
+	var $FormName = 'ft95_rkaslist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -296,10 +296,10 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t99_audit_trail)
-		if (!isset($GLOBALS["t99_audit_trail"]) || get_class($GLOBALS["t99_audit_trail"]) == "ct99_audit_trail") {
-			$GLOBALS["t99_audit_trail"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t99_audit_trail"];
+		// Table object (t95_rkas)
+		if (!isset($GLOBALS["t95_rkas"]) || get_class($GLOBALS["t95_rkas"]) == "ct95_rkas") {
+			$GLOBALS["t95_rkas"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t95_rkas"];
 		}
 
 		// Initialize URLs
@@ -310,12 +310,12 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "t99_audit_trailadd.php";
+		$this->AddUrl = "t95_rkasadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "t99_audit_traildelete.php";
-		$this->MultiUpdateUrl = "t99_audit_trailupdate.php";
+		$this->MultiDeleteUrl = "t95_rkasdelete.php";
+		$this->MultiUpdateUrl = "t95_rkasupdate.php";
 
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
@@ -326,7 +326,7 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't99_audit_trail', TRUE);
+			define("EW_TABLE_NAME", 't95_rkas', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -368,7 +368,7 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption ft99_audit_traillistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption ft95_rkaslistsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -458,12 +458,18 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		$this->id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
 			$this->id->Visible = FALSE;
-		$this->datetime->SetVisibility();
-		$this->script->SetVisibility();
-		$this->user->SetVisibility();
-		$this->action->SetVisibility();
-		$this->_table->SetVisibility();
-		$this->_field->SetVisibility();
+		$this->kiri_tabel->SetVisibility();
+		$this->kiri_id->SetVisibility();
+		$this->kiri_lv2->SetVisibility();
+		$this->kiri_lv3->SetVisibility();
+		$this->kiri_lv4->SetVisibility();
+		$this->kiri_jumlah->SetVisibility();
+		$this->kanan_tabel->SetVisibility();
+		$this->kanan_id->SetVisibility();
+		$this->kanan_lv2->SetVisibility();
+		$this->kanan_lv3->SetVisibility();
+		$this->kanan_lv4->SetVisibility();
+		$this->kanan_jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -524,13 +530,13 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t99_audit_trail;
+		global $EW_EXPORT, $t95_rkas;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t99_audit_trail);
+				$doc = new $class($t95_rkas);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -817,15 +823,18 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		$sFilterList = "";
 		$sSavedFilterList = "";
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJson(), ","); // Field id
-		$sFilterList = ew_Concat($sFilterList, $this->datetime->AdvancedSearch->ToJson(), ","); // Field datetime
-		$sFilterList = ew_Concat($sFilterList, $this->script->AdvancedSearch->ToJson(), ","); // Field script
-		$sFilterList = ew_Concat($sFilterList, $this->user->AdvancedSearch->ToJson(), ","); // Field user
-		$sFilterList = ew_Concat($sFilterList, $this->action->AdvancedSearch->ToJson(), ","); // Field action
-		$sFilterList = ew_Concat($sFilterList, $this->_table->AdvancedSearch->ToJson(), ","); // Field table
-		$sFilterList = ew_Concat($sFilterList, $this->_field->AdvancedSearch->ToJson(), ","); // Field field
-		$sFilterList = ew_Concat($sFilterList, $this->keyvalue->AdvancedSearch->ToJson(), ","); // Field keyvalue
-		$sFilterList = ew_Concat($sFilterList, $this->oldvalue->AdvancedSearch->ToJson(), ","); // Field oldvalue
-		$sFilterList = ew_Concat($sFilterList, $this->newvalue->AdvancedSearch->ToJson(), ","); // Field newvalue
+		$sFilterList = ew_Concat($sFilterList, $this->kiri_tabel->AdvancedSearch->ToJson(), ","); // Field kiri_tabel
+		$sFilterList = ew_Concat($sFilterList, $this->kiri_id->AdvancedSearch->ToJson(), ","); // Field kiri_id
+		$sFilterList = ew_Concat($sFilterList, $this->kiri_lv2->AdvancedSearch->ToJson(), ","); // Field kiri_lv2
+		$sFilterList = ew_Concat($sFilterList, $this->kiri_lv3->AdvancedSearch->ToJson(), ","); // Field kiri_lv3
+		$sFilterList = ew_Concat($sFilterList, $this->kiri_lv4->AdvancedSearch->ToJson(), ","); // Field kiri_lv4
+		$sFilterList = ew_Concat($sFilterList, $this->kiri_jumlah->AdvancedSearch->ToJson(), ","); // Field kiri_jumlah
+		$sFilterList = ew_Concat($sFilterList, $this->kanan_tabel->AdvancedSearch->ToJson(), ","); // Field kanan_tabel
+		$sFilterList = ew_Concat($sFilterList, $this->kanan_id->AdvancedSearch->ToJson(), ","); // Field kanan_id
+		$sFilterList = ew_Concat($sFilterList, $this->kanan_lv2->AdvancedSearch->ToJson(), ","); // Field kanan_lv2
+		$sFilterList = ew_Concat($sFilterList, $this->kanan_lv3->AdvancedSearch->ToJson(), ","); // Field kanan_lv3
+		$sFilterList = ew_Concat($sFilterList, $this->kanan_lv4->AdvancedSearch->ToJson(), ","); // Field kanan_lv4
+		$sFilterList = ew_Concat($sFilterList, $this->kanan_jumlah->AdvancedSearch->ToJson(), ","); // Field kanan_jumlah
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -848,7 +857,7 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = @$_POST["filters"];
-			$UserProfile->SetSearchFilters(CurrentUserName(), "ft99_audit_traillistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "ft95_rkaslistsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -878,77 +887,101 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
 		$this->id->AdvancedSearch->Save();
 
-		// Field datetime
-		$this->datetime->AdvancedSearch->SearchValue = @$filter["x_datetime"];
-		$this->datetime->AdvancedSearch->SearchOperator = @$filter["z_datetime"];
-		$this->datetime->AdvancedSearch->SearchCondition = @$filter["v_datetime"];
-		$this->datetime->AdvancedSearch->SearchValue2 = @$filter["y_datetime"];
-		$this->datetime->AdvancedSearch->SearchOperator2 = @$filter["w_datetime"];
-		$this->datetime->AdvancedSearch->Save();
+		// Field kiri_tabel
+		$this->kiri_tabel->AdvancedSearch->SearchValue = @$filter["x_kiri_tabel"];
+		$this->kiri_tabel->AdvancedSearch->SearchOperator = @$filter["z_kiri_tabel"];
+		$this->kiri_tabel->AdvancedSearch->SearchCondition = @$filter["v_kiri_tabel"];
+		$this->kiri_tabel->AdvancedSearch->SearchValue2 = @$filter["y_kiri_tabel"];
+		$this->kiri_tabel->AdvancedSearch->SearchOperator2 = @$filter["w_kiri_tabel"];
+		$this->kiri_tabel->AdvancedSearch->Save();
 
-		// Field script
-		$this->script->AdvancedSearch->SearchValue = @$filter["x_script"];
-		$this->script->AdvancedSearch->SearchOperator = @$filter["z_script"];
-		$this->script->AdvancedSearch->SearchCondition = @$filter["v_script"];
-		$this->script->AdvancedSearch->SearchValue2 = @$filter["y_script"];
-		$this->script->AdvancedSearch->SearchOperator2 = @$filter["w_script"];
-		$this->script->AdvancedSearch->Save();
+		// Field kiri_id
+		$this->kiri_id->AdvancedSearch->SearchValue = @$filter["x_kiri_id"];
+		$this->kiri_id->AdvancedSearch->SearchOperator = @$filter["z_kiri_id"];
+		$this->kiri_id->AdvancedSearch->SearchCondition = @$filter["v_kiri_id"];
+		$this->kiri_id->AdvancedSearch->SearchValue2 = @$filter["y_kiri_id"];
+		$this->kiri_id->AdvancedSearch->SearchOperator2 = @$filter["w_kiri_id"];
+		$this->kiri_id->AdvancedSearch->Save();
 
-		// Field user
-		$this->user->AdvancedSearch->SearchValue = @$filter["x_user"];
-		$this->user->AdvancedSearch->SearchOperator = @$filter["z_user"];
-		$this->user->AdvancedSearch->SearchCondition = @$filter["v_user"];
-		$this->user->AdvancedSearch->SearchValue2 = @$filter["y_user"];
-		$this->user->AdvancedSearch->SearchOperator2 = @$filter["w_user"];
-		$this->user->AdvancedSearch->Save();
+		// Field kiri_lv2
+		$this->kiri_lv2->AdvancedSearch->SearchValue = @$filter["x_kiri_lv2"];
+		$this->kiri_lv2->AdvancedSearch->SearchOperator = @$filter["z_kiri_lv2"];
+		$this->kiri_lv2->AdvancedSearch->SearchCondition = @$filter["v_kiri_lv2"];
+		$this->kiri_lv2->AdvancedSearch->SearchValue2 = @$filter["y_kiri_lv2"];
+		$this->kiri_lv2->AdvancedSearch->SearchOperator2 = @$filter["w_kiri_lv2"];
+		$this->kiri_lv2->AdvancedSearch->Save();
 
-		// Field action
-		$this->action->AdvancedSearch->SearchValue = @$filter["x_action"];
-		$this->action->AdvancedSearch->SearchOperator = @$filter["z_action"];
-		$this->action->AdvancedSearch->SearchCondition = @$filter["v_action"];
-		$this->action->AdvancedSearch->SearchValue2 = @$filter["y_action"];
-		$this->action->AdvancedSearch->SearchOperator2 = @$filter["w_action"];
-		$this->action->AdvancedSearch->Save();
+		// Field kiri_lv3
+		$this->kiri_lv3->AdvancedSearch->SearchValue = @$filter["x_kiri_lv3"];
+		$this->kiri_lv3->AdvancedSearch->SearchOperator = @$filter["z_kiri_lv3"];
+		$this->kiri_lv3->AdvancedSearch->SearchCondition = @$filter["v_kiri_lv3"];
+		$this->kiri_lv3->AdvancedSearch->SearchValue2 = @$filter["y_kiri_lv3"];
+		$this->kiri_lv3->AdvancedSearch->SearchOperator2 = @$filter["w_kiri_lv3"];
+		$this->kiri_lv3->AdvancedSearch->Save();
 
-		// Field table
-		$this->_table->AdvancedSearch->SearchValue = @$filter["x__table"];
-		$this->_table->AdvancedSearch->SearchOperator = @$filter["z__table"];
-		$this->_table->AdvancedSearch->SearchCondition = @$filter["v__table"];
-		$this->_table->AdvancedSearch->SearchValue2 = @$filter["y__table"];
-		$this->_table->AdvancedSearch->SearchOperator2 = @$filter["w__table"];
-		$this->_table->AdvancedSearch->Save();
+		// Field kiri_lv4
+		$this->kiri_lv4->AdvancedSearch->SearchValue = @$filter["x_kiri_lv4"];
+		$this->kiri_lv4->AdvancedSearch->SearchOperator = @$filter["z_kiri_lv4"];
+		$this->kiri_lv4->AdvancedSearch->SearchCondition = @$filter["v_kiri_lv4"];
+		$this->kiri_lv4->AdvancedSearch->SearchValue2 = @$filter["y_kiri_lv4"];
+		$this->kiri_lv4->AdvancedSearch->SearchOperator2 = @$filter["w_kiri_lv4"];
+		$this->kiri_lv4->AdvancedSearch->Save();
 
-		// Field field
-		$this->_field->AdvancedSearch->SearchValue = @$filter["x__field"];
-		$this->_field->AdvancedSearch->SearchOperator = @$filter["z__field"];
-		$this->_field->AdvancedSearch->SearchCondition = @$filter["v__field"];
-		$this->_field->AdvancedSearch->SearchValue2 = @$filter["y__field"];
-		$this->_field->AdvancedSearch->SearchOperator2 = @$filter["w__field"];
-		$this->_field->AdvancedSearch->Save();
+		// Field kiri_jumlah
+		$this->kiri_jumlah->AdvancedSearch->SearchValue = @$filter["x_kiri_jumlah"];
+		$this->kiri_jumlah->AdvancedSearch->SearchOperator = @$filter["z_kiri_jumlah"];
+		$this->kiri_jumlah->AdvancedSearch->SearchCondition = @$filter["v_kiri_jumlah"];
+		$this->kiri_jumlah->AdvancedSearch->SearchValue2 = @$filter["y_kiri_jumlah"];
+		$this->kiri_jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_kiri_jumlah"];
+		$this->kiri_jumlah->AdvancedSearch->Save();
 
-		// Field keyvalue
-		$this->keyvalue->AdvancedSearch->SearchValue = @$filter["x_keyvalue"];
-		$this->keyvalue->AdvancedSearch->SearchOperator = @$filter["z_keyvalue"];
-		$this->keyvalue->AdvancedSearch->SearchCondition = @$filter["v_keyvalue"];
-		$this->keyvalue->AdvancedSearch->SearchValue2 = @$filter["y_keyvalue"];
-		$this->keyvalue->AdvancedSearch->SearchOperator2 = @$filter["w_keyvalue"];
-		$this->keyvalue->AdvancedSearch->Save();
+		// Field kanan_tabel
+		$this->kanan_tabel->AdvancedSearch->SearchValue = @$filter["x_kanan_tabel"];
+		$this->kanan_tabel->AdvancedSearch->SearchOperator = @$filter["z_kanan_tabel"];
+		$this->kanan_tabel->AdvancedSearch->SearchCondition = @$filter["v_kanan_tabel"];
+		$this->kanan_tabel->AdvancedSearch->SearchValue2 = @$filter["y_kanan_tabel"];
+		$this->kanan_tabel->AdvancedSearch->SearchOperator2 = @$filter["w_kanan_tabel"];
+		$this->kanan_tabel->AdvancedSearch->Save();
 
-		// Field oldvalue
-		$this->oldvalue->AdvancedSearch->SearchValue = @$filter["x_oldvalue"];
-		$this->oldvalue->AdvancedSearch->SearchOperator = @$filter["z_oldvalue"];
-		$this->oldvalue->AdvancedSearch->SearchCondition = @$filter["v_oldvalue"];
-		$this->oldvalue->AdvancedSearch->SearchValue2 = @$filter["y_oldvalue"];
-		$this->oldvalue->AdvancedSearch->SearchOperator2 = @$filter["w_oldvalue"];
-		$this->oldvalue->AdvancedSearch->Save();
+		// Field kanan_id
+		$this->kanan_id->AdvancedSearch->SearchValue = @$filter["x_kanan_id"];
+		$this->kanan_id->AdvancedSearch->SearchOperator = @$filter["z_kanan_id"];
+		$this->kanan_id->AdvancedSearch->SearchCondition = @$filter["v_kanan_id"];
+		$this->kanan_id->AdvancedSearch->SearchValue2 = @$filter["y_kanan_id"];
+		$this->kanan_id->AdvancedSearch->SearchOperator2 = @$filter["w_kanan_id"];
+		$this->kanan_id->AdvancedSearch->Save();
 
-		// Field newvalue
-		$this->newvalue->AdvancedSearch->SearchValue = @$filter["x_newvalue"];
-		$this->newvalue->AdvancedSearch->SearchOperator = @$filter["z_newvalue"];
-		$this->newvalue->AdvancedSearch->SearchCondition = @$filter["v_newvalue"];
-		$this->newvalue->AdvancedSearch->SearchValue2 = @$filter["y_newvalue"];
-		$this->newvalue->AdvancedSearch->SearchOperator2 = @$filter["w_newvalue"];
-		$this->newvalue->AdvancedSearch->Save();
+		// Field kanan_lv2
+		$this->kanan_lv2->AdvancedSearch->SearchValue = @$filter["x_kanan_lv2"];
+		$this->kanan_lv2->AdvancedSearch->SearchOperator = @$filter["z_kanan_lv2"];
+		$this->kanan_lv2->AdvancedSearch->SearchCondition = @$filter["v_kanan_lv2"];
+		$this->kanan_lv2->AdvancedSearch->SearchValue2 = @$filter["y_kanan_lv2"];
+		$this->kanan_lv2->AdvancedSearch->SearchOperator2 = @$filter["w_kanan_lv2"];
+		$this->kanan_lv2->AdvancedSearch->Save();
+
+		// Field kanan_lv3
+		$this->kanan_lv3->AdvancedSearch->SearchValue = @$filter["x_kanan_lv3"];
+		$this->kanan_lv3->AdvancedSearch->SearchOperator = @$filter["z_kanan_lv3"];
+		$this->kanan_lv3->AdvancedSearch->SearchCondition = @$filter["v_kanan_lv3"];
+		$this->kanan_lv3->AdvancedSearch->SearchValue2 = @$filter["y_kanan_lv3"];
+		$this->kanan_lv3->AdvancedSearch->SearchOperator2 = @$filter["w_kanan_lv3"];
+		$this->kanan_lv3->AdvancedSearch->Save();
+
+		// Field kanan_lv4
+		$this->kanan_lv4->AdvancedSearch->SearchValue = @$filter["x_kanan_lv4"];
+		$this->kanan_lv4->AdvancedSearch->SearchOperator = @$filter["z_kanan_lv4"];
+		$this->kanan_lv4->AdvancedSearch->SearchCondition = @$filter["v_kanan_lv4"];
+		$this->kanan_lv4->AdvancedSearch->SearchValue2 = @$filter["y_kanan_lv4"];
+		$this->kanan_lv4->AdvancedSearch->SearchOperator2 = @$filter["w_kanan_lv4"];
+		$this->kanan_lv4->AdvancedSearch->Save();
+
+		// Field kanan_jumlah
+		$this->kanan_jumlah->AdvancedSearch->SearchValue = @$filter["x_kanan_jumlah"];
+		$this->kanan_jumlah->AdvancedSearch->SearchOperator = @$filter["z_kanan_jumlah"];
+		$this->kanan_jumlah->AdvancedSearch->SearchCondition = @$filter["v_kanan_jumlah"];
+		$this->kanan_jumlah->AdvancedSearch->SearchValue2 = @$filter["y_kanan_jumlah"];
+		$this->kanan_jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_kanan_jumlah"];
+		$this->kanan_jumlah->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -956,14 +989,14 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->script, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->user, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->action, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->_table, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->_field, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->keyvalue, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->oldvalue, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->newvalue, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kiri_tabel, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kiri_lv2, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kiri_lv3, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kiri_lv4, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kanan_tabel, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kanan_lv2, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kanan_lv3, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->kanan_lv4, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -1114,12 +1147,18 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
 			$this->UpdateSort($this->id, $bCtrl); // id
-			$this->UpdateSort($this->datetime, $bCtrl); // datetime
-			$this->UpdateSort($this->script, $bCtrl); // script
-			$this->UpdateSort($this->user, $bCtrl); // user
-			$this->UpdateSort($this->action, $bCtrl); // action
-			$this->UpdateSort($this->_table, $bCtrl); // table
-			$this->UpdateSort($this->_field, $bCtrl); // field
+			$this->UpdateSort($this->kiri_tabel, $bCtrl); // kiri_tabel
+			$this->UpdateSort($this->kiri_id, $bCtrl); // kiri_id
+			$this->UpdateSort($this->kiri_lv2, $bCtrl); // kiri_lv2
+			$this->UpdateSort($this->kiri_lv3, $bCtrl); // kiri_lv3
+			$this->UpdateSort($this->kiri_lv4, $bCtrl); // kiri_lv4
+			$this->UpdateSort($this->kiri_jumlah, $bCtrl); // kiri_jumlah
+			$this->UpdateSort($this->kanan_tabel, $bCtrl); // kanan_tabel
+			$this->UpdateSort($this->kanan_id, $bCtrl); // kanan_id
+			$this->UpdateSort($this->kanan_lv2, $bCtrl); // kanan_lv2
+			$this->UpdateSort($this->kanan_lv3, $bCtrl); // kanan_lv3
+			$this->UpdateSort($this->kanan_lv4, $bCtrl); // kanan_lv4
+			$this->UpdateSort($this->kanan_jumlah, $bCtrl); // kanan_jumlah
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1153,12 +1192,18 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
 				$this->id->setSort("");
-				$this->datetime->setSort("");
-				$this->script->setSort("");
-				$this->user->setSort("");
-				$this->action->setSort("");
-				$this->_table->setSort("");
-				$this->_field->setSort("");
+				$this->kiri_tabel->setSort("");
+				$this->kiri_id->setSort("");
+				$this->kiri_lv2->setSort("");
+				$this->kiri_lv3->setSort("");
+				$this->kiri_lv4->setSort("");
+				$this->kiri_jumlah->setSort("");
+				$this->kanan_tabel->setSort("");
+				$this->kanan_id->setSort("");
+				$this->kanan_lv2->setSort("");
+				$this->kanan_lv3->setSort("");
+				$this->kanan_lv4->setSort("");
+				$this->kanan_jumlah->setSort("");
 			}
 
 			// Reset start position
@@ -1328,7 +1373,7 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft99_audit_traillist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft95_rkaslist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = ($Security->CanDelete());
 
 		// Set up options default
@@ -1347,10 +1392,10 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft99_audit_traillistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft95_rkaslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft99_audit_traillistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft95_rkaslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1374,7 +1419,7 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft99_audit_traillist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft95_rkaslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1478,7 +1523,7 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft99_audit_traillistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft95_rkaslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1618,30 +1663,36 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		if (!$rs || $rs->EOF)
 			return;
 		$this->id->setDbValue($row['id']);
-		$this->datetime->setDbValue($row['datetime']);
-		$this->script->setDbValue($row['script']);
-		$this->user->setDbValue($row['user']);
-		$this->action->setDbValue($row['action']);
-		$this->_table->setDbValue($row['table']);
-		$this->_field->setDbValue($row['field']);
-		$this->keyvalue->setDbValue($row['keyvalue']);
-		$this->oldvalue->setDbValue($row['oldvalue']);
-		$this->newvalue->setDbValue($row['newvalue']);
+		$this->kiri_tabel->setDbValue($row['kiri_tabel']);
+		$this->kiri_id->setDbValue($row['kiri_id']);
+		$this->kiri_lv2->setDbValue($row['kiri_lv2']);
+		$this->kiri_lv3->setDbValue($row['kiri_lv3']);
+		$this->kiri_lv4->setDbValue($row['kiri_lv4']);
+		$this->kiri_jumlah->setDbValue($row['kiri_jumlah']);
+		$this->kanan_tabel->setDbValue($row['kanan_tabel']);
+		$this->kanan_id->setDbValue($row['kanan_id']);
+		$this->kanan_lv2->setDbValue($row['kanan_lv2']);
+		$this->kanan_lv3->setDbValue($row['kanan_lv3']);
+		$this->kanan_lv4->setDbValue($row['kanan_lv4']);
+		$this->kanan_jumlah->setDbValue($row['kanan_jumlah']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
-		$row['datetime'] = NULL;
-		$row['script'] = NULL;
-		$row['user'] = NULL;
-		$row['action'] = NULL;
-		$row['table'] = NULL;
-		$row['field'] = NULL;
-		$row['keyvalue'] = NULL;
-		$row['oldvalue'] = NULL;
-		$row['newvalue'] = NULL;
+		$row['kiri_tabel'] = NULL;
+		$row['kiri_id'] = NULL;
+		$row['kiri_lv2'] = NULL;
+		$row['kiri_lv3'] = NULL;
+		$row['kiri_lv4'] = NULL;
+		$row['kiri_jumlah'] = NULL;
+		$row['kanan_tabel'] = NULL;
+		$row['kanan_id'] = NULL;
+		$row['kanan_lv2'] = NULL;
+		$row['kanan_lv3'] = NULL;
+		$row['kanan_lv4'] = NULL;
+		$row['kanan_jumlah'] = NULL;
 		return $row;
 	}
 
@@ -1651,15 +1702,18 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->datetime->DbValue = $row['datetime'];
-		$this->script->DbValue = $row['script'];
-		$this->user->DbValue = $row['user'];
-		$this->action->DbValue = $row['action'];
-		$this->_table->DbValue = $row['table'];
-		$this->_field->DbValue = $row['field'];
-		$this->keyvalue->DbValue = $row['keyvalue'];
-		$this->oldvalue->DbValue = $row['oldvalue'];
-		$this->newvalue->DbValue = $row['newvalue'];
+		$this->kiri_tabel->DbValue = $row['kiri_tabel'];
+		$this->kiri_id->DbValue = $row['kiri_id'];
+		$this->kiri_lv2->DbValue = $row['kiri_lv2'];
+		$this->kiri_lv3->DbValue = $row['kiri_lv3'];
+		$this->kiri_lv4->DbValue = $row['kiri_lv4'];
+		$this->kiri_jumlah->DbValue = $row['kiri_jumlah'];
+		$this->kanan_tabel->DbValue = $row['kanan_tabel'];
+		$this->kanan_id->DbValue = $row['kanan_id'];
+		$this->kanan_lv2->DbValue = $row['kanan_lv2'];
+		$this->kanan_lv3->DbValue = $row['kanan_lv3'];
+		$this->kanan_lv4->DbValue = $row['kanan_lv4'];
+		$this->kanan_jumlah->DbValue = $row['kanan_jumlah'];
 	}
 
 	// Load old record
@@ -1696,20 +1750,31 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		$this->InlineCopyUrl = $this->GetInlineCopyUrl();
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
+		// Convert decimal values if posted back
+		if ($this->kiri_jumlah->FormValue == $this->kiri_jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->kiri_jumlah->CurrentValue)))
+			$this->kiri_jumlah->CurrentValue = ew_StrToFloat($this->kiri_jumlah->CurrentValue);
+
+		// Convert decimal values if posted back
+		if ($this->kanan_jumlah->FormValue == $this->kanan_jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->kanan_jumlah->CurrentValue)))
+			$this->kanan_jumlah->CurrentValue = ew_StrToFloat($this->kanan_jumlah->CurrentValue);
+
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
 		// id
-		// datetime
-		// script
-		// user
-		// action
-		// table
-		// field
-		// keyvalue
-		// oldvalue
-		// newvalue
+		// kiri_tabel
+		// kiri_id
+		// kiri_lv2
+		// kiri_lv3
+		// kiri_lv4
+		// kiri_jumlah
+		// kanan_tabel
+		// kanan_id
+		// kanan_lv2
+		// kanan_lv3
+		// kanan_lv4
+		// kanan_jumlah
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -1717,65 +1782,118 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// datetime
-		$this->datetime->ViewValue = $this->datetime->CurrentValue;
-		$this->datetime->ViewValue = ew_FormatDateTime($this->datetime->ViewValue, 0);
-		$this->datetime->ViewCustomAttributes = "";
+		// kiri_tabel
+		$this->kiri_tabel->ViewValue = $this->kiri_tabel->CurrentValue;
+		$this->kiri_tabel->ViewCustomAttributes = "";
 
-		// script
-		$this->script->ViewValue = $this->script->CurrentValue;
-		$this->script->ViewCustomAttributes = "";
+		// kiri_id
+		$this->kiri_id->ViewValue = $this->kiri_id->CurrentValue;
+		$this->kiri_id->ViewCustomAttributes = "";
 
-		// user
-		$this->user->ViewValue = $this->user->CurrentValue;
-		$this->user->ViewCustomAttributes = "";
+		// kiri_lv2
+		$this->kiri_lv2->ViewValue = $this->kiri_lv2->CurrentValue;
+		$this->kiri_lv2->ViewCustomAttributes = "";
 
-		// action
-		$this->action->ViewValue = $this->action->CurrentValue;
-		$this->action->ViewCustomAttributes = "";
+		// kiri_lv3
+		$this->kiri_lv3->ViewValue = $this->kiri_lv3->CurrentValue;
+		$this->kiri_lv3->ViewCustomAttributes = "";
 
-		// table
-		$this->_table->ViewValue = $this->_table->CurrentValue;
-		$this->_table->ViewCustomAttributes = "";
+		// kiri_lv4
+		$this->kiri_lv4->ViewValue = $this->kiri_lv4->CurrentValue;
+		$this->kiri_lv4->ViewCustomAttributes = "";
 
-		// field
-		$this->_field->ViewValue = $this->_field->CurrentValue;
-		$this->_field->ViewCustomAttributes = "";
+		// kiri_jumlah
+		$this->kiri_jumlah->ViewValue = $this->kiri_jumlah->CurrentValue;
+		$this->kiri_jumlah->ViewCustomAttributes = "";
+
+		// kanan_tabel
+		$this->kanan_tabel->ViewValue = $this->kanan_tabel->CurrentValue;
+		$this->kanan_tabel->ViewCustomAttributes = "";
+
+		// kanan_id
+		$this->kanan_id->ViewValue = $this->kanan_id->CurrentValue;
+		$this->kanan_id->ViewCustomAttributes = "";
+
+		// kanan_lv2
+		$this->kanan_lv2->ViewValue = $this->kanan_lv2->CurrentValue;
+		$this->kanan_lv2->ViewCustomAttributes = "";
+
+		// kanan_lv3
+		$this->kanan_lv3->ViewValue = $this->kanan_lv3->CurrentValue;
+		$this->kanan_lv3->ViewCustomAttributes = "";
+
+		// kanan_lv4
+		$this->kanan_lv4->ViewValue = $this->kanan_lv4->CurrentValue;
+		$this->kanan_lv4->ViewCustomAttributes = "";
+
+		// kanan_jumlah
+		$this->kanan_jumlah->ViewValue = $this->kanan_jumlah->CurrentValue;
+		$this->kanan_jumlah->ViewCustomAttributes = "";
 
 			// id
 			$this->id->LinkCustomAttributes = "";
 			$this->id->HrefValue = "";
 			$this->id->TooltipValue = "";
 
-			// datetime
-			$this->datetime->LinkCustomAttributes = "";
-			$this->datetime->HrefValue = "";
-			$this->datetime->TooltipValue = "";
+			// kiri_tabel
+			$this->kiri_tabel->LinkCustomAttributes = "";
+			$this->kiri_tabel->HrefValue = "";
+			$this->kiri_tabel->TooltipValue = "";
 
-			// script
-			$this->script->LinkCustomAttributes = "";
-			$this->script->HrefValue = "";
-			$this->script->TooltipValue = "";
+			// kiri_id
+			$this->kiri_id->LinkCustomAttributes = "";
+			$this->kiri_id->HrefValue = "";
+			$this->kiri_id->TooltipValue = "";
 
-			// user
-			$this->user->LinkCustomAttributes = "";
-			$this->user->HrefValue = "";
-			$this->user->TooltipValue = "";
+			// kiri_lv2
+			$this->kiri_lv2->LinkCustomAttributes = "";
+			$this->kiri_lv2->HrefValue = "";
+			$this->kiri_lv2->TooltipValue = "";
 
-			// action
-			$this->action->LinkCustomAttributes = "";
-			$this->action->HrefValue = "";
-			$this->action->TooltipValue = "";
+			// kiri_lv3
+			$this->kiri_lv3->LinkCustomAttributes = "";
+			$this->kiri_lv3->HrefValue = "";
+			$this->kiri_lv3->TooltipValue = "";
 
-			// table
-			$this->_table->LinkCustomAttributes = "";
-			$this->_table->HrefValue = "";
-			$this->_table->TooltipValue = "";
+			// kiri_lv4
+			$this->kiri_lv4->LinkCustomAttributes = "";
+			$this->kiri_lv4->HrefValue = "";
+			$this->kiri_lv4->TooltipValue = "";
 
-			// field
-			$this->_field->LinkCustomAttributes = "";
-			$this->_field->HrefValue = "";
-			$this->_field->TooltipValue = "";
+			// kiri_jumlah
+			$this->kiri_jumlah->LinkCustomAttributes = "";
+			$this->kiri_jumlah->HrefValue = "";
+			$this->kiri_jumlah->TooltipValue = "";
+
+			// kanan_tabel
+			$this->kanan_tabel->LinkCustomAttributes = "";
+			$this->kanan_tabel->HrefValue = "";
+			$this->kanan_tabel->TooltipValue = "";
+
+			// kanan_id
+			$this->kanan_id->LinkCustomAttributes = "";
+			$this->kanan_id->HrefValue = "";
+			$this->kanan_id->TooltipValue = "";
+
+			// kanan_lv2
+			$this->kanan_lv2->LinkCustomAttributes = "";
+			$this->kanan_lv2->HrefValue = "";
+			$this->kanan_lv2->TooltipValue = "";
+
+			// kanan_lv3
+			$this->kanan_lv3->LinkCustomAttributes = "";
+			$this->kanan_lv3->HrefValue = "";
+			$this->kanan_lv3->TooltipValue = "";
+
+			// kanan_lv4
+			$this->kanan_lv4->LinkCustomAttributes = "";
+			$this->kanan_lv4->HrefValue = "";
+			$this->kanan_lv4->TooltipValue = "";
+
+			// kanan_jumlah
+			$this->kanan_jumlah->LinkCustomAttributes = "";
+			$this->kanan_jumlah->HrefValue = "";
+			$this->kanan_jumlah->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1825,7 +1943,7 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t99_audit_trail\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t99_audit_trail',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft99_audit_traillist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t95_rkas\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t95_rkas',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft95_rkaslist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -2206,31 +2324,31 @@ class ct99_audit_trail_list extends ct99_audit_trail {
 <?php
 
 // Create page object
-if (!isset($t99_audit_trail_list)) $t99_audit_trail_list = new ct99_audit_trail_list();
+if (!isset($t95_rkas_list)) $t95_rkas_list = new ct95_rkas_list();
 
 // Page init
-$t99_audit_trail_list->Page_Init();
+$t95_rkas_list->Page_Init();
 
 // Page main
-$t99_audit_trail_list->Page_Main();
+$t95_rkas_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t99_audit_trail_list->Page_Render();
+$t95_rkas_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t95_rkas->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = ft99_audit_traillist = new ew_Form("ft99_audit_traillist", "list");
-ft99_audit_traillist.FormKeyCountName = '<?php echo $t99_audit_trail_list->FormKeyCountName ?>';
+var CurrentForm = ft95_rkaslist = new ew_Form("ft95_rkaslist", "list");
+ft95_rkaslist.FormKeyCountName = '<?php echo $t95_rkas_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-ft99_audit_traillist.Form_CustomValidate = 
+ft95_rkaslist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -2238,86 +2356,86 @@ ft99_audit_traillist.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft99_audit_traillist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft95_rkaslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
 
-var CurrentSearchForm = ft99_audit_traillistsrch = new ew_Form("ft99_audit_traillistsrch");
+var CurrentSearchForm = ft95_rkaslistsrch = new ew_Form("ft95_rkaslistsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t95_rkas->Export == "") { ?>
 <div class="ewToolbar">
-<?php if ($t99_audit_trail_list->TotalRecs > 0 && $t99_audit_trail_list->ExportOptions->Visible()) { ?>
-<?php $t99_audit_trail_list->ExportOptions->Render("body") ?>
+<?php if ($t95_rkas_list->TotalRecs > 0 && $t95_rkas_list->ExportOptions->Visible()) { ?>
+<?php $t95_rkas_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t99_audit_trail_list->SearchOptions->Visible()) { ?>
-<?php $t99_audit_trail_list->SearchOptions->Render("body") ?>
+<?php if ($t95_rkas_list->SearchOptions->Visible()) { ?>
+<?php $t95_rkas_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t99_audit_trail_list->FilterOptions->Visible()) { ?>
-<?php $t99_audit_trail_list->FilterOptions->Render("body") ?>
+<?php if ($t95_rkas_list->FilterOptions->Visible()) { ?>
+<?php $t95_rkas_list->FilterOptions->Render("body") ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
-	$bSelectLimit = $t99_audit_trail_list->UseSelectLimit;
+	$bSelectLimit = $t95_rkas_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($t99_audit_trail_list->TotalRecs <= 0)
-			$t99_audit_trail_list->TotalRecs = $t99_audit_trail->ListRecordCount();
+		if ($t95_rkas_list->TotalRecs <= 0)
+			$t95_rkas_list->TotalRecs = $t95_rkas->ListRecordCount();
 	} else {
-		if (!$t99_audit_trail_list->Recordset && ($t99_audit_trail_list->Recordset = $t99_audit_trail_list->LoadRecordset()))
-			$t99_audit_trail_list->TotalRecs = $t99_audit_trail_list->Recordset->RecordCount();
+		if (!$t95_rkas_list->Recordset && ($t95_rkas_list->Recordset = $t95_rkas_list->LoadRecordset()))
+			$t95_rkas_list->TotalRecs = $t95_rkas_list->Recordset->RecordCount();
 	}
-	$t99_audit_trail_list->StartRec = 1;
-	if ($t99_audit_trail_list->DisplayRecs <= 0 || ($t99_audit_trail->Export <> "" && $t99_audit_trail->ExportAll)) // Display all records
-		$t99_audit_trail_list->DisplayRecs = $t99_audit_trail_list->TotalRecs;
-	if (!($t99_audit_trail->Export <> "" && $t99_audit_trail->ExportAll))
-		$t99_audit_trail_list->SetupStartRec(); // Set up start record position
+	$t95_rkas_list->StartRec = 1;
+	if ($t95_rkas_list->DisplayRecs <= 0 || ($t95_rkas->Export <> "" && $t95_rkas->ExportAll)) // Display all records
+		$t95_rkas_list->DisplayRecs = $t95_rkas_list->TotalRecs;
+	if (!($t95_rkas->Export <> "" && $t95_rkas->ExportAll))
+		$t95_rkas_list->SetupStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$t99_audit_trail_list->Recordset = $t99_audit_trail_list->LoadRecordset($t99_audit_trail_list->StartRec-1, $t99_audit_trail_list->DisplayRecs);
+		$t95_rkas_list->Recordset = $t95_rkas_list->LoadRecordset($t95_rkas_list->StartRec-1, $t95_rkas_list->DisplayRecs);
 
 	// Set no record found message
-	if ($t99_audit_trail->CurrentAction == "" && $t99_audit_trail_list->TotalRecs == 0) {
+	if ($t95_rkas->CurrentAction == "" && $t95_rkas_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$t99_audit_trail_list->setWarningMessage(ew_DeniedMsg());
-		if ($t99_audit_trail_list->SearchWhere == "0=101")
-			$t99_audit_trail_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$t95_rkas_list->setWarningMessage(ew_DeniedMsg());
+		if ($t95_rkas_list->SearchWhere == "0=101")
+			$t95_rkas_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$t99_audit_trail_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$t95_rkas_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
 
 	// Audit trail on search
-	if ($t99_audit_trail_list->AuditTrailOnSearch && $t99_audit_trail_list->Command == "search" && !$t99_audit_trail_list->RestoreSearch) {
+	if ($t95_rkas_list->AuditTrailOnSearch && $t95_rkas_list->Command == "search" && !$t95_rkas_list->RestoreSearch) {
 		$searchparm = ew_ServerVar("QUERY_STRING");
-		$searchsql = $t99_audit_trail_list->getSessionWhere();
-		$t99_audit_trail_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
+		$searchsql = $t95_rkas_list->getSessionWhere();
+		$t95_rkas_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
 	}
-$t99_audit_trail_list->RenderOtherOptions();
+$t95_rkas_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($t99_audit_trail->Export == "" && $t99_audit_trail->CurrentAction == "") { ?>
-<form name="ft99_audit_traillistsrch" id="ft99_audit_traillistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($t99_audit_trail_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="ft99_audit_traillistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($t95_rkas->Export == "" && $t95_rkas->CurrentAction == "") { ?>
+<form name="ft95_rkaslistsrch" id="ft95_rkaslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($t95_rkas_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="ft95_rkaslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="t99_audit_trail">
+<input type="hidden" name="t" value="t95_rkas">
 	<div class="ewBasicSearch">
 <div id="xsr_1" class="ewRow">
 	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t99_audit_trail_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t99_audit_trail_list->BasicSearch->getType()) ?>">
+	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t95_rkas_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
+	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t95_rkas_list->BasicSearch->getType()) ?>">
 	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t99_audit_trail_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t95_rkas_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
 		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($t99_audit_trail_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($t99_audit_trail_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($t99_audit_trail_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($t99_audit_trail_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
+			<li<?php if ($t95_rkas_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
+			<li<?php if ($t95_rkas_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
+			<li<?php if ($t95_rkas_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
+			<li<?php if ($t95_rkas_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
 		</ul>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("SearchBtn") ?></button>
 	</div>
@@ -2328,70 +2446,70 @@ $t99_audit_trail_list->RenderOtherOptions();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $t99_audit_trail_list->ShowPageHeader(); ?>
+<?php $t95_rkas_list->ShowPageHeader(); ?>
 <?php
-$t99_audit_trail_list->ShowMessage();
+$t95_rkas_list->ShowMessage();
 ?>
-<?php if ($t99_audit_trail_list->TotalRecs > 0 || $t99_audit_trail->CurrentAction <> "") { ?>
-<div class="box ewBox ewGrid<?php if ($t99_audit_trail_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t99_audit_trail">
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t95_rkas_list->TotalRecs > 0 || $t95_rkas->CurrentAction <> "") { ?>
+<div class="box ewBox ewGrid<?php if ($t95_rkas_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t95_rkas">
+<?php if ($t95_rkas->Export == "") { ?>
 <div class="box-header ewGridUpperPanel">
-<?php if ($t99_audit_trail->CurrentAction <> "gridadd" && $t99_audit_trail->CurrentAction <> "gridedit") { ?>
+<?php if ($t95_rkas->CurrentAction <> "gridadd" && $t95_rkas->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t99_audit_trail_list->Pager)) $t99_audit_trail_list->Pager = new cPrevNextPager($t99_audit_trail_list->StartRec, $t99_audit_trail_list->DisplayRecs, $t99_audit_trail_list->TotalRecs, $t99_audit_trail_list->AutoHidePager) ?>
-<?php if ($t99_audit_trail_list->Pager->RecordCount > 0 && $t99_audit_trail_list->Pager->Visible) { ?>
+<?php if (!isset($t95_rkas_list->Pager)) $t95_rkas_list->Pager = new cPrevNextPager($t95_rkas_list->StartRec, $t95_rkas_list->DisplayRecs, $t95_rkas_list->TotalRecs, $t95_rkas_list->AutoHidePager) ?>
+<?php if ($t95_rkas_list->Pager->RecordCount > 0 && $t95_rkas_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t99_audit_trail_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t99_audit_trail_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t99_audit_trail_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t95_rkas_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t99_audit_trail_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t99_audit_trail_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t95_rkas_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t99_audit_trail_list->Pager->RecordCount > 0) { ?>
+<?php if ($t95_rkas_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t95_rkas_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t95_rkas_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t95_rkas_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t99_audit_trail_list->TotalRecs > 0 && (!$t99_audit_trail_list->AutoHidePageSizeSelector || $t99_audit_trail_list->Pager->Visible)) { ?>
+<?php if ($t95_rkas_list->TotalRecs > 0 && (!$t95_rkas_list->AutoHidePageSizeSelector || $t95_rkas_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t99_audit_trail">
+<input type="hidden" name="t" value="t95_rkas">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t99_audit_trail_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t99_audit_trail_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t99_audit_trail_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t99_audit_trail_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t99_audit_trail->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t95_rkas_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t95_rkas_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t95_rkas_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t95_rkas_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t95_rkas->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2399,234 +2517,336 @@ $t99_audit_trail_list->ShowMessage();
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t99_audit_trail_list->OtherOptions as &$option)
+	foreach ($t95_rkas_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<form name="ft99_audit_traillist" id="ft99_audit_traillist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t99_audit_trail_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t99_audit_trail_list->Token ?>">
+<form name="ft95_rkaslist" id="ft95_rkaslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t95_rkas_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t95_rkas_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t99_audit_trail">
-<div id="gmp_t99_audit_trail" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
-<?php if ($t99_audit_trail_list->TotalRecs > 0 || $t99_audit_trail->CurrentAction == "gridedit") { ?>
-<table id="tbl_t99_audit_traillist" class="table ewTable">
+<input type="hidden" name="t" value="t95_rkas">
+<div id="gmp_t95_rkas" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
+<?php if ($t95_rkas_list->TotalRecs > 0 || $t95_rkas->CurrentAction == "gridedit") { ?>
+<table id="tbl_t95_rkaslist" class="table ewTable">
 <thead>
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$t99_audit_trail_list->RowType = EW_ROWTYPE_HEADER;
+$t95_rkas_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$t99_audit_trail_list->RenderListOptions();
+$t95_rkas_list->RenderListOptions();
 
 // Render list options (header, left)
-$t99_audit_trail_list->ListOptions->Render("header", "left");
+$t95_rkas_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($t99_audit_trail->id->Visible) { // id ?>
-	<?php if ($t99_audit_trail->SortUrl($t99_audit_trail->id) == "") { ?>
-		<th data-name="id" class="<?php echo $t99_audit_trail->id->HeaderCellClass() ?>"><div id="elh_t99_audit_trail_id" class="t99_audit_trail_id"><div class="ewTableHeaderCaption"><?php echo $t99_audit_trail->id->FldCaption() ?></div></div></th>
+<?php if ($t95_rkas->id->Visible) { // id ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->id) == "") { ?>
+		<th data-name="id" class="<?php echo $t95_rkas->id->HeaderCellClass() ?>"><div id="elh_t95_rkas_id" class="t95_rkas_id"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="id" class="<?php echo $t99_audit_trail->id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t99_audit_trail->SortUrl($t99_audit_trail->id) ?>',2);"><div id="elh_t99_audit_trail_id" class="t99_audit_trail_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t99_audit_trail->id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t99_audit_trail->id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t99_audit_trail->id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="id" class="<?php echo $t95_rkas->id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->id) ?>',2);"><div id="elh_t95_rkas_id" class="t95_rkas_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t99_audit_trail->datetime->Visible) { // datetime ?>
-	<?php if ($t99_audit_trail->SortUrl($t99_audit_trail->datetime) == "") { ?>
-		<th data-name="datetime" class="<?php echo $t99_audit_trail->datetime->HeaderCellClass() ?>"><div id="elh_t99_audit_trail_datetime" class="t99_audit_trail_datetime"><div class="ewTableHeaderCaption"><?php echo $t99_audit_trail->datetime->FldCaption() ?></div></div></th>
+<?php if ($t95_rkas->kiri_tabel->Visible) { // kiri_tabel ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kiri_tabel) == "") { ?>
+		<th data-name="kiri_tabel" class="<?php echo $t95_rkas->kiri_tabel->HeaderCellClass() ?>"><div id="elh_t95_rkas_kiri_tabel" class="t95_rkas_kiri_tabel"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_tabel->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="datetime" class="<?php echo $t99_audit_trail->datetime->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t99_audit_trail->SortUrl($t99_audit_trail->datetime) ?>',2);"><div id="elh_t99_audit_trail_datetime" class="t99_audit_trail_datetime">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t99_audit_trail->datetime->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t99_audit_trail->datetime->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t99_audit_trail->datetime->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="kiri_tabel" class="<?php echo $t95_rkas->kiri_tabel->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kiri_tabel) ?>',2);"><div id="elh_t95_rkas_kiri_tabel" class="t95_rkas_kiri_tabel">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_tabel->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kiri_tabel->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kiri_tabel->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t99_audit_trail->script->Visible) { // script ?>
-	<?php if ($t99_audit_trail->SortUrl($t99_audit_trail->script) == "") { ?>
-		<th data-name="script" class="<?php echo $t99_audit_trail->script->HeaderCellClass() ?>"><div id="elh_t99_audit_trail_script" class="t99_audit_trail_script"><div class="ewTableHeaderCaption"><?php echo $t99_audit_trail->script->FldCaption() ?></div></div></th>
+<?php if ($t95_rkas->kiri_id->Visible) { // kiri_id ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kiri_id) == "") { ?>
+		<th data-name="kiri_id" class="<?php echo $t95_rkas->kiri_id->HeaderCellClass() ?>"><div id="elh_t95_rkas_kiri_id" class="t95_rkas_kiri_id"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="script" class="<?php echo $t99_audit_trail->script->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t99_audit_trail->SortUrl($t99_audit_trail->script) ?>',2);"><div id="elh_t99_audit_trail_script" class="t99_audit_trail_script">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t99_audit_trail->script->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t99_audit_trail->script->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t99_audit_trail->script->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="kiri_id" class="<?php echo $t95_rkas->kiri_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kiri_id) ?>',2);"><div id="elh_t95_rkas_kiri_id" class="t95_rkas_kiri_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kiri_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kiri_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t99_audit_trail->user->Visible) { // user ?>
-	<?php if ($t99_audit_trail->SortUrl($t99_audit_trail->user) == "") { ?>
-		<th data-name="user" class="<?php echo $t99_audit_trail->user->HeaderCellClass() ?>"><div id="elh_t99_audit_trail_user" class="t99_audit_trail_user"><div class="ewTableHeaderCaption"><?php echo $t99_audit_trail->user->FldCaption() ?></div></div></th>
+<?php if ($t95_rkas->kiri_lv2->Visible) { // kiri_lv2 ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kiri_lv2) == "") { ?>
+		<th data-name="kiri_lv2" class="<?php echo $t95_rkas->kiri_lv2->HeaderCellClass() ?>"><div id="elh_t95_rkas_kiri_lv2" class="t95_rkas_kiri_lv2"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_lv2->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="user" class="<?php echo $t99_audit_trail->user->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t99_audit_trail->SortUrl($t99_audit_trail->user) ?>',2);"><div id="elh_t99_audit_trail_user" class="t99_audit_trail_user">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t99_audit_trail->user->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t99_audit_trail->user->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t99_audit_trail->user->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="kiri_lv2" class="<?php echo $t95_rkas->kiri_lv2->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kiri_lv2) ?>',2);"><div id="elh_t95_rkas_kiri_lv2" class="t95_rkas_kiri_lv2">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_lv2->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kiri_lv2->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kiri_lv2->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t99_audit_trail->action->Visible) { // action ?>
-	<?php if ($t99_audit_trail->SortUrl($t99_audit_trail->action) == "") { ?>
-		<th data-name="action" class="<?php echo $t99_audit_trail->action->HeaderCellClass() ?>"><div id="elh_t99_audit_trail_action" class="t99_audit_trail_action"><div class="ewTableHeaderCaption"><?php echo $t99_audit_trail->action->FldCaption() ?></div></div></th>
+<?php if ($t95_rkas->kiri_lv3->Visible) { // kiri_lv3 ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kiri_lv3) == "") { ?>
+		<th data-name="kiri_lv3" class="<?php echo $t95_rkas->kiri_lv3->HeaderCellClass() ?>"><div id="elh_t95_rkas_kiri_lv3" class="t95_rkas_kiri_lv3"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_lv3->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="action" class="<?php echo $t99_audit_trail->action->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t99_audit_trail->SortUrl($t99_audit_trail->action) ?>',2);"><div id="elh_t99_audit_trail_action" class="t99_audit_trail_action">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t99_audit_trail->action->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t99_audit_trail->action->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t99_audit_trail->action->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="kiri_lv3" class="<?php echo $t95_rkas->kiri_lv3->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kiri_lv3) ?>',2);"><div id="elh_t95_rkas_kiri_lv3" class="t95_rkas_kiri_lv3">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_lv3->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kiri_lv3->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kiri_lv3->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t99_audit_trail->_table->Visible) { // table ?>
-	<?php if ($t99_audit_trail->SortUrl($t99_audit_trail->_table) == "") { ?>
-		<th data-name="_table" class="<?php echo $t99_audit_trail->_table->HeaderCellClass() ?>"><div id="elh_t99_audit_trail__table" class="t99_audit_trail__table"><div class="ewTableHeaderCaption"><?php echo $t99_audit_trail->_table->FldCaption() ?></div></div></th>
+<?php if ($t95_rkas->kiri_lv4->Visible) { // kiri_lv4 ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kiri_lv4) == "") { ?>
+		<th data-name="kiri_lv4" class="<?php echo $t95_rkas->kiri_lv4->HeaderCellClass() ?>"><div id="elh_t95_rkas_kiri_lv4" class="t95_rkas_kiri_lv4"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_lv4->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="_table" class="<?php echo $t99_audit_trail->_table->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t99_audit_trail->SortUrl($t99_audit_trail->_table) ?>',2);"><div id="elh_t99_audit_trail__table" class="t99_audit_trail__table">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t99_audit_trail->_table->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t99_audit_trail->_table->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t99_audit_trail->_table->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="kiri_lv4" class="<?php echo $t95_rkas->kiri_lv4->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kiri_lv4) ?>',2);"><div id="elh_t95_rkas_kiri_lv4" class="t95_rkas_kiri_lv4">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_lv4->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kiri_lv4->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kiri_lv4->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t99_audit_trail->_field->Visible) { // field ?>
-	<?php if ($t99_audit_trail->SortUrl($t99_audit_trail->_field) == "") { ?>
-		<th data-name="_field" class="<?php echo $t99_audit_trail->_field->HeaderCellClass() ?>"><div id="elh_t99_audit_trail__field" class="t99_audit_trail__field"><div class="ewTableHeaderCaption"><?php echo $t99_audit_trail->_field->FldCaption() ?></div></div></th>
+<?php if ($t95_rkas->kiri_jumlah->Visible) { // kiri_jumlah ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kiri_jumlah) == "") { ?>
+		<th data-name="kiri_jumlah" class="<?php echo $t95_rkas->kiri_jumlah->HeaderCellClass() ?>"><div id="elh_t95_rkas_kiri_jumlah" class="t95_rkas_kiri_jumlah"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_jumlah->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="_field" class="<?php echo $t99_audit_trail->_field->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t99_audit_trail->SortUrl($t99_audit_trail->_field) ?>',2);"><div id="elh_t99_audit_trail__field" class="t99_audit_trail__field">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t99_audit_trail->_field->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t99_audit_trail->_field->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t99_audit_trail->_field->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="kiri_jumlah" class="<?php echo $t95_rkas->kiri_jumlah->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kiri_jumlah) ?>',2);"><div id="elh_t95_rkas_kiri_jumlah" class="t95_rkas_kiri_jumlah">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kiri_jumlah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kiri_jumlah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kiri_jumlah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t95_rkas->kanan_tabel->Visible) { // kanan_tabel ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kanan_tabel) == "") { ?>
+		<th data-name="kanan_tabel" class="<?php echo $t95_rkas->kanan_tabel->HeaderCellClass() ?>"><div id="elh_t95_rkas_kanan_tabel" class="t95_rkas_kanan_tabel"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_tabel->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="kanan_tabel" class="<?php echo $t95_rkas->kanan_tabel->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kanan_tabel) ?>',2);"><div id="elh_t95_rkas_kanan_tabel" class="t95_rkas_kanan_tabel">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_tabel->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kanan_tabel->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kanan_tabel->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t95_rkas->kanan_id->Visible) { // kanan_id ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kanan_id) == "") { ?>
+		<th data-name="kanan_id" class="<?php echo $t95_rkas->kanan_id->HeaderCellClass() ?>"><div id="elh_t95_rkas_kanan_id" class="t95_rkas_kanan_id"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_id->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="kanan_id" class="<?php echo $t95_rkas->kanan_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kanan_id) ?>',2);"><div id="elh_t95_rkas_kanan_id" class="t95_rkas_kanan_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kanan_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kanan_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t95_rkas->kanan_lv2->Visible) { // kanan_lv2 ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kanan_lv2) == "") { ?>
+		<th data-name="kanan_lv2" class="<?php echo $t95_rkas->kanan_lv2->HeaderCellClass() ?>"><div id="elh_t95_rkas_kanan_lv2" class="t95_rkas_kanan_lv2"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_lv2->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="kanan_lv2" class="<?php echo $t95_rkas->kanan_lv2->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kanan_lv2) ?>',2);"><div id="elh_t95_rkas_kanan_lv2" class="t95_rkas_kanan_lv2">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_lv2->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kanan_lv2->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kanan_lv2->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t95_rkas->kanan_lv3->Visible) { // kanan_lv3 ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kanan_lv3) == "") { ?>
+		<th data-name="kanan_lv3" class="<?php echo $t95_rkas->kanan_lv3->HeaderCellClass() ?>"><div id="elh_t95_rkas_kanan_lv3" class="t95_rkas_kanan_lv3"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_lv3->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="kanan_lv3" class="<?php echo $t95_rkas->kanan_lv3->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kanan_lv3) ?>',2);"><div id="elh_t95_rkas_kanan_lv3" class="t95_rkas_kanan_lv3">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_lv3->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kanan_lv3->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kanan_lv3->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t95_rkas->kanan_lv4->Visible) { // kanan_lv4 ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kanan_lv4) == "") { ?>
+		<th data-name="kanan_lv4" class="<?php echo $t95_rkas->kanan_lv4->HeaderCellClass() ?>"><div id="elh_t95_rkas_kanan_lv4" class="t95_rkas_kanan_lv4"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_lv4->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="kanan_lv4" class="<?php echo $t95_rkas->kanan_lv4->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kanan_lv4) ?>',2);"><div id="elh_t95_rkas_kanan_lv4" class="t95_rkas_kanan_lv4">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_lv4->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kanan_lv4->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kanan_lv4->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t95_rkas->kanan_jumlah->Visible) { // kanan_jumlah ?>
+	<?php if ($t95_rkas->SortUrl($t95_rkas->kanan_jumlah) == "") { ?>
+		<th data-name="kanan_jumlah" class="<?php echo $t95_rkas->kanan_jumlah->HeaderCellClass() ?>"><div id="elh_t95_rkas_kanan_jumlah" class="t95_rkas_kanan_jumlah"><div class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_jumlah->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="kanan_jumlah" class="<?php echo $t95_rkas->kanan_jumlah->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t95_rkas->SortUrl($t95_rkas->kanan_jumlah) ?>',2);"><div id="elh_t95_rkas_kanan_jumlah" class="t95_rkas_kanan_jumlah">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t95_rkas->kanan_jumlah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t95_rkas->kanan_jumlah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t95_rkas->kanan_jumlah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php
 
 // Render list options (header, right)
-$t99_audit_trail_list->ListOptions->Render("header", "right");
+$t95_rkas_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($t99_audit_trail->ExportAll && $t99_audit_trail->Export <> "") {
-	$t99_audit_trail_list->StopRec = $t99_audit_trail_list->TotalRecs;
+if ($t95_rkas->ExportAll && $t95_rkas->Export <> "") {
+	$t95_rkas_list->StopRec = $t95_rkas_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($t99_audit_trail_list->TotalRecs > $t99_audit_trail_list->StartRec + $t99_audit_trail_list->DisplayRecs - 1)
-		$t99_audit_trail_list->StopRec = $t99_audit_trail_list->StartRec + $t99_audit_trail_list->DisplayRecs - 1;
+	if ($t95_rkas_list->TotalRecs > $t95_rkas_list->StartRec + $t95_rkas_list->DisplayRecs - 1)
+		$t95_rkas_list->StopRec = $t95_rkas_list->StartRec + $t95_rkas_list->DisplayRecs - 1;
 	else
-		$t99_audit_trail_list->StopRec = $t99_audit_trail_list->TotalRecs;
+		$t95_rkas_list->StopRec = $t95_rkas_list->TotalRecs;
 }
-$t99_audit_trail_list->RecCnt = $t99_audit_trail_list->StartRec - 1;
-if ($t99_audit_trail_list->Recordset && !$t99_audit_trail_list->Recordset->EOF) {
-	$t99_audit_trail_list->Recordset->MoveFirst();
-	$bSelectLimit = $t99_audit_trail_list->UseSelectLimit;
-	if (!$bSelectLimit && $t99_audit_trail_list->StartRec > 1)
-		$t99_audit_trail_list->Recordset->Move($t99_audit_trail_list->StartRec - 1);
-} elseif (!$t99_audit_trail->AllowAddDeleteRow && $t99_audit_trail_list->StopRec == 0) {
-	$t99_audit_trail_list->StopRec = $t99_audit_trail->GridAddRowCount;
+$t95_rkas_list->RecCnt = $t95_rkas_list->StartRec - 1;
+if ($t95_rkas_list->Recordset && !$t95_rkas_list->Recordset->EOF) {
+	$t95_rkas_list->Recordset->MoveFirst();
+	$bSelectLimit = $t95_rkas_list->UseSelectLimit;
+	if (!$bSelectLimit && $t95_rkas_list->StartRec > 1)
+		$t95_rkas_list->Recordset->Move($t95_rkas_list->StartRec - 1);
+} elseif (!$t95_rkas->AllowAddDeleteRow && $t95_rkas_list->StopRec == 0) {
+	$t95_rkas_list->StopRec = $t95_rkas->GridAddRowCount;
 }
 
 // Initialize aggregate
-$t99_audit_trail->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$t99_audit_trail->ResetAttrs();
-$t99_audit_trail_list->RenderRow();
-while ($t99_audit_trail_list->RecCnt < $t99_audit_trail_list->StopRec) {
-	$t99_audit_trail_list->RecCnt++;
-	if (intval($t99_audit_trail_list->RecCnt) >= intval($t99_audit_trail_list->StartRec)) {
-		$t99_audit_trail_list->RowCnt++;
+$t95_rkas->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$t95_rkas->ResetAttrs();
+$t95_rkas_list->RenderRow();
+while ($t95_rkas_list->RecCnt < $t95_rkas_list->StopRec) {
+	$t95_rkas_list->RecCnt++;
+	if (intval($t95_rkas_list->RecCnt) >= intval($t95_rkas_list->StartRec)) {
+		$t95_rkas_list->RowCnt++;
 
 		// Set up key count
-		$t99_audit_trail_list->KeyCount = $t99_audit_trail_list->RowIndex;
+		$t95_rkas_list->KeyCount = $t95_rkas_list->RowIndex;
 
 		// Init row class and style
-		$t99_audit_trail->ResetAttrs();
-		$t99_audit_trail->CssClass = "";
-		if ($t99_audit_trail->CurrentAction == "gridadd") {
+		$t95_rkas->ResetAttrs();
+		$t95_rkas->CssClass = "";
+		if ($t95_rkas->CurrentAction == "gridadd") {
 		} else {
-			$t99_audit_trail_list->LoadRowValues($t99_audit_trail_list->Recordset); // Load row values
+			$t95_rkas_list->LoadRowValues($t95_rkas_list->Recordset); // Load row values
 		}
-		$t99_audit_trail->RowType = EW_ROWTYPE_VIEW; // Render view
+		$t95_rkas->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$t99_audit_trail->RowAttrs = array_merge($t99_audit_trail->RowAttrs, array('data-rowindex'=>$t99_audit_trail_list->RowCnt, 'id'=>'r' . $t99_audit_trail_list->RowCnt . '_t99_audit_trail', 'data-rowtype'=>$t99_audit_trail->RowType));
+		$t95_rkas->RowAttrs = array_merge($t95_rkas->RowAttrs, array('data-rowindex'=>$t95_rkas_list->RowCnt, 'id'=>'r' . $t95_rkas_list->RowCnt . '_t95_rkas', 'data-rowtype'=>$t95_rkas->RowType));
 
 		// Render row
-		$t99_audit_trail_list->RenderRow();
+		$t95_rkas_list->RenderRow();
 
 		// Render list options
-		$t99_audit_trail_list->RenderListOptions();
+		$t95_rkas_list->RenderListOptions();
 ?>
-	<tr<?php echo $t99_audit_trail->RowAttributes() ?>>
+	<tr<?php echo $t95_rkas->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$t99_audit_trail_list->ListOptions->Render("body", "left", $t99_audit_trail_list->RowCnt);
+$t95_rkas_list->ListOptions->Render("body", "left", $t95_rkas_list->RowCnt);
 ?>
-	<?php if ($t99_audit_trail->id->Visible) { // id ?>
-		<td data-name="id"<?php echo $t99_audit_trail->id->CellAttributes() ?>>
-<span id="el<?php echo $t99_audit_trail_list->RowCnt ?>_t99_audit_trail_id" class="t99_audit_trail_id">
-<span<?php echo $t99_audit_trail->id->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->id->ListViewValue() ?></span>
+	<?php if ($t95_rkas->id->Visible) { // id ?>
+		<td data-name="id"<?php echo $t95_rkas->id->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_id" class="t95_rkas_id">
+<span<?php echo $t95_rkas->id->ViewAttributes() ?>>
+<?php echo $t95_rkas->id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t99_audit_trail->datetime->Visible) { // datetime ?>
-		<td data-name="datetime"<?php echo $t99_audit_trail->datetime->CellAttributes() ?>>
-<span id="el<?php echo $t99_audit_trail_list->RowCnt ?>_t99_audit_trail_datetime" class="t99_audit_trail_datetime">
-<span<?php echo $t99_audit_trail->datetime->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->datetime->ListViewValue() ?></span>
+	<?php if ($t95_rkas->kiri_tabel->Visible) { // kiri_tabel ?>
+		<td data-name="kiri_tabel"<?php echo $t95_rkas->kiri_tabel->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kiri_tabel" class="t95_rkas_kiri_tabel">
+<span<?php echo $t95_rkas->kiri_tabel->ViewAttributes() ?>>
+<?php echo $t95_rkas->kiri_tabel->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t99_audit_trail->script->Visible) { // script ?>
-		<td data-name="script"<?php echo $t99_audit_trail->script->CellAttributes() ?>>
-<span id="el<?php echo $t99_audit_trail_list->RowCnt ?>_t99_audit_trail_script" class="t99_audit_trail_script">
-<span<?php echo $t99_audit_trail->script->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->script->ListViewValue() ?></span>
+	<?php if ($t95_rkas->kiri_id->Visible) { // kiri_id ?>
+		<td data-name="kiri_id"<?php echo $t95_rkas->kiri_id->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kiri_id" class="t95_rkas_kiri_id">
+<span<?php echo $t95_rkas->kiri_id->ViewAttributes() ?>>
+<?php echo $t95_rkas->kiri_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t99_audit_trail->user->Visible) { // user ?>
-		<td data-name="user"<?php echo $t99_audit_trail->user->CellAttributes() ?>>
-<span id="el<?php echo $t99_audit_trail_list->RowCnt ?>_t99_audit_trail_user" class="t99_audit_trail_user">
-<span<?php echo $t99_audit_trail->user->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->user->ListViewValue() ?></span>
+	<?php if ($t95_rkas->kiri_lv2->Visible) { // kiri_lv2 ?>
+		<td data-name="kiri_lv2"<?php echo $t95_rkas->kiri_lv2->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kiri_lv2" class="t95_rkas_kiri_lv2">
+<span<?php echo $t95_rkas->kiri_lv2->ViewAttributes() ?>>
+<?php echo $t95_rkas->kiri_lv2->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t99_audit_trail->action->Visible) { // action ?>
-		<td data-name="action"<?php echo $t99_audit_trail->action->CellAttributes() ?>>
-<span id="el<?php echo $t99_audit_trail_list->RowCnt ?>_t99_audit_trail_action" class="t99_audit_trail_action">
-<span<?php echo $t99_audit_trail->action->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->action->ListViewValue() ?></span>
+	<?php if ($t95_rkas->kiri_lv3->Visible) { // kiri_lv3 ?>
+		<td data-name="kiri_lv3"<?php echo $t95_rkas->kiri_lv3->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kiri_lv3" class="t95_rkas_kiri_lv3">
+<span<?php echo $t95_rkas->kiri_lv3->ViewAttributes() ?>>
+<?php echo $t95_rkas->kiri_lv3->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t99_audit_trail->_table->Visible) { // table ?>
-		<td data-name="_table"<?php echo $t99_audit_trail->_table->CellAttributes() ?>>
-<span id="el<?php echo $t99_audit_trail_list->RowCnt ?>_t99_audit_trail__table" class="t99_audit_trail__table">
-<span<?php echo $t99_audit_trail->_table->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->_table->ListViewValue() ?></span>
+	<?php if ($t95_rkas->kiri_lv4->Visible) { // kiri_lv4 ?>
+		<td data-name="kiri_lv4"<?php echo $t95_rkas->kiri_lv4->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kiri_lv4" class="t95_rkas_kiri_lv4">
+<span<?php echo $t95_rkas->kiri_lv4->ViewAttributes() ?>>
+<?php echo $t95_rkas->kiri_lv4->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($t99_audit_trail->_field->Visible) { // field ?>
-		<td data-name="_field"<?php echo $t99_audit_trail->_field->CellAttributes() ?>>
-<span id="el<?php echo $t99_audit_trail_list->RowCnt ?>_t99_audit_trail__field" class="t99_audit_trail__field">
-<span<?php echo $t99_audit_trail->_field->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->_field->ListViewValue() ?></span>
+	<?php if ($t95_rkas->kiri_jumlah->Visible) { // kiri_jumlah ?>
+		<td data-name="kiri_jumlah"<?php echo $t95_rkas->kiri_jumlah->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kiri_jumlah" class="t95_rkas_kiri_jumlah">
+<span<?php echo $t95_rkas->kiri_jumlah->ViewAttributes() ?>>
+<?php echo $t95_rkas->kiri_jumlah->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t95_rkas->kanan_tabel->Visible) { // kanan_tabel ?>
+		<td data-name="kanan_tabel"<?php echo $t95_rkas->kanan_tabel->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kanan_tabel" class="t95_rkas_kanan_tabel">
+<span<?php echo $t95_rkas->kanan_tabel->ViewAttributes() ?>>
+<?php echo $t95_rkas->kanan_tabel->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t95_rkas->kanan_id->Visible) { // kanan_id ?>
+		<td data-name="kanan_id"<?php echo $t95_rkas->kanan_id->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kanan_id" class="t95_rkas_kanan_id">
+<span<?php echo $t95_rkas->kanan_id->ViewAttributes() ?>>
+<?php echo $t95_rkas->kanan_id->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t95_rkas->kanan_lv2->Visible) { // kanan_lv2 ?>
+		<td data-name="kanan_lv2"<?php echo $t95_rkas->kanan_lv2->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kanan_lv2" class="t95_rkas_kanan_lv2">
+<span<?php echo $t95_rkas->kanan_lv2->ViewAttributes() ?>>
+<?php echo $t95_rkas->kanan_lv2->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t95_rkas->kanan_lv3->Visible) { // kanan_lv3 ?>
+		<td data-name="kanan_lv3"<?php echo $t95_rkas->kanan_lv3->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kanan_lv3" class="t95_rkas_kanan_lv3">
+<span<?php echo $t95_rkas->kanan_lv3->ViewAttributes() ?>>
+<?php echo $t95_rkas->kanan_lv3->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t95_rkas->kanan_lv4->Visible) { // kanan_lv4 ?>
+		<td data-name="kanan_lv4"<?php echo $t95_rkas->kanan_lv4->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kanan_lv4" class="t95_rkas_kanan_lv4">
+<span<?php echo $t95_rkas->kanan_lv4->ViewAttributes() ?>>
+<?php echo $t95_rkas->kanan_lv4->ListViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($t95_rkas->kanan_jumlah->Visible) { // kanan_jumlah ?>
+		<td data-name="kanan_jumlah"<?php echo $t95_rkas->kanan_jumlah->CellAttributes() ?>>
+<span id="el<?php echo $t95_rkas_list->RowCnt ?>_t95_rkas_kanan_jumlah" class="t95_rkas_kanan_jumlah">
+<span<?php echo $t95_rkas->kanan_jumlah->ViewAttributes() ?>>
+<?php echo $t95_rkas->kanan_jumlah->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$t99_audit_trail_list->ListOptions->Render("body", "right", $t99_audit_trail_list->RowCnt);
+$t95_rkas_list->ListOptions->Render("body", "right", $t95_rkas_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($t99_audit_trail->CurrentAction <> "gridadd")
-		$t99_audit_trail_list->Recordset->MoveNext();
+	if ($t95_rkas->CurrentAction <> "gridadd")
+		$t95_rkas_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($t99_audit_trail->CurrentAction == "") { ?>
+<?php if ($t95_rkas->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -2634,67 +2854,67 @@ $t99_audit_trail_list->ListOptions->Render("body", "right", $t99_audit_trail_lis
 <?php
 
 // Close recordset
-if ($t99_audit_trail_list->Recordset)
-	$t99_audit_trail_list->Recordset->Close();
+if ($t95_rkas_list->Recordset)
+	$t95_rkas_list->Recordset->Close();
 ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t95_rkas->Export == "") { ?>
 <div class="box-footer ewGridLowerPanel">
-<?php if ($t99_audit_trail->CurrentAction <> "gridadd" && $t99_audit_trail->CurrentAction <> "gridedit") { ?>
+<?php if ($t95_rkas->CurrentAction <> "gridadd" && $t95_rkas->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t99_audit_trail_list->Pager)) $t99_audit_trail_list->Pager = new cPrevNextPager($t99_audit_trail_list->StartRec, $t99_audit_trail_list->DisplayRecs, $t99_audit_trail_list->TotalRecs, $t99_audit_trail_list->AutoHidePager) ?>
-<?php if ($t99_audit_trail_list->Pager->RecordCount > 0 && $t99_audit_trail_list->Pager->Visible) { ?>
+<?php if (!isset($t95_rkas_list->Pager)) $t95_rkas_list->Pager = new cPrevNextPager($t95_rkas_list->StartRec, $t95_rkas_list->DisplayRecs, $t95_rkas_list->TotalRecs, $t95_rkas_list->AutoHidePager) ?>
+<?php if ($t95_rkas_list->Pager->RecordCount > 0 && $t95_rkas_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t99_audit_trail_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t99_audit_trail_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t99_audit_trail_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t95_rkas_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t99_audit_trail_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t99_audit_trail_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t99_audit_trail_list->PageUrl() ?>start=<?php echo $t99_audit_trail_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t95_rkas_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t95_rkas_list->PageUrl() ?>start=<?php echo $t95_rkas_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t95_rkas_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t99_audit_trail_list->Pager->RecordCount > 0) { ?>
+<?php if ($t95_rkas_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t99_audit_trail_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t95_rkas_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t95_rkas_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t95_rkas_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t99_audit_trail_list->TotalRecs > 0 && (!$t99_audit_trail_list->AutoHidePageSizeSelector || $t99_audit_trail_list->Pager->Visible)) { ?>
+<?php if ($t95_rkas_list->TotalRecs > 0 && (!$t95_rkas_list->AutoHidePageSizeSelector || $t95_rkas_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t99_audit_trail">
+<input type="hidden" name="t" value="t95_rkas">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t99_audit_trail_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t99_audit_trail_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t99_audit_trail_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t99_audit_trail_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t99_audit_trail->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t95_rkas_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t95_rkas_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t95_rkas_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t95_rkas_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t95_rkas->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2702,7 +2922,7 @@ if ($t99_audit_trail_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t99_audit_trail_list->OtherOptions as &$option)
+	foreach ($t95_rkas_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -2711,10 +2931,10 @@ if ($t99_audit_trail_list->Recordset)
 <?php } ?>
 </div>
 <?php } ?>
-<?php if ($t99_audit_trail_list->TotalRecs == 0 && $t99_audit_trail->CurrentAction == "") { // Show other options ?>
+<?php if ($t95_rkas_list->TotalRecs == 0 && $t95_rkas->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t99_audit_trail_list->OtherOptions as &$option) {
+	foreach ($t95_rkas_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -2722,19 +2942,19 @@ if ($t99_audit_trail_list->Recordset)
 </div>
 <div class="clearfix"></div>
 <?php } ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t95_rkas->Export == "") { ?>
 <script type="text/javascript">
-ft99_audit_traillistsrch.FilterList = <?php echo $t99_audit_trail_list->GetFilterList() ?>;
-ft99_audit_traillistsrch.Init();
-ft99_audit_traillist.Init();
+ft95_rkaslistsrch.FilterList = <?php echo $t95_rkas_list->GetFilterList() ?>;
+ft95_rkaslistsrch.Init();
+ft95_rkaslist.Init();
 </script>
 <?php } ?>
 <?php
-$t99_audit_trail_list->ShowPageFooter();
+$t95_rkas_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t95_rkas->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -2744,5 +2964,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t99_audit_trail_list->Page_Terminate();
+$t95_rkas_list->Page_Terminate();
 ?>
