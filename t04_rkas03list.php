@@ -812,10 +812,6 @@ class ct04_rkas03_list extends ct04_rkas03 {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-
-		// Load server side filters
-		if (EW_SEARCH_FILTER_OPTION == "Server" && isset($UserProfile))
-			$sSavedFilterList = $UserProfile->GetSearchFilters(CurrentUserName(), "ft04_rkas03listsrch");
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJson(), ","); // Field id
 		$sFilterList = ew_Concat($sFilterList, $this->lv1_id->AdvancedSearch->ToJson(), ","); // Field lv1_id
 		$sFilterList = ew_Concat($sFilterList, $this->lv2_id->AdvancedSearch->ToJson(), ","); // Field lv2_id

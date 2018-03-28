@@ -621,20 +621,38 @@
     <menu id="42">
       <phrase id="menutext" value="t 94 rkas 1" />
     </menu>
-    <menu id="43">
-      <phrase id="menutext" value="t 95 rkas 2" />
-    </menu>
     <menu id="6">
       <phrase id="menutext" value="Beranda" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="Identitas Sekolah" />
     </menu>
-    <menu id="41">
-      <phrase id="menutext" value="Input" />
+    <menu id="64">
+      <phrase id="menutext" value="RKAS" />
     </menu>
     <menu id="36">
-      <phrase id="menutext" value="RKAS" />
+      <phrase id="menutext" value="Buku RKAS" />
+    </menu>
+    <menu id="63">
+      <phrase id="menutext" value="Setup" />
+    </menu>
+    <menu id="24">
+      <phrase id="menutext" value="RKAS Level-1" />
+    </menu>
+    <menu id="31">
+      <phrase id="menutext" value="RKAS Level-2" />
+    </menu>
+    <menu id="32">
+      <phrase id="menutext" value="RKAS Level-3" />
+    </menu>
+    <menu id="33">
+      <phrase id="menutext" value="RKAS Level-4" />
+    </menu>
+    <menu id="43">
+      <phrase id="menutext" value="t 95 rkas 2" />
+    </menu>
+    <menu id="41">
+      <phrase id="menutext" value="Input" />
     </menu>
     <menu id="19">
       <phrase id="menutext" value="Buku Kas BOS &amp; Pembantu Tunai" />
@@ -654,21 +672,6 @@
     <menu id="12">
       <phrase id="menutext" value="Setup" />
     </menu>
-    <menu id="30">
-      <phrase id="menutext" value="RKAS" />
-    </menu>
-    <menu id="24">
-      <phrase id="menutext" value="RKAS Level-1" />
-    </menu>
-    <menu id="31">
-      <phrase id="menutext" value="RKAS Level-2" />
-    </menu>
-    <menu id="32">
-      <phrase id="menutext" value="RKAS Level-3" />
-    </menu>
-    <menu id="33">
-      <phrase id="menutext" value="RKAS Level-4" />
-    </menu>
     <menu id="5">
       <phrase id="menutext" value="Pengguna" />
     </menu>
@@ -685,7 +688,7 @@
       <phrase id="tblcaption" value="Beranda" />
     </table>
     <table id="cf02_input_rkas_php">
-      <phrase id="tblcaption" value="RKAS" />
+      <phrase id="tblcaption" value="Buku RKAS" />
     </table>
     <table id="t01_master_sekolah">
       <phrase id="tblcaption" value="Identitas Sekolah" />
