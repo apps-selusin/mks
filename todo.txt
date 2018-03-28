@@ -1,0 +1,5 @@
+12:19 AM 3/29/2018
+- buat hanya 2 kolom,
+  keterangan dan jumlah
+  untuk isian keterangan agar kelihatan hirarki nya :: main spasi aja
+

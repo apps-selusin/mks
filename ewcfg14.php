@@ -25,7 +25,7 @@ define("EW_CONFIG_FILE_FOLDER", EW_PROJECT_NAME, TRUE); // Config file name
 define("EW_PROJECT_ID", "{EC8C353E-21D9-43CE-9845-66794CB3C5CD}", TRUE); // Project ID (GUID)
 $EW_RELATED_PROJECT_ID = "";
 $EW_RELATED_LANGUAGE_FOLDER = "";
-define("EW_RANDOM_KEY", 'yBlssDuTeoDa1Ppc', TRUE); // Random key for encryption
+define("EW_RANDOM_KEY", 'uB3V7DJj7pUZKgRi', TRUE); // Random key for encryption
 define("EW_PROJECT_STYLESHEET_FILENAME", "phpcss/prj_mks.css", TRUE); // Project stylesheet file name
 define("EW_CHARSET", "utf-8", TRUE); // Project charset
 define("EW_EMAIL_CHARSET", EW_CHARSET, TRUE); // Email charset

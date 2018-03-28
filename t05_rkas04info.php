@@ -907,32 +907,107 @@ class ct05_rkas04 extends cTable {
 		// lv1_id
 		$this->lv1_id->EditAttrs["class"] = "form-control";
 		$this->lv1_id->EditCustomAttributes = "";
-		$this->lv1_id->EditValue = $this->lv1_id->CurrentValue;
-		$this->lv1_id->PlaceHolder = ew_RemoveHtml($this->lv1_id->FldCaption());
+		if ($this->lv1_id->VirtualValue <> "") {
+			$this->lv1_id->EditValue = $this->lv1_id->VirtualValue;
+		} else {
+			$this->lv1_id->EditValue = $this->lv1_id->CurrentValue;
+		if (strval($this->lv1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sWhereWrk = "";
+		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv1_id->EditValue = $this->lv1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv1_id->EditValue = $this->lv1_id->CurrentValue;
+			}
+		} else {
+			$this->lv1_id->EditValue = NULL;
+		}
+		}
+		$this->lv1_id->ViewCustomAttributes = "";
 
 		// lv2_id
 		$this->lv2_id->EditAttrs["class"] = "form-control";
 		$this->lv2_id->EditCustomAttributes = "";
-		$this->lv2_id->EditValue = $this->lv2_id->CurrentValue;
-		$this->lv2_id->PlaceHolder = ew_RemoveHtml($this->lv2_id->FldCaption());
+		if ($this->lv2_id->VirtualValue <> "") {
+			$this->lv2_id->EditValue = $this->lv2_id->VirtualValue;
+		} else {
+			$this->lv2_id->EditValue = $this->lv2_id->CurrentValue;
+		if (strval($this->lv2_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+		$sWhereWrk = "";
+		$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv2_id->EditValue = $this->lv2_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv2_id->EditValue = $this->lv2_id->CurrentValue;
+			}
+		} else {
+			$this->lv2_id->EditValue = NULL;
+		}
+		}
+		$this->lv2_id->ViewCustomAttributes = "";
 
 		// lv3_id
 		$this->lv3_id->EditAttrs["class"] = "form-control";
 		$this->lv3_id->EditCustomAttributes = "";
-		$this->lv3_id->EditValue = $this->lv3_id->CurrentValue;
-		$this->lv3_id->PlaceHolder = ew_RemoveHtml($this->lv3_id->FldCaption());
+		if ($this->lv3_id->VirtualValue <> "") {
+			$this->lv3_id->EditValue = $this->lv3_id->VirtualValue;
+		} else {
+			$this->lv3_id->EditValue = $this->lv3_id->CurrentValue;
+		if (strval($this->lv3_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv3_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rkas03`";
+		$sWhereWrk = "";
+		$this->lv3_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv3_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv3_id->EditValue = $this->lv3_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv3_id->EditValue = $this->lv3_id->CurrentValue;
+			}
+		} else {
+			$this->lv3_id->EditValue = NULL;
+		}
+		}
+		$this->lv3_id->ViewCustomAttributes = "";
 
 		// no_urut
 		$this->no_urut->EditAttrs["class"] = "form-control";
 		$this->no_urut->EditCustomAttributes = "";
 		$this->no_urut->EditValue = $this->no_urut->CurrentValue;
-		$this->no_urut->PlaceHolder = ew_RemoveHtml($this->no_urut->FldCaption());
+		$this->no_urut->ViewCustomAttributes = "";
 
 		// keterangan
 		$this->keterangan->EditAttrs["class"] = "form-control";
 		$this->keterangan->EditCustomAttributes = "";
 		$this->keterangan->EditValue = $this->keterangan->CurrentValue;
-		$this->keterangan->PlaceHolder = ew_RemoveHtml($this->keterangan->FldCaption());
+		$this->keterangan->ViewCustomAttributes = "";
 
 		// jumlah
 		$this->jumlah->EditAttrs["class"] = "form-control";
