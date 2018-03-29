@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2018/3/28" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2018/3/29" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -618,6 +618,9 @@
   <project>
     <phrase id="bodytitle" value="Manajemen Keuangan Sekolah" />
     <phrase id="footertext" value="&amp;copy;2018 Selaras Solusindo. All rights reserved." />
+    <menu id="65">
+      <phrase id="menutext" value="RKAS" />
+    </menu>
     <menu id="42">
       <phrase id="menutext" value="t 94 rkas 1" />
     </menu>
@@ -719,6 +722,36 @@
       </field>
       <field id="provinsi">
         <phrase id="fldcaption" value="Provinsi" />
+      </field>
+    </table>
+    <table id="t02_rkas">
+      <phrase id="tblcaption" value="RKAS" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="lvl">
+        <phrase id="fldcaption" value="Level" />
+      </field>
+      <field id="urutan">
+        <phrase id="fldcaption" value="Urutan" />
+      </field>
+      <field id="nour1">
+        <phrase id="fldcaption" value="No. urut" />
+      </field>
+      <field id="ket1">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="jml1">
+        <phrase id="fldcaption" value="Jumlah" />
+      </field>
+      <field id="nour2">
+        <phrase id="fldcaption" value="No. Urut" />
+      </field>
+      <field id="ket2">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="jml2">
+        <phrase id="fldcaption" value="Jumlah" />
       </field>
     </table>
     <table id="t02_rkas01">

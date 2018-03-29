@@ -105,6 +105,12 @@ class ct95_rkas2_list extends ct95_rkas2 {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
+	var $AuditTrailOnAdd = TRUE;
+	var $AuditTrailOnEdit = TRUE;
+	var $AuditTrailOnDelete = TRUE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -2256,6 +2262,13 @@ var CurrentSearchForm = ft95_rkas2listsrch = new ew_Form("ft95_rkas2listsrch");
 			$t95_rkas2_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
 			$t95_rkas2_list->setWarningMessage($Language->Phrase("NoRecord"));
+	}
+
+	// Audit trail on search
+	if ($t95_rkas2_list->AuditTrailOnSearch && $t95_rkas2_list->Command == "search" && !$t95_rkas2_list->RestoreSearch) {
+		$searchparm = ew_ServerVar("QUERY_STRING");
+		$searchsql = $t95_rkas2_list->getSessionWhere();
+		$t95_rkas2_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
 	}
 $t95_rkas2_list->RenderOtherOptions();
 ?>

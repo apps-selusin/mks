@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 27, 2018 at 08:25 PM
+-- Generation Time: Mar 29, 2018 at 10:52 AM
 -- Server version: 5.6.14
 -- PHP Version: 5.5.6
 
@@ -50,6 +50,37 @@ INSERT INTO `t01_master_sekolah` (`id`, `no_stat`, `nama`, `status`, `alamat1`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `t02_rkas`
+--
+
+CREATE TABLE IF NOT EXISTS `t02_rkas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lvl` tinyint(4) NOT NULL,
+  `urutan` smallint(6) NOT NULL,
+  `nour1` varchar(10) DEFAULT NULL,
+  `ket1` varchar(50) DEFAULT NULL,
+  `jml1` float(15,2) DEFAULT '0.00',
+  `nour2` varchar(10) DEFAULT NULL,
+  `ket2` varchar(50) DEFAULT NULL,
+  `jml2` float(15,2) DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `t02_rkas`
+--
+
+INSERT INTO `t02_rkas` (`id`, `lvl`, `urutan`, `nour1`, `ket1`, `jml1`, `nour2`, `ket2`, `jml2`) VALUES
+(1, 1, 1, '1.', 'Sumber Dana', 0.00, '1.', 'Penggunaan', 0.00),
+(2, 2, 2, '1.1.', 'Dana Rutin', 0.00, '2.1.', 'Dana Rutin', 0.00),
+(3, 3, 3, '1.1.1.', 'Gaji', 0.00, NULL, NULL, 0.00),
+(4, 3, 4, '1.1.2.', 'Tunjangan Profesi', 0.00, NULL, NULL, 0.00),
+(5, 3, 5, '1.1.3.', 'Kesra', 0.00, NULL, NULL, 0.00),
+(6, 2, 6, '1.2.', 'Dana Bantuan', 0.00, NULL, NULL, 0.00);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `t02_rkas01`
 --
 
@@ -89,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `t03_rkas02` (
 --
 
 INSERT INTO `t03_rkas02` (`id`, `no_urut`, `keterangan`, `jumlah`, `lv1_id`) VALUES
-(1, 1, 'Dana Rutin', 1.00, 1),
+(1, 1, 'Dana Rutin', 0.00, 1),
 (2, 2, 'Dana Bantuan', 0.00, 1),
 (3, 3, 'Dana Komite', 0.00, 1),
 (4, 4, 'Dana Hibah', 0.00, 1),
@@ -208,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `t94_rkas1` (
 
 INSERT INTO `t94_rkas1` (`id`, `no_urut`, `keterangan`, `jumlah`, `no_keyfield`, `no_level`, `nama_tabel`, `id_data`) VALUES
 (1, '1.', 'Sumber Dana', 0.00, '01000000', 1, 't02_rkas01', 1),
-(2, '1.1.', 'Dana Rutin', 1.00, '01010000', 2, 't03_rkas02', 1),
+(2, '1.1.', 'Dana Rutin', 0.00, '01010000', 2, 't03_rkas02', 1),
 (3, '1.1.1.', 'Gaji', 0.00, '01010100', 3, 't04_rkas03', 1),
 (4, '1.1.2.', 'Tunjangan Profesi', 0.00, '01010200', 3, 't04_rkas03', 2),
 (5, '1.1.3.', 'Kesra', 0.00, '01010300', 3, 't04_rkas03', 3),
@@ -396,7 +427,7 @@ CREATE TABLE IF NOT EXISTS `t99_audit_trail` (
   `oldvalue` longtext,
   `newvalue` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=354 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=437 ;
 
 --
 -- Dumping data for table `t99_audit_trail`
@@ -755,7 +786,90 @@ INSERT INTO `t99_audit_trail` (`id`, `datetime`, `script`, `user`, `action`, `ta
 (350, '2018-03-22 21:16:14', '/mks/t04_rkas03add.php', '1', 'A', 't04_rkas03', 'jumlah', '19', '', '0.00'),
 (351, '2018-03-22 21:16:14', '/mks/t04_rkas03add.php', '1', 'A', 't04_rkas03', 'id', '19', '', '19'),
 (352, '2018-03-27 11:05:43', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
-(353, '2018-03-27 13:26:03', '/mks/login.php', 'admin', 'login', '::1', '', '', '', '');
+(353, '2018-03-27 13:26:03', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
+(354, '2018-03-28 11:48:26', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
+(355, '2018-03-28 11:50:01', '/mks/t03_rkas02edit.php', '1', 'U', 't03_rkas02', 'jumlah', '1', '1.00', '0'),
+(356, '2018-03-28 12:43:29', '/mks/logout.php', 'admin', 'logout', '::1', '', '', '', ''),
+(357, '2018-03-28 12:54:51', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
+(358, '2018-03-28 14:38:27', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
+(359, '2018-03-29 08:30:57', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
+(360, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', '*** Batch insert begin ***', 't02_rkas', '', '', '', ''),
+(361, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '1', '', '1'),
+(362, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '1', '', NULL),
+(363, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '1', '', NULL),
+(364, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '1', '', '4000000'),
+(365, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '1', '', NULL),
+(366, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '1', '', NULL),
+(367, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '1', '', NULL),
+(368, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '1', '', '1'),
+(369, '2018-03-29 09:09:47', '/mks/t02_rkaslist.php', '1', '*** Batch insert successful ***', 't02_rkas', '', '', '', ''),
+(370, '2018-03-29 09:13:48', '/mks/t02_rkaslist.php', '1', '*** Batch update begin ***', 't02_rkas', '', '', '', ''),
+(371, '2018-03-29 09:13:48', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour1', '1', NULL, '1.'),
+(372, '2018-03-29 09:13:48', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket1', '1', NULL, 'Sumber Dana'),
+(373, '2018-03-29 09:13:48', '/mks/t02_rkaslist.php', '1', '*** Batch update successful ***', 't02_rkas', '', '', '', ''),
+(374, '2018-03-29 09:18:47', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'urutan', '1', '0', '1'),
+(375, '2018-03-29 09:19:24', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'jml1', '1', '4000000.00', '0'),
+(376, '2018-03-29 09:19:24', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '1', NULL, '1.'),
+(377, '2018-03-29 09:19:24', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '1', NULL, 'Penggunaan'),
+(378, '2018-03-29 09:19:24', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'jml2', '1', NULL, '0'),
+(379, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', '*** Batch insert begin ***', 't02_rkas', '', '', '', ''),
+(380, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '2', '', '2'),
+(381, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '2', '', '2'),
+(382, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '2', '', '1.1'),
+(383, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '2', '', 'Dana Rutin'),
+(384, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '2', '', '0'),
+(385, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '2', '', NULL),
+(386, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '2', '', NULL),
+(387, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '2', '', '0'),
+(388, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '2', '', '2'),
+(389, '2018-03-29 09:23:32', '/mks/t02_rkaslist.php', '1', '*** Batch insert successful ***', 't02_rkas', '', '', '', ''),
+(390, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '3', '', '3'),
+(391, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '3', '', '3'),
+(392, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '3', '', '1.1.1'),
+(393, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '3', '', 'Gaji'),
+(394, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '3', '', '0.00'),
+(395, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '3', '', NULL),
+(396, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '3', '', NULL),
+(397, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '3', '', '0.00'),
+(398, '2018-03-29 09:28:09', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '3', '', '3'),
+(399, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '4', '', '3'),
+(400, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '4', '', '3'),
+(401, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '4', '', '1.1.2'),
+(402, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '4', '', 'Tunjangan Profesi'),
+(403, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '4', '', '0.00'),
+(404, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '4', '', NULL),
+(405, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '4', '', NULL),
+(406, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '4', '', '0.00'),
+(407, '2018-03-29 09:28:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '4', '', '4'),
+(408, '2018-03-29 09:29:11', '/mks/t02_rkasedit.php', '1', 'U', 't02_rkas', 'urutan', '4', '3', '2'),
+(409, '2018-03-29 09:29:25', '/mks/t02_rkasedit.php', '1', 'U', 't02_rkas', 'urutan', '4', '2', '3'),
+(410, '2018-03-29 09:29:32', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'urutan', '4', '3', '4'),
+(411, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '5', '', '3'),
+(412, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '5', '', '5'),
+(413, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '5', '', '1.1.3'),
+(414, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '5', '', 'Kesra'),
+(415, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '5', '', '0.00'),
+(416, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '5', '', NULL),
+(417, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '5', '', NULL),
+(418, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '5', '', '0.00'),
+(419, '2018-03-29 09:34:28', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '5', '', '5'),
+(420, '2018-03-29 09:34:50', '/mks/t02_rkaslist.php', '1', '*** Batch update begin ***', 't02_rkas', '', '', '', ''),
+(421, '2018-03-29 09:34:50', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour1', '2', '1.1', '1.1.'),
+(422, '2018-03-29 09:34:51', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour1', '3', '1.1.1', '1.1.1.'),
+(423, '2018-03-29 09:34:51', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour1', '4', '1.1.2', '1.1.2.'),
+(424, '2018-03-29 09:34:51', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour1', '5', '1.1.3', '1.1.3.'),
+(425, '2018-03-29 09:34:51', '/mks/t02_rkaslist.php', '1', '*** Batch update successful ***', 't02_rkas', '', '', '', ''),
+(426, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '6', '', '2'),
+(427, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '6', '', '6'),
+(428, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '6', '', '1.2.'),
+(429, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '6', '', 'Dana Bantuan'),
+(430, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '6', '', '0'),
+(431, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '6', '', NULL),
+(432, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '6', '', NULL),
+(433, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '6', '', '0'),
+(434, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '6', '', '6'),
+(435, '2018-03-29 09:39:41', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '2', NULL, '2.1.'),
+(436, '2018-03-29 09:39:41', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '2', NULL, 'Dana Rutin');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

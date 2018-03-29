@@ -331,6 +331,11 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
+		$this->lv1_id->SetVisibility();
+		$this->lv2_id->SetVisibility();
+		$this->lv3_id->SetVisibility();
+		$this->no_urut->SetVisibility();
+		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
@@ -616,6 +621,21 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 
 		// Load from form
 		global $objForm;
+		if (!$this->lv1_id->FldIsDetailKey) {
+			$this->lv1_id->setFormValue($objForm->GetValue("x_lv1_id"));
+		}
+		if (!$this->lv2_id->FldIsDetailKey) {
+			$this->lv2_id->setFormValue($objForm->GetValue("x_lv2_id"));
+		}
+		if (!$this->lv3_id->FldIsDetailKey) {
+			$this->lv3_id->setFormValue($objForm->GetValue("x_lv3_id"));
+		}
+		if (!$this->no_urut->FldIsDetailKey) {
+			$this->no_urut->setFormValue($objForm->GetValue("x_no_urut"));
+		}
+		if (!$this->keterangan->FldIsDetailKey) {
+			$this->keterangan->setFormValue($objForm->GetValue("x_keterangan"));
+		}
 		if (!$this->jumlah->FldIsDetailKey) {
 			$this->jumlah->setFormValue($objForm->GetValue("x_jumlah"));
 		}
@@ -627,6 +647,11 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 	function RestoreFormValues() {
 		global $objForm;
 		$this->id->CurrentValue = $this->id->FormValue;
+		$this->lv1_id->CurrentValue = $this->lv1_id->FormValue;
+		$this->lv2_id->CurrentValue = $this->lv2_id->FormValue;
+		$this->lv3_id->CurrentValue = $this->lv3_id->FormValue;
+		$this->no_urut->CurrentValue = $this->no_urut->FormValue;
+		$this->keterangan->CurrentValue = $this->keterangan->FormValue;
 		$this->jumlah->CurrentValue = $this->jumlah->FormValue;
 	}
 
@@ -891,11 +916,129 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 		$this->jumlah->CellCssStyle .= "text-align: right;";
 		$this->jumlah->ViewCustomAttributes = "";
 
+			// lv1_id
+			$this->lv1_id->LinkCustomAttributes = "";
+			$this->lv1_id->HrefValue = "";
+			$this->lv1_id->TooltipValue = "";
+
+			// lv2_id
+			$this->lv2_id->LinkCustomAttributes = "";
+			$this->lv2_id->HrefValue = "";
+			$this->lv2_id->TooltipValue = "";
+
+			// lv3_id
+			$this->lv3_id->LinkCustomAttributes = "";
+			$this->lv3_id->HrefValue = "";
+			$this->lv3_id->TooltipValue = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
+
+			// keterangan
+			$this->keterangan->LinkCustomAttributes = "";
+			$this->keterangan->HrefValue = "";
+			$this->keterangan->TooltipValue = "";
+
 			// jumlah
 			$this->jumlah->LinkCustomAttributes = "";
 			$this->jumlah->HrefValue = "";
 			$this->jumlah->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
+
+			// lv1_id
+			$this->lv1_id->EditAttrs["class"] = "form-control";
+			$this->lv1_id->EditCustomAttributes = "";
+			$this->lv1_id->EditValue = ew_HtmlEncode($this->lv1_id->CurrentValue);
+			if (strval($this->lv1_id->CurrentValue) <> "") {
+				$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+			$sWhereWrk = "";
+			$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
+					$this->lv1_id->EditValue = $this->lv1_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->lv1_id->EditValue = ew_HtmlEncode($this->lv1_id->CurrentValue);
+				}
+			} else {
+				$this->lv1_id->EditValue = NULL;
+			}
+			$this->lv1_id->PlaceHolder = ew_RemoveHtml($this->lv1_id->FldCaption());
+
+			// lv2_id
+			$this->lv2_id->EditAttrs["class"] = "form-control";
+			$this->lv2_id->EditCustomAttributes = "";
+			$this->lv2_id->EditValue = ew_HtmlEncode($this->lv2_id->CurrentValue);
+			if (strval($this->lv2_id->CurrentValue) <> "") {
+				$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+			$sWhereWrk = "";
+			$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
+					$this->lv2_id->EditValue = $this->lv2_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->lv2_id->EditValue = ew_HtmlEncode($this->lv2_id->CurrentValue);
+				}
+			} else {
+				$this->lv2_id->EditValue = NULL;
+			}
+			$this->lv2_id->PlaceHolder = ew_RemoveHtml($this->lv2_id->FldCaption());
+
+			// lv3_id
+			$this->lv3_id->EditAttrs["class"] = "form-control";
+			$this->lv3_id->EditCustomAttributes = "";
+			$this->lv3_id->EditValue = ew_HtmlEncode($this->lv3_id->CurrentValue);
+			if (strval($this->lv3_id->CurrentValue) <> "") {
+				$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv3_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rkas03`";
+			$sWhereWrk = "";
+			$this->lv3_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->lv3_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
+					$this->lv3_id->EditValue = $this->lv3_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->lv3_id->EditValue = ew_HtmlEncode($this->lv3_id->CurrentValue);
+				}
+			} else {
+				$this->lv3_id->EditValue = NULL;
+			}
+			$this->lv3_id->PlaceHolder = ew_RemoveHtml($this->lv3_id->FldCaption());
+
+			// no_urut
+			$this->no_urut->EditAttrs["class"] = "form-control";
+			$this->no_urut->EditCustomAttributes = "";
+			$this->no_urut->EditValue = ew_HtmlEncode($this->no_urut->CurrentValue);
+			$this->no_urut->PlaceHolder = ew_RemoveHtml($this->no_urut->FldCaption());
+
+			// keterangan
+			$this->keterangan->EditAttrs["class"] = "form-control";
+			$this->keterangan->EditCustomAttributes = "";
+			$this->keterangan->EditValue = ew_HtmlEncode($this->keterangan->CurrentValue);
+			$this->keterangan->PlaceHolder = ew_RemoveHtml($this->keterangan->FldCaption());
 
 			// jumlah
 			$this->jumlah->EditAttrs["class"] = "form-control";
@@ -905,8 +1048,28 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 			if (strval($this->jumlah->EditValue) <> "" && is_numeric($this->jumlah->EditValue)) $this->jumlah->EditValue = ew_FormatNumber($this->jumlah->EditValue, -2, -2, -2, -2);
 
 			// Edit refer script
-			// jumlah
+			// lv1_id
 
+			$this->lv1_id->LinkCustomAttributes = "";
+			$this->lv1_id->HrefValue = "";
+
+			// lv2_id
+			$this->lv2_id->LinkCustomAttributes = "";
+			$this->lv2_id->HrefValue = "";
+
+			// lv3_id
+			$this->lv3_id->LinkCustomAttributes = "";
+			$this->lv3_id->HrefValue = "";
+
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+
+			// keterangan
+			$this->keterangan->LinkCustomAttributes = "";
+			$this->keterangan->HrefValue = "";
+
+			// jumlah
 			$this->jumlah->LinkCustomAttributes = "";
 			$this->jumlah->HrefValue = "";
 		}
@@ -928,6 +1091,15 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
+		if (!$this->lv3_id->FldIsDetailKey && !is_null($this->lv3_id->FormValue) && $this->lv3_id->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->lv3_id->FldCaption(), $this->lv3_id->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->no_urut->FormValue)) {
+			ew_AddMessage($gsFormError, $this->no_urut->FldErrMsg());
+		}
+		if (!$this->keterangan->FldIsDetailKey && !is_null($this->keterangan->FormValue) && $this->keterangan->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->keterangan->FldCaption(), $this->keterangan->ReqErrMsg));
+		}
 		if (!ew_CheckNumber($this->jumlah->FormValue)) {
 			ew_AddMessage($gsFormError, $this->jumlah->FldErrMsg());
 		}
@@ -966,6 +1138,21 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 			$rsold = &$rs->fields;
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
+
+			// lv1_id
+			$this->lv1_id->SetDbValueDef($rsnew, $this->lv1_id->CurrentValue, NULL, $this->lv1_id->ReadOnly);
+
+			// lv2_id
+			$this->lv2_id->SetDbValueDef($rsnew, $this->lv2_id->CurrentValue, NULL, $this->lv2_id->ReadOnly);
+
+			// lv3_id
+			$this->lv3_id->SetDbValueDef($rsnew, $this->lv3_id->CurrentValue, 0, $this->lv3_id->ReadOnly);
+
+			// no_urut
+			$this->no_urut->SetDbValueDef($rsnew, $this->no_urut->CurrentValue, 0, $this->no_urut->ReadOnly);
+
+			// keterangan
+			$this->keterangan->SetDbValueDef($rsnew, $this->keterangan->CurrentValue, "", $this->keterangan->ReadOnly);
 
 			// jumlah
 			$this->jumlah->SetDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, $this->jumlah->ReadOnly);
@@ -1017,6 +1204,42 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		case "x_lv1_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+			$sWhereWrk = "{filter}";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` IN ({filter_value})', "t0" => "3", "fn0" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_lv2_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+			$sWhereWrk = "{filter}";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` IN ({filter_value})', "t0" => "3", "fn0" => "", "f1" => '`lv1_id` IN ({filter_value})', "t1" => "3", "fn1" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_lv3_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id` AS `LinkFld`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_rkas03`";
+			$sWhereWrk = "{filter}";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` IN ({filter_value})', "t0" => "3", "fn0" => "", "f1" => '`lv2_id` IN ({filter_value})', "t1" => "3", "fn1" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->lv3_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 
@@ -1025,6 +1248,42 @@ class ct05_rkas04_edit extends ct05_rkas04 {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		case "x_lv1_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld` FROM `t02_rkas01`";
+			$sWhereWrk = "`no_urut` LIKE '{query_value}%' OR CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv1_id) . "',COALESCE(`keterangan`,'')) LIKE '{query_value}%'";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_lv2_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld` FROM `t03_rkas02`";
+			$sWhereWrk = "(`no_urut` LIKE '{query_value}%' OR CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv2_id) . "',COALESCE(`keterangan`,'')) LIKE '{query_value}%') AND ({filter})";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f1" => "`lv1_id` IN ({filter_value})", "t1" => "3", "fn1" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_lv3_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld` FROM `t04_rkas03`";
+			$sWhereWrk = "(`no_urut` LIKE '{query_value}%' OR CONCAT(COALESCE(`no_urut`, ''),'" . ew_ValueSeparator(1, $this->lv3_id) . "',COALESCE(`keterangan`,'')) LIKE '{query_value}%') AND ({filter})";
+			$fld->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f1" => "`lv2_id` IN ({filter_value})", "t1" => "3", "fn1" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->lv3_id, $sWhereWrk); // Call Lookup Selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 
@@ -1136,6 +1395,15 @@ ft05_rkas04edit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
+			elm = this.GetElements("x" + infix + "_lv3_id");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t05_rkas04->lv3_id->FldCaption(), $t05_rkas04->lv3_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_no_urut");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t05_rkas04->no_urut->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_keterangan");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t05_rkas04->keterangan->FldCaption(), $t05_rkas04->keterangan->ReqErrMsg)) ?>");
 			elm = this.GetElements("x" + infix + "_jumlah");
 			if (elm && !ew_CheckNumber(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($t05_rkas04->jumlah->FldErrMsg()) ?>");
@@ -1168,8 +1436,17 @@ ft05_rkas04edit.Form_CustomValidate =
 ft05_rkas04edit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+ft05_rkas04edit.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
+ft05_rkas04edit.Lists["x_lv1_id"].Data = "<?php echo $t05_rkas04_edit->lv1_id->LookupFilterQuery(FALSE, "edit") ?>";
+ft05_rkas04edit.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t05_rkas04_edit->lv1_id->LookupFilterQuery(TRUE, "edit"))) ?>;
+ft05_rkas04edit.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":["x_lv1_id"],"ChildFields":["x_lv3_id"],"FilterFields":["x_lv1_id"],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
+ft05_rkas04edit.Lists["x_lv2_id"].Data = "<?php echo $t05_rkas04_edit->lv2_id->LookupFilterQuery(FALSE, "edit") ?>";
+ft05_rkas04edit.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t05_rkas04_edit->lv2_id->LookupFilterQuery(TRUE, "edit"))) ?>;
+ft05_rkas04edit.Lists["x_lv3_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":["x_lv2_id"],"ChildFields":[],"FilterFields":["x_lv2_id"],"Options":[],"Template":"","LinkTable":"t04_rkas03"};
+ft05_rkas04edit.Lists["x_lv3_id"].Data = "<?php echo $t05_rkas04_edit->lv3_id->LookupFilterQuery(FALSE, "edit") ?>";
+ft05_rkas04edit.AutoSuggests["x_lv3_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t05_rkas04_edit->lv3_id->LookupFilterQuery(TRUE, "edit"))) ?>;
 
+// Form object for search
 </script>
 <script type="text/javascript">
 
@@ -1232,6 +1509,92 @@ $t05_rkas04_edit->ShowMessage();
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="modal" value="<?php echo intval($t05_rkas04_edit->IsModal) ?>">
 <div class="ewEditDiv"><!-- page* -->
+<?php if ($t05_rkas04->lv1_id->Visible) { // lv1_id ?>
+	<div id="r_lv1_id" class="form-group">
+		<label id="elh_t05_rkas04_lv1_id" class="<?php echo $t05_rkas04_edit->LeftColumnClass ?>"><?php echo $t05_rkas04->lv1_id->FldCaption() ?></label>
+		<div class="<?php echo $t05_rkas04_edit->RightColumnClass ?>"><div<?php echo $t05_rkas04->lv1_id->CellAttributes() ?>>
+<span id="el_t05_rkas04_lv1_id">
+<?php
+$wrkonchange = trim("ew_UpdateOpt.call(this); " . @$t05_rkas04->lv1_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t05_rkas04->lv1_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_lv1_id" style="white-space: nowrap; z-index: 8980">
+	<input type="text" name="sv_x_lv1_id" id="sv_x_lv1_id" value="<?php echo $t05_rkas04->lv1_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t05_rkas04->lv1_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t05_rkas04->lv1_id->getPlaceHolder()) ?>"<?php echo $t05_rkas04->lv1_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t05_rkas04" data-field="x_lv1_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t05_rkas04->lv1_id->DisplayValueSeparatorAttribute() ?>" name="x_lv1_id" id="x_lv1_id" value="<?php echo ew_HtmlEncode($t05_rkas04->lv1_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script type="text/javascript">
+ft05_rkas04edit.CreateAutoSuggest({"id":"x_lv1_id","forceSelect":true});
+</script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t05_rkas04->lv1_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_lv1_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"<?php echo (($t05_rkas04->lv1_id->ReadOnly || $t05_rkas04->lv1_id->Disabled) ? " disabled" : "")?>><span class="glyphicon glyphicon-search ewIcon"></span></button>
+</span>
+<?php echo $t05_rkas04->lv1_id->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t05_rkas04->lv2_id->Visible) { // lv2_id ?>
+	<div id="r_lv2_id" class="form-group">
+		<label id="elh_t05_rkas04_lv2_id" class="<?php echo $t05_rkas04_edit->LeftColumnClass ?>"><?php echo $t05_rkas04->lv2_id->FldCaption() ?></label>
+		<div class="<?php echo $t05_rkas04_edit->RightColumnClass ?>"><div<?php echo $t05_rkas04->lv2_id->CellAttributes() ?>>
+<span id="el_t05_rkas04_lv2_id">
+<?php
+$wrkonchange = trim("ew_UpdateOpt.call(this); " . @$t05_rkas04->lv2_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t05_rkas04->lv2_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_lv2_id" style="white-space: nowrap; z-index: 8970">
+	<input type="text" name="sv_x_lv2_id" id="sv_x_lv2_id" value="<?php echo $t05_rkas04->lv2_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t05_rkas04->lv2_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t05_rkas04->lv2_id->getPlaceHolder()) ?>"<?php echo $t05_rkas04->lv2_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t05_rkas04" data-field="x_lv2_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t05_rkas04->lv2_id->DisplayValueSeparatorAttribute() ?>" name="x_lv2_id" id="x_lv2_id" value="<?php echo ew_HtmlEncode($t05_rkas04->lv2_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script type="text/javascript">
+ft05_rkas04edit.CreateAutoSuggest({"id":"x_lv2_id","forceSelect":true});
+</script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t05_rkas04->lv2_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_lv2_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"<?php echo (($t05_rkas04->lv2_id->ReadOnly || $t05_rkas04->lv2_id->Disabled) ? " disabled" : "")?>><span class="glyphicon glyphicon-search ewIcon"></span></button>
+</span>
+<?php echo $t05_rkas04->lv2_id->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t05_rkas04->lv3_id->Visible) { // lv3_id ?>
+	<div id="r_lv3_id" class="form-group">
+		<label id="elh_t05_rkas04_lv3_id" class="<?php echo $t05_rkas04_edit->LeftColumnClass ?>"><?php echo $t05_rkas04->lv3_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $t05_rkas04_edit->RightColumnClass ?>"><div<?php echo $t05_rkas04->lv3_id->CellAttributes() ?>>
+<span id="el_t05_rkas04_lv3_id">
+<?php
+$wrkonchange = trim(" " . @$t05_rkas04->lv3_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t05_rkas04->lv3_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_lv3_id" style="white-space: nowrap; z-index: 8960">
+	<input type="text" name="sv_x_lv3_id" id="sv_x_lv3_id" value="<?php echo $t05_rkas04->lv3_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t05_rkas04->lv3_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t05_rkas04->lv3_id->getPlaceHolder()) ?>"<?php echo $t05_rkas04->lv3_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t05_rkas04" data-field="x_lv3_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t05_rkas04->lv3_id->DisplayValueSeparatorAttribute() ?>" name="x_lv3_id" id="x_lv3_id" value="<?php echo ew_HtmlEncode($t05_rkas04->lv3_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<script type="text/javascript">
+ft05_rkas04edit.CreateAutoSuggest({"id":"x_lv3_id","forceSelect":true});
+</script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($t05_rkas04->lv3_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_lv3_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"<?php echo (($t05_rkas04->lv3_id->ReadOnly || $t05_rkas04->lv3_id->Disabled) ? " disabled" : "")?>><span class="glyphicon glyphicon-search ewIcon"></span></button>
+</span>
+<?php echo $t05_rkas04->lv3_id->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t05_rkas04->no_urut->Visible) { // no_urut ?>
+	<div id="r_no_urut" class="form-group">
+		<label id="elh_t05_rkas04_no_urut" for="x_no_urut" class="<?php echo $t05_rkas04_edit->LeftColumnClass ?>"><?php echo $t05_rkas04->no_urut->FldCaption() ?></label>
+		<div class="<?php echo $t05_rkas04_edit->RightColumnClass ?>"><div<?php echo $t05_rkas04->no_urut->CellAttributes() ?>>
+<span id="el_t05_rkas04_no_urut">
+<input type="text" data-table="t05_rkas04" data-field="x_no_urut" name="x_no_urut" id="x_no_urut" size="30" placeholder="<?php echo ew_HtmlEncode($t05_rkas04->no_urut->getPlaceHolder()) ?>" value="<?php echo $t05_rkas04->no_urut->EditValue ?>"<?php echo $t05_rkas04->no_urut->EditAttributes() ?>>
+</span>
+<?php echo $t05_rkas04->no_urut->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t05_rkas04->keterangan->Visible) { // keterangan ?>
+	<div id="r_keterangan" class="form-group">
+		<label id="elh_t05_rkas04_keterangan" for="x_keterangan" class="<?php echo $t05_rkas04_edit->LeftColumnClass ?>"><?php echo $t05_rkas04->keterangan->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $t05_rkas04_edit->RightColumnClass ?>"><div<?php echo $t05_rkas04->keterangan->CellAttributes() ?>>
+<span id="el_t05_rkas04_keterangan">
+<input type="text" data-table="t05_rkas04" data-field="x_keterangan" name="x_keterangan" id="x_keterangan" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t05_rkas04->keterangan->getPlaceHolder()) ?>" value="<?php echo $t05_rkas04->keterangan->EditValue ?>"<?php echo $t05_rkas04->keterangan->EditAttributes() ?>>
+</span>
+<?php echo $t05_rkas04->keterangan->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
 <?php if ($t05_rkas04->jumlah->Visible) { // jumlah ?>
 	<div id="r_jumlah" class="form-group">
 		<label id="elh_t05_rkas04_jumlah" for="x_jumlah" class="<?php echo $t05_rkas04_edit->LeftColumnClass ?>"><?php echo $t05_rkas04->jumlah->FldCaption() ?></label>

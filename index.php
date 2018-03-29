@@ -309,6 +309,8 @@ class cdefault {
 			$this->Page_Terminate("cf02_input_rkas.php");
 		if ($Security->AllowList(CurrentProjectID() . 't01_master_sekolah'))
 			$this->Page_Terminate("t01_master_sekolahlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't02_rkas'))
+			$this->Page_Terminate("t02_rkaslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't02_rkas01'))
 			$this->Page_Terminate("t02_rkas01list.php");
 		if ($Security->AllowList(CurrentProjectID() . 't03_rkas02'))

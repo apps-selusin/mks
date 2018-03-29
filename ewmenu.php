@@ -2,6 +2,7 @@
 
 // Menu
 $RootMenu = new cMenu("RootMenu", TRUE);
+$RootMenu->AddMenuItem(65, "mi_t02_rkas", $Language->MenuPhrase("65", "MenuText"), "t02_rkaslist.php", -1, "", AllowListMenu('{EC8C353E-21D9-43CE-9845-66794CB3C5CD}t02_rkas'), FALSE, FALSE, "");
 $RootMenu->AddMenuItem(6, "mi_cf01_home_php", $Language->MenuPhrase("6", "MenuText"), "cf01_home.php", -1, "", AllowListMenu('{EC8C353E-21D9-43CE-9845-66794CB3C5CD}cf01_home.php'), FALSE, TRUE, "");
 $RootMenu->AddMenuItem(1, "mi_t01_master_sekolah", $Language->MenuPhrase("1", "MenuText"), "t01_master_sekolahlist.php", -1, "", AllowListMenu('{EC8C353E-21D9-43CE-9845-66794CB3C5CD}t01_master_sekolah'), FALSE, FALSE, "");
 $RootMenu->AddMenuItem(64, "mci_RKAS", $Language->MenuPhrase("64", "MenuText"), "", -1, "", TRUE, FALSE, TRUE, "");

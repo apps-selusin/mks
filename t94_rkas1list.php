@@ -105,6 +105,12 @@ class ct94_rkas1_list extends ct94_rkas1 {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
+	var $AuditTrailOnAdd = TRUE;
+	var $AuditTrailOnEdit = TRUE;
+	var $AuditTrailOnDelete = TRUE;
+	var $AuditTrailOnView = FALSE;
+	var $AuditTrailOnViewData = FALSE;
+	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -2256,6 +2262,13 @@ var CurrentSearchForm = ft94_rkas1listsrch = new ew_Form("ft94_rkas1listsrch");
 			$t94_rkas1_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
 			$t94_rkas1_list->setWarningMessage($Language->Phrase("NoRecord"));
+	}
+
+	// Audit trail on search
+	if ($t94_rkas1_list->AuditTrailOnSearch && $t94_rkas1_list->Command == "search" && !$t94_rkas1_list->RestoreSearch) {
+		$searchparm = ew_ServerVar("QUERY_STRING");
+		$searchsql = $t94_rkas1_list->getSessionWhere();
+		$t94_rkas1_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
 	}
 $t94_rkas1_list->RenderOtherOptions();
 ?>

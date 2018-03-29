@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t95_rkas2info.php" ?>
+<?php include_once "t02_rkasinfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t95_rkas2_delete = NULL; // Initialize page object first
+$t02_rkas_delete = NULL; // Initialize page object first
 
-class ct95_rkas2_delete extends ct95_rkas2 {
+class ct02_rkas_delete extends ct02_rkas {
 
 	// Page ID
 	var $PageID = 'delete';
@@ -25,10 +25,10 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't95_rkas2';
+	var $TableName = 't02_rkas';
 
 	// Page object name
-	var $PageObjName = 't95_rkas2_delete';
+	var $PageObjName = 't02_rkas_delete';
 
 	// Page headings
 	var $Heading = '';
@@ -256,10 +256,10 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t95_rkas2)
-		if (!isset($GLOBALS["t95_rkas2"]) || get_class($GLOBALS["t95_rkas2"]) == "ct95_rkas2") {
-			$GLOBALS["t95_rkas2"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t95_rkas2"];
+		// Table object (t02_rkas)
+		if (!isset($GLOBALS["t02_rkas"]) || get_class($GLOBALS["t02_rkas"]) == "ct02_rkas") {
+			$GLOBALS["t02_rkas"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t02_rkas"];
 		}
 
 		// Table object (t96_employees)
@@ -271,7 +271,7 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't95_rkas2', TRUE);
+			define("EW_TABLE_NAME", 't02_rkas', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -310,7 +310,7 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t95_rkas2list.php"));
+				$this->Page_Terminate(ew_GetUrl("t02_rkaslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -326,16 +326,14 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->id->SetVisibility();
-		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->id->Visible = FALSE;
-		$this->no_urut->SetVisibility();
-		$this->keterangan->SetVisibility();
-		$this->jumlah->SetVisibility();
-		$this->no_keyfield->SetVisibility();
-		$this->no_level->SetVisibility();
-		$this->nama_tabel->SetVisibility();
-		$this->id_data->SetVisibility();
+		$this->lvl->SetVisibility();
+		$this->urutan->SetVisibility();
+		$this->nour1->SetVisibility();
+		$this->ket1->SetVisibility();
+		$this->jml1->SetVisibility();
+		$this->nour2->SetVisibility();
+		$this->ket2->SetVisibility();
+		$this->jml2->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -367,13 +365,13 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t95_rkas2;
+		global $EW_EXPORT, $t02_rkas;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t95_rkas2);
+				$doc = new $class($t02_rkas);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -420,10 +418,10 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		$this->RecKeys = $this->GetRecordKeys(); // Load record keys
 		$sFilter = $this->GetKeyFilter();
 		if ($sFilter == "")
-			$this->Page_Terminate("t95_rkas2list.php"); // Prevent SQL injection, return to list
+			$this->Page_Terminate("t02_rkaslist.php"); // Prevent SQL injection, return to list
 
 		// Set up filter (SQL WHHERE clause) and get return SQL
-		// SQL constructor in t95_rkas2 class, t95_rkas2info.php
+		// SQL constructor in t02_rkas class, t02_rkasinfo.php
 
 		$this->CurrentFilter = $sFilter;
 
@@ -451,7 +449,7 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 			if ($this->TotalRecs <= 0) { // No record found, exit
 				if ($this->Recordset)
 					$this->Recordset->Close();
-				$this->Page_Terminate("t95_rkas2list.php"); // Return to list
+				$this->Page_Terminate("t02_rkaslist.php"); // Return to list
 			}
 		}
 	}
@@ -516,26 +514,28 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		if (!$rs || $rs->EOF)
 			return;
 		$this->id->setDbValue($row['id']);
-		$this->no_urut->setDbValue($row['no_urut']);
-		$this->keterangan->setDbValue($row['keterangan']);
-		$this->jumlah->setDbValue($row['jumlah']);
-		$this->no_keyfield->setDbValue($row['no_keyfield']);
-		$this->no_level->setDbValue($row['no_level']);
-		$this->nama_tabel->setDbValue($row['nama_tabel']);
-		$this->id_data->setDbValue($row['id_data']);
+		$this->lvl->setDbValue($row['lvl']);
+		$this->urutan->setDbValue($row['urutan']);
+		$this->nour1->setDbValue($row['nour1']);
+		$this->ket1->setDbValue($row['ket1']);
+		$this->jml1->setDbValue($row['jml1']);
+		$this->nour2->setDbValue($row['nour2']);
+		$this->ket2->setDbValue($row['ket2']);
+		$this->jml2->setDbValue($row['jml2']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
-		$row['no_urut'] = NULL;
-		$row['keterangan'] = NULL;
-		$row['jumlah'] = NULL;
-		$row['no_keyfield'] = NULL;
-		$row['no_level'] = NULL;
-		$row['nama_tabel'] = NULL;
-		$row['id_data'] = NULL;
+		$row['lvl'] = NULL;
+		$row['urutan'] = NULL;
+		$row['nour1'] = NULL;
+		$row['ket1'] = NULL;
+		$row['jml1'] = NULL;
+		$row['nour2'] = NULL;
+		$row['ket2'] = NULL;
+		$row['jml2'] = NULL;
 		return $row;
 	}
 
@@ -545,13 +545,14 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->no_urut->DbValue = $row['no_urut'];
-		$this->keterangan->DbValue = $row['keterangan'];
-		$this->jumlah->DbValue = $row['jumlah'];
-		$this->no_keyfield->DbValue = $row['no_keyfield'];
-		$this->no_level->DbValue = $row['no_level'];
-		$this->nama_tabel->DbValue = $row['nama_tabel'];
-		$this->id_data->DbValue = $row['id_data'];
+		$this->lvl->DbValue = $row['lvl'];
+		$this->urutan->DbValue = $row['urutan'];
+		$this->nour1->DbValue = $row['nour1'];
+		$this->ket1->DbValue = $row['ket1'];
+		$this->jml1->DbValue = $row['jml1'];
+		$this->nour2->DbValue = $row['nour2'];
+		$this->ket2->DbValue = $row['ket2'];
+		$this->jml2->DbValue = $row['jml2'];
 	}
 
 	// Render row values based on field settings
@@ -561,21 +562,26 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		// Initialize URLs
 		// Convert decimal values if posted back
 
-		if ($this->jumlah->FormValue == $this->jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->jumlah->CurrentValue)))
-			$this->jumlah->CurrentValue = ew_StrToFloat($this->jumlah->CurrentValue);
+		if ($this->jml1->FormValue == $this->jml1->CurrentValue && is_numeric(ew_StrToFloat($this->jml1->CurrentValue)))
+			$this->jml1->CurrentValue = ew_StrToFloat($this->jml1->CurrentValue);
+
+		// Convert decimal values if posted back
+		if ($this->jml2->FormValue == $this->jml2->CurrentValue && is_numeric(ew_StrToFloat($this->jml2->CurrentValue)))
+			$this->jml2->CurrentValue = ew_StrToFloat($this->jml2->CurrentValue);
 
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
 		// id
-		// no_urut
-		// keterangan
-		// jumlah
-		// no_keyfield
-		// no_level
-		// nama_tabel
-		// id_data
+		// lvl
+		// urutan
+		// nour1
+		// ket1
+		// jml1
+		// nour2
+		// ket2
+		// jml2
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -583,73 +589,81 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// no_urut
-		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
-		$this->no_urut->ViewCustomAttributes = "";
+		// lvl
+		$this->lvl->ViewValue = $this->lvl->CurrentValue;
+		$this->lvl->ViewCustomAttributes = "";
 
-		// keterangan
-		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-		$this->keterangan->ViewCustomAttributes = "";
+		// urutan
+		$this->urutan->ViewValue = $this->urutan->CurrentValue;
+		$this->urutan->ViewCustomAttributes = "";
 
-		// jumlah
-		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-		$this->jumlah->ViewCustomAttributes = "";
+		// nour1
+		$this->nour1->ViewValue = $this->nour1->CurrentValue;
+		$this->nour1->ViewCustomAttributes = "";
 
-		// no_keyfield
-		$this->no_keyfield->ViewValue = $this->no_keyfield->CurrentValue;
-		$this->no_keyfield->ViewCustomAttributes = "";
+		// ket1
+		$this->ket1->ViewValue = $this->ket1->CurrentValue;
+		$this->ket1->ViewCustomAttributes = "";
 
-		// no_level
-		$this->no_level->ViewValue = $this->no_level->CurrentValue;
-		$this->no_level->ViewCustomAttributes = "";
+		// jml1
+		$this->jml1->ViewValue = $this->jml1->CurrentValue;
+		$this->jml1->ViewValue = ew_FormatNumber($this->jml1->ViewValue, 0, -2, -2, -2);
+		$this->jml1->CellCssStyle .= "text-align: right;";
+		$this->jml1->ViewCustomAttributes = "";
 
-		// nama_tabel
-		$this->nama_tabel->ViewValue = $this->nama_tabel->CurrentValue;
-		$this->nama_tabel->ViewCustomAttributes = "";
+		// nour2
+		$this->nour2->ViewValue = $this->nour2->CurrentValue;
+		$this->nour2->ViewCustomAttributes = "";
 
-		// id_data
-		$this->id_data->ViewValue = $this->id_data->CurrentValue;
-		$this->id_data->ViewCustomAttributes = "";
+		// ket2
+		$this->ket2->ViewValue = $this->ket2->CurrentValue;
+		$this->ket2->ViewCustomAttributes = "";
 
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
+		// jml2
+		$this->jml2->ViewValue = $this->jml2->CurrentValue;
+		$this->jml2->ViewValue = ew_FormatNumber($this->jml2->ViewValue, 0, -2, -2, -2);
+		$this->jml2->CellCssStyle .= "text-align: right;";
+		$this->jml2->ViewCustomAttributes = "";
 
-			// no_urut
-			$this->no_urut->LinkCustomAttributes = "";
-			$this->no_urut->HrefValue = "";
-			$this->no_urut->TooltipValue = "";
+			// lvl
+			$this->lvl->LinkCustomAttributes = "";
+			$this->lvl->HrefValue = "";
+			$this->lvl->TooltipValue = "";
 
-			// keterangan
-			$this->keterangan->LinkCustomAttributes = "";
-			$this->keterangan->HrefValue = "";
-			$this->keterangan->TooltipValue = "";
+			// urutan
+			$this->urutan->LinkCustomAttributes = "";
+			$this->urutan->HrefValue = "";
+			$this->urutan->TooltipValue = "";
 
-			// jumlah
-			$this->jumlah->LinkCustomAttributes = "";
-			$this->jumlah->HrefValue = "";
-			$this->jumlah->TooltipValue = "";
+			// nour1
+			$this->nour1->LinkCustomAttributes = "";
+			$this->nour1->HrefValue = "";
+			$this->nour1->TooltipValue = "";
 
-			// no_keyfield
-			$this->no_keyfield->LinkCustomAttributes = "";
-			$this->no_keyfield->HrefValue = "";
-			$this->no_keyfield->TooltipValue = "";
+			// ket1
+			$this->ket1->LinkCustomAttributes = "";
+			$this->ket1->HrefValue = "";
+			$this->ket1->TooltipValue = "";
 
-			// no_level
-			$this->no_level->LinkCustomAttributes = "";
-			$this->no_level->HrefValue = "";
-			$this->no_level->TooltipValue = "";
+			// jml1
+			$this->jml1->LinkCustomAttributes = "";
+			$this->jml1->HrefValue = "";
+			$this->jml1->TooltipValue = "";
 
-			// nama_tabel
-			$this->nama_tabel->LinkCustomAttributes = "";
-			$this->nama_tabel->HrefValue = "";
-			$this->nama_tabel->TooltipValue = "";
+			// nour2
+			$this->nour2->LinkCustomAttributes = "";
+			$this->nour2->HrefValue = "";
+			$this->nour2->TooltipValue = "";
 
-			// id_data
-			$this->id_data->LinkCustomAttributes = "";
-			$this->id_data->HrefValue = "";
-			$this->id_data->TooltipValue = "";
+			// ket2
+			$this->ket2->LinkCustomAttributes = "";
+			$this->ket2->HrefValue = "";
+			$this->ket2->TooltipValue = "";
+
+			// jml2
+			$this->jml2->LinkCustomAttributes = "";
+			$this->jml2->HrefValue = "";
+			$this->jml2->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -745,7 +759,7 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t95_rkas2list.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t02_rkaslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "delete";
 		$Breadcrumb->Add("delete", $PageId, $url);
 	}
@@ -831,29 +845,29 @@ class ct95_rkas2_delete extends ct95_rkas2 {
 <?php
 
 // Create page object
-if (!isset($t95_rkas2_delete)) $t95_rkas2_delete = new ct95_rkas2_delete();
+if (!isset($t02_rkas_delete)) $t02_rkas_delete = new ct02_rkas_delete();
 
 // Page init
-$t95_rkas2_delete->Page_Init();
+$t02_rkas_delete->Page_Init();
 
 // Page main
-$t95_rkas2_delete->Page_Main();
+$t02_rkas_delete->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t95_rkas2_delete->Page_Render();
+$t02_rkas_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "delete";
-var CurrentForm = ft95_rkas2delete = new ew_Form("ft95_rkas2delete", "delete");
+var CurrentForm = ft02_rkasdelete = new ew_Form("ft02_rkasdelete", "delete");
 
 // Form_CustomValidate event
-ft95_rkas2delete.Form_CustomValidate = 
+ft02_rkasdelete.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -861,7 +875,7 @@ ft95_rkas2delete.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft95_rkas2delete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft02_rkasdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
@@ -871,17 +885,17 @@ ft95_rkas2delete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $t95_rkas2_delete->ShowPageHeader(); ?>
+<?php $t02_rkas_delete->ShowPageHeader(); ?>
 <?php
-$t95_rkas2_delete->ShowMessage();
+$t02_rkas_delete->ShowMessage();
 ?>
-<form name="ft95_rkas2delete" id="ft95_rkas2delete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t95_rkas2_delete->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t95_rkas2_delete->Token ?>">
+<form name="ft02_rkasdelete" id="ft02_rkasdelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t02_rkas_delete->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t02_rkas_delete->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t95_rkas2">
+<input type="hidden" name="t" value="t02_rkas">
 <input type="hidden" name="a_delete" id="a_delete" value="D">
-<?php foreach ($t95_rkas2_delete->RecKeys as $key) { ?>
+<?php foreach ($t02_rkas_delete->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
@@ -890,120 +904,120 @@ $t95_rkas2_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($t95_rkas2->id->Visible) { // id ?>
-		<th class="<?php echo $t95_rkas2->id->HeaderCellClass() ?>"><span id="elh_t95_rkas2_id" class="t95_rkas2_id"><?php echo $t95_rkas2->id->FldCaption() ?></span></th>
+<?php if ($t02_rkas->lvl->Visible) { // lvl ?>
+		<th class="<?php echo $t02_rkas->lvl->HeaderCellClass() ?>"><span id="elh_t02_rkas_lvl" class="t02_rkas_lvl"><?php echo $t02_rkas->lvl->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t95_rkas2->no_urut->Visible) { // no_urut ?>
-		<th class="<?php echo $t95_rkas2->no_urut->HeaderCellClass() ?>"><span id="elh_t95_rkas2_no_urut" class="t95_rkas2_no_urut"><?php echo $t95_rkas2->no_urut->FldCaption() ?></span></th>
+<?php if ($t02_rkas->urutan->Visible) { // urutan ?>
+		<th class="<?php echo $t02_rkas->urutan->HeaderCellClass() ?>"><span id="elh_t02_rkas_urutan" class="t02_rkas_urutan"><?php echo $t02_rkas->urutan->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t95_rkas2->keterangan->Visible) { // keterangan ?>
-		<th class="<?php echo $t95_rkas2->keterangan->HeaderCellClass() ?>"><span id="elh_t95_rkas2_keterangan" class="t95_rkas2_keterangan"><?php echo $t95_rkas2->keterangan->FldCaption() ?></span></th>
+<?php if ($t02_rkas->nour1->Visible) { // nour1 ?>
+		<th class="<?php echo $t02_rkas->nour1->HeaderCellClass() ?>"><span id="elh_t02_rkas_nour1" class="t02_rkas_nour1"><?php echo $t02_rkas->nour1->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t95_rkas2->jumlah->Visible) { // jumlah ?>
-		<th class="<?php echo $t95_rkas2->jumlah->HeaderCellClass() ?>"><span id="elh_t95_rkas2_jumlah" class="t95_rkas2_jumlah"><?php echo $t95_rkas2->jumlah->FldCaption() ?></span></th>
+<?php if ($t02_rkas->ket1->Visible) { // ket1 ?>
+		<th class="<?php echo $t02_rkas->ket1->HeaderCellClass() ?>"><span id="elh_t02_rkas_ket1" class="t02_rkas_ket1"><?php echo $t02_rkas->ket1->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t95_rkas2->no_keyfield->Visible) { // no_keyfield ?>
-		<th class="<?php echo $t95_rkas2->no_keyfield->HeaderCellClass() ?>"><span id="elh_t95_rkas2_no_keyfield" class="t95_rkas2_no_keyfield"><?php echo $t95_rkas2->no_keyfield->FldCaption() ?></span></th>
+<?php if ($t02_rkas->jml1->Visible) { // jml1 ?>
+		<th class="<?php echo $t02_rkas->jml1->HeaderCellClass() ?>"><span id="elh_t02_rkas_jml1" class="t02_rkas_jml1"><?php echo $t02_rkas->jml1->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t95_rkas2->no_level->Visible) { // no_level ?>
-		<th class="<?php echo $t95_rkas2->no_level->HeaderCellClass() ?>"><span id="elh_t95_rkas2_no_level" class="t95_rkas2_no_level"><?php echo $t95_rkas2->no_level->FldCaption() ?></span></th>
+<?php if ($t02_rkas->nour2->Visible) { // nour2 ?>
+		<th class="<?php echo $t02_rkas->nour2->HeaderCellClass() ?>"><span id="elh_t02_rkas_nour2" class="t02_rkas_nour2"><?php echo $t02_rkas->nour2->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t95_rkas2->nama_tabel->Visible) { // nama_tabel ?>
-		<th class="<?php echo $t95_rkas2->nama_tabel->HeaderCellClass() ?>"><span id="elh_t95_rkas2_nama_tabel" class="t95_rkas2_nama_tabel"><?php echo $t95_rkas2->nama_tabel->FldCaption() ?></span></th>
+<?php if ($t02_rkas->ket2->Visible) { // ket2 ?>
+		<th class="<?php echo $t02_rkas->ket2->HeaderCellClass() ?>"><span id="elh_t02_rkas_ket2" class="t02_rkas_ket2"><?php echo $t02_rkas->ket2->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($t95_rkas2->id_data->Visible) { // id_data ?>
-		<th class="<?php echo $t95_rkas2->id_data->HeaderCellClass() ?>"><span id="elh_t95_rkas2_id_data" class="t95_rkas2_id_data"><?php echo $t95_rkas2->id_data->FldCaption() ?></span></th>
+<?php if ($t02_rkas->jml2->Visible) { // jml2 ?>
+		<th class="<?php echo $t02_rkas->jml2->HeaderCellClass() ?>"><span id="elh_t02_rkas_jml2" class="t02_rkas_jml2"><?php echo $t02_rkas->jml2->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-$t95_rkas2_delete->RecCnt = 0;
+$t02_rkas_delete->RecCnt = 0;
 $i = 0;
-while (!$t95_rkas2_delete->Recordset->EOF) {
-	$t95_rkas2_delete->RecCnt++;
-	$t95_rkas2_delete->RowCnt++;
+while (!$t02_rkas_delete->Recordset->EOF) {
+	$t02_rkas_delete->RecCnt++;
+	$t02_rkas_delete->RowCnt++;
 
 	// Set row properties
-	$t95_rkas2->ResetAttrs();
-	$t95_rkas2->RowType = EW_ROWTYPE_VIEW; // View
+	$t02_rkas->ResetAttrs();
+	$t02_rkas->RowType = EW_ROWTYPE_VIEW; // View
 
 	// Get the field contents
-	$t95_rkas2_delete->LoadRowValues($t95_rkas2_delete->Recordset);
+	$t02_rkas_delete->LoadRowValues($t02_rkas_delete->Recordset);
 
 	// Render row
-	$t95_rkas2_delete->RenderRow();
+	$t02_rkas_delete->RenderRow();
 ?>
-	<tr<?php echo $t95_rkas2->RowAttributes() ?>>
-<?php if ($t95_rkas2->id->Visible) { // id ?>
-		<td<?php echo $t95_rkas2->id->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_id" class="t95_rkas2_id">
-<span<?php echo $t95_rkas2->id->ViewAttributes() ?>>
-<?php echo $t95_rkas2->id->ListViewValue() ?></span>
+	<tr<?php echo $t02_rkas->RowAttributes() ?>>
+<?php if ($t02_rkas->lvl->Visible) { // lvl ?>
+		<td<?php echo $t02_rkas->lvl->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_lvl" class="t02_rkas_lvl">
+<span<?php echo $t02_rkas->lvl->ViewAttributes() ?>>
+<?php echo $t02_rkas->lvl->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t95_rkas2->no_urut->Visible) { // no_urut ?>
-		<td<?php echo $t95_rkas2->no_urut->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_no_urut" class="t95_rkas2_no_urut">
-<span<?php echo $t95_rkas2->no_urut->ViewAttributes() ?>>
-<?php echo $t95_rkas2->no_urut->ListViewValue() ?></span>
+<?php if ($t02_rkas->urutan->Visible) { // urutan ?>
+		<td<?php echo $t02_rkas->urutan->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_urutan" class="t02_rkas_urutan">
+<span<?php echo $t02_rkas->urutan->ViewAttributes() ?>>
+<?php echo $t02_rkas->urutan->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t95_rkas2->keterangan->Visible) { // keterangan ?>
-		<td<?php echo $t95_rkas2->keterangan->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_keterangan" class="t95_rkas2_keterangan">
-<span<?php echo $t95_rkas2->keterangan->ViewAttributes() ?>>
-<?php echo $t95_rkas2->keterangan->ListViewValue() ?></span>
+<?php if ($t02_rkas->nour1->Visible) { // nour1 ?>
+		<td<?php echo $t02_rkas->nour1->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_nour1" class="t02_rkas_nour1">
+<span<?php echo $t02_rkas->nour1->ViewAttributes() ?>>
+<?php echo $t02_rkas->nour1->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t95_rkas2->jumlah->Visible) { // jumlah ?>
-		<td<?php echo $t95_rkas2->jumlah->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_jumlah" class="t95_rkas2_jumlah">
-<span<?php echo $t95_rkas2->jumlah->ViewAttributes() ?>>
-<?php echo $t95_rkas2->jumlah->ListViewValue() ?></span>
+<?php if ($t02_rkas->ket1->Visible) { // ket1 ?>
+		<td<?php echo $t02_rkas->ket1->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_ket1" class="t02_rkas_ket1">
+<span<?php echo $t02_rkas->ket1->ViewAttributes() ?>>
+<?php echo $t02_rkas->ket1->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t95_rkas2->no_keyfield->Visible) { // no_keyfield ?>
-		<td<?php echo $t95_rkas2->no_keyfield->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_no_keyfield" class="t95_rkas2_no_keyfield">
-<span<?php echo $t95_rkas2->no_keyfield->ViewAttributes() ?>>
-<?php echo $t95_rkas2->no_keyfield->ListViewValue() ?></span>
+<?php if ($t02_rkas->jml1->Visible) { // jml1 ?>
+		<td<?php echo $t02_rkas->jml1->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_jml1" class="t02_rkas_jml1">
+<span<?php echo $t02_rkas->jml1->ViewAttributes() ?>>
+<?php echo $t02_rkas->jml1->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t95_rkas2->no_level->Visible) { // no_level ?>
-		<td<?php echo $t95_rkas2->no_level->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_no_level" class="t95_rkas2_no_level">
-<span<?php echo $t95_rkas2->no_level->ViewAttributes() ?>>
-<?php echo $t95_rkas2->no_level->ListViewValue() ?></span>
+<?php if ($t02_rkas->nour2->Visible) { // nour2 ?>
+		<td<?php echo $t02_rkas->nour2->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_nour2" class="t02_rkas_nour2">
+<span<?php echo $t02_rkas->nour2->ViewAttributes() ?>>
+<?php echo $t02_rkas->nour2->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t95_rkas2->nama_tabel->Visible) { // nama_tabel ?>
-		<td<?php echo $t95_rkas2->nama_tabel->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_nama_tabel" class="t95_rkas2_nama_tabel">
-<span<?php echo $t95_rkas2->nama_tabel->ViewAttributes() ?>>
-<?php echo $t95_rkas2->nama_tabel->ListViewValue() ?></span>
+<?php if ($t02_rkas->ket2->Visible) { // ket2 ?>
+		<td<?php echo $t02_rkas->ket2->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_ket2" class="t02_rkas_ket2">
+<span<?php echo $t02_rkas->ket2->ViewAttributes() ?>>
+<?php echo $t02_rkas->ket2->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($t95_rkas2->id_data->Visible) { // id_data ?>
-		<td<?php echo $t95_rkas2->id_data->CellAttributes() ?>>
-<span id="el<?php echo $t95_rkas2_delete->RowCnt ?>_t95_rkas2_id_data" class="t95_rkas2_id_data">
-<span<?php echo $t95_rkas2->id_data->ViewAttributes() ?>>
-<?php echo $t95_rkas2->id_data->ListViewValue() ?></span>
+<?php if ($t02_rkas->jml2->Visible) { // jml2 ?>
+		<td<?php echo $t02_rkas->jml2->CellAttributes() ?>>
+<span id="el<?php echo $t02_rkas_delete->RowCnt ?>_t02_rkas_jml2" class="t02_rkas_jml2">
+<span<?php echo $t02_rkas->jml2->ViewAttributes() ?>>
+<?php echo $t02_rkas->jml2->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
 	</tr>
 <?php
-	$t95_rkas2_delete->Recordset->MoveNext();
+	$t02_rkas_delete->Recordset->MoveNext();
 }
-$t95_rkas2_delete->Recordset->Close();
+$t02_rkas_delete->Recordset->Close();
 ?>
 </tbody>
 </table>
@@ -1011,14 +1025,14 @@ $t95_rkas2_delete->Recordset->Close();
 </div>
 <div>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("DeleteBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t95_rkas2_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t02_rkas_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 </div>
 </form>
 <script type="text/javascript">
-ft95_rkas2delete.Init();
+ft02_rkasdelete.Init();
 </script>
 <?php
-$t95_rkas2_delete->ShowPageFooter();
+$t02_rkas_delete->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1030,5 +1044,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$t95_rkas2_delete->Page_Terminate();
+$t02_rkas_delete->Page_Terminate();
 ?>

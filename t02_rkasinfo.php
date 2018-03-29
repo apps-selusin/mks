@@ -1,12 +1,12 @@
 <?php
 
 // Global variable for table object
-$t94_rkas1 = NULL;
+$t02_rkas = NULL;
 
 //
-// Table class for t94_rkas1
+// Table class for t02_rkas
 //
-class ct94_rkas1 extends cTable {
+class ct02_rkas extends cTable {
 	var $AuditTrailOnAdd = TRUE;
 	var $AuditTrailOnEdit = TRUE;
 	var $AuditTrailOnDelete = TRUE;
@@ -14,13 +14,14 @@ class ct94_rkas1 extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
-	var $no_urut;
-	var $keterangan;
-	var $jumlah;
-	var $no_keyfield;
-	var $no_level;
-	var $nama_tabel;
-	var $id_data;
+	var $lvl;
+	var $urutan;
+	var $nour1;
+	var $ket1;
+	var $jml1;
+	var $nour2;
+	var $ket2;
+	var $jml2;
 
 	//
 	// Table class constructor
@@ -30,12 +31,12 @@ class ct94_rkas1 extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 't94_rkas1';
-		$this->TableName = 't94_rkas1';
+		$this->TableVar = 't02_rkas';
+		$this->TableName = 't02_rkas';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`t94_rkas1`";
+		$this->UpdateTable = "`t02_rkas`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -55,48 +56,54 @@ class ct94_rkas1 extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// id
-		$this->id = new cField('t94_rkas1', 't94_rkas1', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->id = new cField('t02_rkas', 't02_rkas', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->id->Sortable = TRUE; // Allow sort
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
-		// no_urut
-		$this->no_urut = new cField('t94_rkas1', 't94_rkas1', 'x_no_urut', 'no_urut', '`no_urut`', '`no_urut`', 200, -1, FALSE, '`no_urut`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->no_urut->Sortable = TRUE; // Allow sort
-		$this->fields['no_urut'] = &$this->no_urut;
+		// lvl
+		$this->lvl = new cField('t02_rkas', 't02_rkas', 'x_lvl', 'lvl', '`lvl`', '`lvl`', 16, -1, FALSE, '`lvl`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->lvl->Sortable = TRUE; // Allow sort
+		$this->lvl->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['lvl'] = &$this->lvl;
 
-		// keterangan
-		$this->keterangan = new cField('t94_rkas1', 't94_rkas1', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, -1, FALSE, '`keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->keterangan->Sortable = TRUE; // Allow sort
-		$this->fields['keterangan'] = &$this->keterangan;
+		// urutan
+		$this->urutan = new cField('t02_rkas', 't02_rkas', 'x_urutan', 'urutan', '`urutan`', '`urutan`', 2, -1, FALSE, '`urutan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->urutan->Sortable = TRUE; // Allow sort
+		$this->urutan->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['urutan'] = &$this->urutan;
 
-		// jumlah
-		$this->jumlah = new cField('t94_rkas1', 't94_rkas1', 'x_jumlah', 'jumlah', '`jumlah`', '`jumlah`', 4, -1, FALSE, '`jumlah`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->jumlah->Sortable = TRUE; // Allow sort
-		$this->jumlah->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
-		$this->fields['jumlah'] = &$this->jumlah;
+		// nour1
+		$this->nour1 = new cField('t02_rkas', 't02_rkas', 'x_nour1', 'nour1', '`nour1`', '`nour1`', 200, -1, FALSE, '`nour1`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->nour1->Sortable = TRUE; // Allow sort
+		$this->fields['nour1'] = &$this->nour1;
 
-		// no_keyfield
-		$this->no_keyfield = new cField('t94_rkas1', 't94_rkas1', 'x_no_keyfield', 'no_keyfield', '`no_keyfield`', '`no_keyfield`', 200, -1, FALSE, '`no_keyfield`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->no_keyfield->Sortable = TRUE; // Allow sort
-		$this->fields['no_keyfield'] = &$this->no_keyfield;
+		// ket1
+		$this->ket1 = new cField('t02_rkas', 't02_rkas', 'x_ket1', 'ket1', '`ket1`', '`ket1`', 200, -1, FALSE, '`ket1`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->ket1->Sortable = TRUE; // Allow sort
+		$this->fields['ket1'] = &$this->ket1;
 
-		// no_level
-		$this->no_level = new cField('t94_rkas1', 't94_rkas1', 'x_no_level', 'no_level', '`no_level`', '`no_level`', 16, -1, FALSE, '`no_level`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->no_level->Sortable = TRUE; // Allow sort
-		$this->no_level->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['no_level'] = &$this->no_level;
+		// jml1
+		$this->jml1 = new cField('t02_rkas', 't02_rkas', 'x_jml1', 'jml1', '`jml1`', '`jml1`', 4, -1, FALSE, '`jml1`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->jml1->Sortable = TRUE; // Allow sort
+		$this->jml1->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['jml1'] = &$this->jml1;
 
-		// nama_tabel
-		$this->nama_tabel = new cField('t94_rkas1', 't94_rkas1', 'x_nama_tabel', 'nama_tabel', '`nama_tabel`', '`nama_tabel`', 200, -1, FALSE, '`nama_tabel`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->nama_tabel->Sortable = TRUE; // Allow sort
-		$this->fields['nama_tabel'] = &$this->nama_tabel;
+		// nour2
+		$this->nour2 = new cField('t02_rkas', 't02_rkas', 'x_nour2', 'nour2', '`nour2`', '`nour2`', 200, -1, FALSE, '`nour2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->nour2->Sortable = TRUE; // Allow sort
+		$this->fields['nour2'] = &$this->nour2;
 
-		// id_data
-		$this->id_data = new cField('t94_rkas1', 't94_rkas1', 'x_id_data', 'id_data', '`id_data`', '`id_data`', 3, -1, FALSE, '`id_data`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->id_data->Sortable = TRUE; // Allow sort
-		$this->id_data->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['id_data'] = &$this->id_data;
+		// ket2
+		$this->ket2 = new cField('t02_rkas', 't02_rkas', 'x_ket2', 'ket2', '`ket2`', '`ket2`', 200, -1, FALSE, '`ket2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->ket2->Sortable = TRUE; // Allow sort
+		$this->fields['ket2'] = &$this->ket2;
+
+		// jml2
+		$this->jml2 = new cField('t02_rkas', 't02_rkas', 'x_jml2', 'jml2', '`jml2`', '`jml2`', 4, -1, FALSE, '`jml2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->jml2->Sortable = TRUE; // Allow sort
+		$this->jml2->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['jml2'] = &$this->jml2;
 	}
 
 	// Field Visibility
@@ -151,7 +158,7 @@ class ct94_rkas1 extends cTable {
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t94_rkas1`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t02_rkas`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -219,7 +226,7 @@ class ct94_rkas1 extends cTable {
 	var $_SqlOrderBy = "";
 
 	function getSqlOrderBy() { // Order By
-		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "";
+		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`urutan` ASC";
 	}
 
 	function SqlOrderBy() { // For backward compatibility
@@ -474,7 +481,7 @@ class ct94_rkas1 extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "t94_rkas1list.php";
+			return "t02_rkaslist.php";
 		}
 	}
 
@@ -485,11 +492,11 @@ class ct94_rkas1 extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "t94_rkas1view.php")
+		if ($pageName == "t02_rkasview.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "t94_rkas1edit.php")
+		elseif ($pageName == "t02_rkasedit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "t94_rkas1add.php")
+		elseif ($pageName == "t02_rkasadd.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -497,30 +504,30 @@ class ct94_rkas1 extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "t94_rkas1list.php";
+		return "t02_rkaslist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("t94_rkas1view.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("t02_rkasview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("t94_rkas1view.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("t02_rkasview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "t94_rkas1add.php?" . $this->UrlParm($parm);
+			$url = "t02_rkasadd.php?" . $this->UrlParm($parm);
 		else
-			$url = "t94_rkas1add.php";
+			$url = "t02_rkasadd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("t94_rkas1edit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t02_rkasedit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -532,7 +539,7 @@ class ct94_rkas1 extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("t94_rkas1add.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t02_rkasadd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -544,7 +551,7 @@ class ct94_rkas1 extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("t94_rkas1delete.php", $this->UrlParm());
+		return $this->KeyUrl("t02_rkasdelete.php", $this->UrlParm());
 	}
 
 	// Add master url
@@ -646,13 +653,14 @@ class ct94_rkas1 extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
-		$this->no_urut->setDbValue($rs->fields('no_urut'));
-		$this->keterangan->setDbValue($rs->fields('keterangan'));
-		$this->jumlah->setDbValue($rs->fields('jumlah'));
-		$this->no_keyfield->setDbValue($rs->fields('no_keyfield'));
-		$this->no_level->setDbValue($rs->fields('no_level'));
-		$this->nama_tabel->setDbValue($rs->fields('nama_tabel'));
-		$this->id_data->setDbValue($rs->fields('id_data'));
+		$this->lvl->setDbValue($rs->fields('lvl'));
+		$this->urutan->setDbValue($rs->fields('urutan'));
+		$this->nour1->setDbValue($rs->fields('nour1'));
+		$this->ket1->setDbValue($rs->fields('ket1'));
+		$this->jml1->setDbValue($rs->fields('jml1'));
+		$this->nour2->setDbValue($rs->fields('nour2'));
+		$this->ket2->setDbValue($rs->fields('ket2'));
+		$this->jml2->setDbValue($rs->fields('jml2'));
 	}
 
 	// Render list row values
@@ -664,85 +672,99 @@ class ct94_rkas1 extends cTable {
 
 	// Common render codes
 		// id
-		// no_urut
-		// keterangan
-		// jumlah
-		// no_keyfield
-		// no_level
-		// nama_tabel
-		// id_data
+		// lvl
+		// urutan
+		// nour1
+		// ket1
+		// jml1
+		// nour2
+		// ket2
+		// jml2
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// no_urut
-		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
-		$this->no_urut->ViewCustomAttributes = "";
+		// lvl
+		$this->lvl->ViewValue = $this->lvl->CurrentValue;
+		$this->lvl->ViewCustomAttributes = "";
 
-		// keterangan
-		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-		$this->keterangan->ViewCustomAttributes = "";
+		// urutan
+		$this->urutan->ViewValue = $this->urutan->CurrentValue;
+		$this->urutan->ViewCustomAttributes = "";
 
-		// jumlah
-		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-		$this->jumlah->ViewCustomAttributes = "";
+		// nour1
+		$this->nour1->ViewValue = $this->nour1->CurrentValue;
+		$this->nour1->ViewCustomAttributes = "";
 
-		// no_keyfield
-		$this->no_keyfield->ViewValue = $this->no_keyfield->CurrentValue;
-		$this->no_keyfield->ViewCustomAttributes = "";
+		// ket1
+		$this->ket1->ViewValue = $this->ket1->CurrentValue;
+		$this->ket1->ViewCustomAttributes = "";
 
-		// no_level
-		$this->no_level->ViewValue = $this->no_level->CurrentValue;
-		$this->no_level->ViewCustomAttributes = "";
+		// jml1
+		$this->jml1->ViewValue = $this->jml1->CurrentValue;
+		$this->jml1->ViewValue = ew_FormatNumber($this->jml1->ViewValue, 0, -2, -2, -2);
+		$this->jml1->CellCssStyle .= "text-align: right;";
+		$this->jml1->ViewCustomAttributes = "";
 
-		// nama_tabel
-		$this->nama_tabel->ViewValue = $this->nama_tabel->CurrentValue;
-		$this->nama_tabel->ViewCustomAttributes = "";
+		// nour2
+		$this->nour2->ViewValue = $this->nour2->CurrentValue;
+		$this->nour2->ViewCustomAttributes = "";
 
-		// id_data
-		$this->id_data->ViewValue = $this->id_data->CurrentValue;
-		$this->id_data->ViewCustomAttributes = "";
+		// ket2
+		$this->ket2->ViewValue = $this->ket2->CurrentValue;
+		$this->ket2->ViewCustomAttributes = "";
+
+		// jml2
+		$this->jml2->ViewValue = $this->jml2->CurrentValue;
+		$this->jml2->ViewValue = ew_FormatNumber($this->jml2->ViewValue, 0, -2, -2, -2);
+		$this->jml2->CellCssStyle .= "text-align: right;";
+		$this->jml2->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
 
-		// no_urut
-		$this->no_urut->LinkCustomAttributes = "";
-		$this->no_urut->HrefValue = "";
-		$this->no_urut->TooltipValue = "";
+		// lvl
+		$this->lvl->LinkCustomAttributes = "";
+		$this->lvl->HrefValue = "";
+		$this->lvl->TooltipValue = "";
 
-		// keterangan
-		$this->keterangan->LinkCustomAttributes = "";
-		$this->keterangan->HrefValue = "";
-		$this->keterangan->TooltipValue = "";
+		// urutan
+		$this->urutan->LinkCustomAttributes = "";
+		$this->urutan->HrefValue = "";
+		$this->urutan->TooltipValue = "";
 
-		// jumlah
-		$this->jumlah->LinkCustomAttributes = "";
-		$this->jumlah->HrefValue = "";
-		$this->jumlah->TooltipValue = "";
+		// nour1
+		$this->nour1->LinkCustomAttributes = "";
+		$this->nour1->HrefValue = "";
+		$this->nour1->TooltipValue = "";
 
-		// no_keyfield
-		$this->no_keyfield->LinkCustomAttributes = "";
-		$this->no_keyfield->HrefValue = "";
-		$this->no_keyfield->TooltipValue = "";
+		// ket1
+		$this->ket1->LinkCustomAttributes = "";
+		$this->ket1->HrefValue = "";
+		$this->ket1->TooltipValue = "";
 
-		// no_level
-		$this->no_level->LinkCustomAttributes = "";
-		$this->no_level->HrefValue = "";
-		$this->no_level->TooltipValue = "";
+		// jml1
+		$this->jml1->LinkCustomAttributes = "";
+		$this->jml1->HrefValue = "";
+		$this->jml1->TooltipValue = "";
 
-		// nama_tabel
-		$this->nama_tabel->LinkCustomAttributes = "";
-		$this->nama_tabel->HrefValue = "";
-		$this->nama_tabel->TooltipValue = "";
+		// nour2
+		$this->nour2->LinkCustomAttributes = "";
+		$this->nour2->HrefValue = "";
+		$this->nour2->TooltipValue = "";
 
-		// id_data
-		$this->id_data->LinkCustomAttributes = "";
-		$this->id_data->HrefValue = "";
-		$this->id_data->TooltipValue = "";
+		// ket2
+		$this->ket2->LinkCustomAttributes = "";
+		$this->ket2->HrefValue = "";
+		$this->ket2->TooltipValue = "";
+
+		// jml2
+		$this->jml2->LinkCustomAttributes = "";
+		$this->jml2->HrefValue = "";
+		$this->jml2->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -764,48 +786,55 @@ class ct94_rkas1 extends cTable {
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// no_urut
-		$this->no_urut->EditAttrs["class"] = "form-control";
-		$this->no_urut->EditCustomAttributes = "";
-		$this->no_urut->EditValue = $this->no_urut->CurrentValue;
-		$this->no_urut->PlaceHolder = ew_RemoveHtml($this->no_urut->FldCaption());
+		// lvl
+		$this->lvl->EditAttrs["class"] = "form-control";
+		$this->lvl->EditCustomAttributes = "";
+		$this->lvl->EditValue = $this->lvl->CurrentValue;
+		$this->lvl->PlaceHolder = ew_RemoveHtml($this->lvl->FldCaption());
 
-		// keterangan
-		$this->keterangan->EditAttrs["class"] = "form-control";
-		$this->keterangan->EditCustomAttributes = "";
-		$this->keterangan->EditValue = $this->keterangan->CurrentValue;
-		$this->keterangan->PlaceHolder = ew_RemoveHtml($this->keterangan->FldCaption());
+		// urutan
+		$this->urutan->EditAttrs["class"] = "form-control";
+		$this->urutan->EditCustomAttributes = "";
+		$this->urutan->EditValue = $this->urutan->CurrentValue;
+		$this->urutan->PlaceHolder = ew_RemoveHtml($this->urutan->FldCaption());
 
-		// jumlah
-		$this->jumlah->EditAttrs["class"] = "form-control";
-		$this->jumlah->EditCustomAttributes = "";
-		$this->jumlah->EditValue = $this->jumlah->CurrentValue;
-		$this->jumlah->PlaceHolder = ew_RemoveHtml($this->jumlah->FldCaption());
-		if (strval($this->jumlah->EditValue) <> "" && is_numeric($this->jumlah->EditValue)) $this->jumlah->EditValue = ew_FormatNumber($this->jumlah->EditValue, -2, -1, -2, 0);
+		// nour1
+		$this->nour1->EditAttrs["class"] = "form-control";
+		$this->nour1->EditCustomAttributes = "";
+		$this->nour1->EditValue = $this->nour1->CurrentValue;
+		$this->nour1->PlaceHolder = ew_RemoveHtml($this->nour1->FldCaption());
 
-		// no_keyfield
-		$this->no_keyfield->EditAttrs["class"] = "form-control";
-		$this->no_keyfield->EditCustomAttributes = "";
-		$this->no_keyfield->EditValue = $this->no_keyfield->CurrentValue;
-		$this->no_keyfield->PlaceHolder = ew_RemoveHtml($this->no_keyfield->FldCaption());
+		// ket1
+		$this->ket1->EditAttrs["class"] = "form-control";
+		$this->ket1->EditCustomAttributes = "";
+		$this->ket1->EditValue = $this->ket1->CurrentValue;
+		$this->ket1->PlaceHolder = ew_RemoveHtml($this->ket1->FldCaption());
 
-		// no_level
-		$this->no_level->EditAttrs["class"] = "form-control";
-		$this->no_level->EditCustomAttributes = "";
-		$this->no_level->EditValue = $this->no_level->CurrentValue;
-		$this->no_level->PlaceHolder = ew_RemoveHtml($this->no_level->FldCaption());
+		// jml1
+		$this->jml1->EditAttrs["class"] = "form-control";
+		$this->jml1->EditCustomAttributes = "";
+		$this->jml1->EditValue = $this->jml1->CurrentValue;
+		$this->jml1->PlaceHolder = ew_RemoveHtml($this->jml1->FldCaption());
+		if (strval($this->jml1->EditValue) <> "" && is_numeric($this->jml1->EditValue)) $this->jml1->EditValue = ew_FormatNumber($this->jml1->EditValue, -2, -2, -2, -2);
 
-		// nama_tabel
-		$this->nama_tabel->EditAttrs["class"] = "form-control";
-		$this->nama_tabel->EditCustomAttributes = "";
-		$this->nama_tabel->EditValue = $this->nama_tabel->CurrentValue;
-		$this->nama_tabel->PlaceHolder = ew_RemoveHtml($this->nama_tabel->FldCaption());
+		// nour2
+		$this->nour2->EditAttrs["class"] = "form-control";
+		$this->nour2->EditCustomAttributes = "";
+		$this->nour2->EditValue = $this->nour2->CurrentValue;
+		$this->nour2->PlaceHolder = ew_RemoveHtml($this->nour2->FldCaption());
 
-		// id_data
-		$this->id_data->EditAttrs["class"] = "form-control";
-		$this->id_data->EditCustomAttributes = "";
-		$this->id_data->EditValue = $this->id_data->CurrentValue;
-		$this->id_data->PlaceHolder = ew_RemoveHtml($this->id_data->FldCaption());
+		// ket2
+		$this->ket2->EditAttrs["class"] = "form-control";
+		$this->ket2->EditCustomAttributes = "";
+		$this->ket2->EditValue = $this->ket2->CurrentValue;
+		$this->ket2->PlaceHolder = ew_RemoveHtml($this->ket2->FldCaption());
+
+		// jml2
+		$this->jml2->EditAttrs["class"] = "form-control";
+		$this->jml2->EditCustomAttributes = "";
+		$this->jml2->EditValue = $this->jml2->CurrentValue;
+		$this->jml2->PlaceHolder = ew_RemoveHtml($this->jml2->FldCaption());
+		if (strval($this->jml2->EditValue) <> "" && is_numeric($this->jml2->EditValue)) $this->jml2->EditValue = ew_FormatNumber($this->jml2->EditValue, -2, -2, -2, -2);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -834,23 +863,24 @@ class ct94_rkas1 extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
-					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
-					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
-					if ($this->no_keyfield->Exportable) $Doc->ExportCaption($this->no_keyfield);
-					if ($this->no_level->Exportable) $Doc->ExportCaption($this->no_level);
-					if ($this->nama_tabel->Exportable) $Doc->ExportCaption($this->nama_tabel);
-					if ($this->id_data->Exportable) $Doc->ExportCaption($this->id_data);
+					if ($this->lvl->Exportable) $Doc->ExportCaption($this->lvl);
+					if ($this->urutan->Exportable) $Doc->ExportCaption($this->urutan);
+					if ($this->nour1->Exportable) $Doc->ExportCaption($this->nour1);
+					if ($this->ket1->Exportable) $Doc->ExportCaption($this->ket1);
+					if ($this->jml1->Exportable) $Doc->ExportCaption($this->jml1);
+					if ($this->nour2->Exportable) $Doc->ExportCaption($this->nour2);
+					if ($this->ket2->Exportable) $Doc->ExportCaption($this->ket2);
+					if ($this->jml2->Exportable) $Doc->ExportCaption($this->jml2);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->no_urut->Exportable) $Doc->ExportCaption($this->no_urut);
-					if ($this->keterangan->Exportable) $Doc->ExportCaption($this->keterangan);
-					if ($this->jumlah->Exportable) $Doc->ExportCaption($this->jumlah);
-					if ($this->no_keyfield->Exportable) $Doc->ExportCaption($this->no_keyfield);
-					if ($this->no_level->Exportable) $Doc->ExportCaption($this->no_level);
-					if ($this->nama_tabel->Exportable) $Doc->ExportCaption($this->nama_tabel);
-					if ($this->id_data->Exportable) $Doc->ExportCaption($this->id_data);
+					if ($this->lvl->Exportable) $Doc->ExportCaption($this->lvl);
+					if ($this->urutan->Exportable) $Doc->ExportCaption($this->urutan);
+					if ($this->nour1->Exportable) $Doc->ExportCaption($this->nour1);
+					if ($this->ket1->Exportable) $Doc->ExportCaption($this->ket1);
+					if ($this->jml1->Exportable) $Doc->ExportCaption($this->jml1);
+					if ($this->nour2->Exportable) $Doc->ExportCaption($this->nour2);
+					if ($this->ket2->Exportable) $Doc->ExportCaption($this->ket2);
+					if ($this->jml2->Exportable) $Doc->ExportCaption($this->jml2);
 				}
 				$Doc->EndExportRow();
 			}
@@ -882,23 +912,24 @@ class ct94_rkas1 extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
-						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
-						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
-						if ($this->no_keyfield->Exportable) $Doc->ExportField($this->no_keyfield);
-						if ($this->no_level->Exportable) $Doc->ExportField($this->no_level);
-						if ($this->nama_tabel->Exportable) $Doc->ExportField($this->nama_tabel);
-						if ($this->id_data->Exportable) $Doc->ExportField($this->id_data);
+						if ($this->lvl->Exportable) $Doc->ExportField($this->lvl);
+						if ($this->urutan->Exportable) $Doc->ExportField($this->urutan);
+						if ($this->nour1->Exportable) $Doc->ExportField($this->nour1);
+						if ($this->ket1->Exportable) $Doc->ExportField($this->ket1);
+						if ($this->jml1->Exportable) $Doc->ExportField($this->jml1);
+						if ($this->nour2->Exportable) $Doc->ExportField($this->nour2);
+						if ($this->ket2->Exportable) $Doc->ExportField($this->ket2);
+						if ($this->jml2->Exportable) $Doc->ExportField($this->jml2);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->no_urut->Exportable) $Doc->ExportField($this->no_urut);
-						if ($this->keterangan->Exportable) $Doc->ExportField($this->keterangan);
-						if ($this->jumlah->Exportable) $Doc->ExportField($this->jumlah);
-						if ($this->no_keyfield->Exportable) $Doc->ExportField($this->no_keyfield);
-						if ($this->no_level->Exportable) $Doc->ExportField($this->no_level);
-						if ($this->nama_tabel->Exportable) $Doc->ExportField($this->nama_tabel);
-						if ($this->id_data->Exportable) $Doc->ExportField($this->id_data);
+						if ($this->lvl->Exportable) $Doc->ExportField($this->lvl);
+						if ($this->urutan->Exportable) $Doc->ExportField($this->urutan);
+						if ($this->nour1->Exportable) $Doc->ExportField($this->nour1);
+						if ($this->ket1->Exportable) $Doc->ExportField($this->ket1);
+						if ($this->jml1->Exportable) $Doc->ExportField($this->jml1);
+						if ($this->nour2->Exportable) $Doc->ExportField($this->nour2);
+						if ($this->ket2->Exportable) $Doc->ExportField($this->ket2);
+						if ($this->jml2->Exportable) $Doc->ExportField($this->jml2);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}
@@ -942,7 +973,7 @@ class ct94_rkas1 extends cTable {
 
 	// Write Audit Trail start/end for grid update
 	function WriteAuditTrailDummy($typ) {
-		$table = 't94_rkas1';
+		$table = 't02_rkas';
 		$usr = CurrentUserID();
 		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
@@ -951,7 +982,7 @@ class ct94_rkas1 extends cTable {
 	function WriteAuditTrailOnAdd(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnAdd) return;
-		$table = 't94_rkas1';
+		$table = 't02_rkas';
 
 		// Get key value
 		$key = "";
@@ -985,7 +1016,7 @@ class ct94_rkas1 extends cTable {
 	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
 		global $Language;
 		if (!$this->AuditTrailOnEdit) return;
-		$table = 't94_rkas1';
+		$table = 't02_rkas';
 
 		// Get key value
 		$key = "";
@@ -1032,7 +1063,7 @@ class ct94_rkas1 extends cTable {
 	function WriteAuditTrailOnDelete(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnDelete) return;
-		$table = 't94_rkas1';
+		$table = 't02_rkas';
 
 		// Get key value
 		$key = "";
@@ -1213,6 +1244,10 @@ class ct94_rkas1 extends cTable {
 		// To view properties of field class, use:
 		//var_dump($this-><FieldName>);
 
+		/*if () {
+		}*/
+		var_dump($this->lvl);
+		$this->ket1->ViewValue = "*" . $this->ket1->CurrentValue;
 	}
 
 	// User ID Filtering event
