@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t02_rkasinfo.php" ?>
+<?php include_once "t03_rpuinfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t02_rkas_list = NULL; // Initialize page object first
+$t03_rpu_list = NULL; // Initialize page object first
 
-class ct02_rkas_list extends ct02_rkas {
+class ct03_rpu_list extends ct03_rpu {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +25,13 @@ class ct02_rkas_list extends ct02_rkas {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't02_rkas';
+	var $TableName = 't03_rpu';
 
 	// Page object name
-	var $PageObjName = 't02_rkas_list';
+	var $PageObjName = 't03_rpu_list';
 
 	// Grid form hidden field names
-	var $FormName = 'ft02_rkaslist';
+	var $FormName = 'ft03_rpulist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -296,10 +296,10 @@ class ct02_rkas_list extends ct02_rkas {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t02_rkas)
-		if (!isset($GLOBALS["t02_rkas"]) || get_class($GLOBALS["t02_rkas"]) == "ct02_rkas") {
-			$GLOBALS["t02_rkas"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t02_rkas"];
+		// Table object (t03_rpu)
+		if (!isset($GLOBALS["t03_rpu"]) || get_class($GLOBALS["t03_rpu"]) == "ct03_rpu") {
+			$GLOBALS["t03_rpu"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t03_rpu"];
 		}
 
 		// Initialize URLs
@@ -310,12 +310,12 @@ class ct02_rkas_list extends ct02_rkas {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "t02_rkasadd.php";
+		$this->AddUrl = "t03_rpuadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "t02_rkasdelete.php";
-		$this->MultiUpdateUrl = "t02_rkasupdate.php";
+		$this->MultiDeleteUrl = "t03_rpudelete.php";
+		$this->MultiUpdateUrl = "t03_rpuupdate.php";
 
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
@@ -326,7 +326,7 @@ class ct02_rkas_list extends ct02_rkas {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't02_rkas', TRUE);
+			define("EW_TABLE_NAME", 't03_rpu', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -368,7 +368,7 @@ class ct02_rkas_list extends ct02_rkas {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption ft02_rkaslistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption ft03_rpulistsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -458,14 +458,14 @@ class ct02_rkas_list extends ct02_rkas {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->lvl->SetVisibility();
-		$this->urutan->SetVisibility();
-		$this->nour1->SetVisibility();
-		$this->ket1->SetVisibility();
-		$this->jml1->SetVisibility();
-		$this->nour2->SetVisibility();
-		$this->ket2->SetVisibility();
-		$this->jml2->SetVisibility();
+		$this->Level->SetVisibility();
+		$this->Urutan->SetVisibility();
+		$this->No_Urut->SetVisibility();
+		$this->Keterangan->SetVisibility();
+		$this->Volume->SetVisibility();
+		$this->Alokasi->SetVisibility();
+		$this->Unit_KOS->SetVisibility();
+		$this->Jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -526,13 +526,13 @@ class ct02_rkas_list extends ct02_rkas {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t02_rkas;
+		global $EW_EXPORT, $t03_rpu;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t02_rkas);
+				$doc = new $class($t03_rpu);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -849,8 +849,10 @@ class ct02_rkas_list extends ct02_rkas {
 	// Exit inline mode
 	function ClearInlineMode() {
 		$this->setKey("id", ""); // Clear inline edit key
-		$this->jml1->FormValue = ""; // Clear form value
-		$this->jml2->FormValue = ""; // Clear form value
+		$this->Volume->FormValue = ""; // Clear form value
+		$this->Alokasi->FormValue = ""; // Clear form value
+		$this->Unit_KOS->FormValue = ""; // Clear form value
+		$this->Jumlah->FormValue = ""; // Clear form value
 		$this->LastAction = $this->CurrentAction; // Save last action
 		$this->CurrentAction = ""; // Clear action
 		$_SESSION[EW_SESSION_INLINE_MODE] = ""; // Clear inline mode
@@ -1211,21 +1213,21 @@ class ct02_rkas_list extends ct02_rkas {
 	// Check if empty row
 	function EmptyRow() {
 		global $objForm;
-		if ($objForm->HasValue("x_lvl") && $objForm->HasValue("o_lvl") && $this->lvl->CurrentValue <> $this->lvl->OldValue)
+		if ($objForm->HasValue("x_Level") && $objForm->HasValue("o_Level") && $this->Level->CurrentValue <> $this->Level->OldValue)
 			return FALSE;
-		if ($objForm->HasValue("x_urutan") && $objForm->HasValue("o_urutan") && $this->urutan->CurrentValue <> $this->urutan->OldValue)
+		if ($objForm->HasValue("x_Urutan") && $objForm->HasValue("o_Urutan") && $this->Urutan->CurrentValue <> $this->Urutan->OldValue)
 			return FALSE;
-		if ($objForm->HasValue("x_nour1") && $objForm->HasValue("o_nour1") && $this->nour1->CurrentValue <> $this->nour1->OldValue)
+		if ($objForm->HasValue("x_No_Urut") && $objForm->HasValue("o_No_Urut") && $this->No_Urut->CurrentValue <> $this->No_Urut->OldValue)
 			return FALSE;
-		if ($objForm->HasValue("x_ket1") && $objForm->HasValue("o_ket1") && $this->ket1->CurrentValue <> $this->ket1->OldValue)
+		if ($objForm->HasValue("x_Keterangan") && $objForm->HasValue("o_Keterangan") && $this->Keterangan->CurrentValue <> $this->Keterangan->OldValue)
 			return FALSE;
-		if ($objForm->HasValue("x_jml1") && $objForm->HasValue("o_jml1") && $this->jml1->CurrentValue <> $this->jml1->OldValue)
+		if ($objForm->HasValue("x_Volume") && $objForm->HasValue("o_Volume") && $this->Volume->CurrentValue <> $this->Volume->OldValue)
 			return FALSE;
-		if ($objForm->HasValue("x_nour2") && $objForm->HasValue("o_nour2") && $this->nour2->CurrentValue <> $this->nour2->OldValue)
+		if ($objForm->HasValue("x_Alokasi") && $objForm->HasValue("o_Alokasi") && $this->Alokasi->CurrentValue <> $this->Alokasi->OldValue)
 			return FALSE;
-		if ($objForm->HasValue("x_ket2") && $objForm->HasValue("o_ket2") && $this->ket2->CurrentValue <> $this->ket2->OldValue)
+		if ($objForm->HasValue("x_Unit_KOS") && $objForm->HasValue("o_Unit_KOS") && $this->Unit_KOS->CurrentValue <> $this->Unit_KOS->OldValue)
 			return FALSE;
-		if ($objForm->HasValue("x_jml2") && $objForm->HasValue("o_jml2") && $this->jml2->CurrentValue <> $this->jml2->OldValue)
+		if ($objForm->HasValue("x_Jumlah") && $objForm->HasValue("o_Jumlah") && $this->Jumlah->CurrentValue <> $this->Jumlah->OldValue)
 			return FALSE;
 		return TRUE;
 	}
@@ -1306,14 +1308,14 @@ class ct02_rkas_list extends ct02_rkas {
 		$sFilterList = "";
 		$sSavedFilterList = "";
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJson(), ","); // Field id
-		$sFilterList = ew_Concat($sFilterList, $this->lvl->AdvancedSearch->ToJson(), ","); // Field lvl
-		$sFilterList = ew_Concat($sFilterList, $this->urutan->AdvancedSearch->ToJson(), ","); // Field urutan
-		$sFilterList = ew_Concat($sFilterList, $this->nour1->AdvancedSearch->ToJson(), ","); // Field nour1
-		$sFilterList = ew_Concat($sFilterList, $this->ket1->AdvancedSearch->ToJson(), ","); // Field ket1
-		$sFilterList = ew_Concat($sFilterList, $this->jml1->AdvancedSearch->ToJson(), ","); // Field jml1
-		$sFilterList = ew_Concat($sFilterList, $this->nour2->AdvancedSearch->ToJson(), ","); // Field nour2
-		$sFilterList = ew_Concat($sFilterList, $this->ket2->AdvancedSearch->ToJson(), ","); // Field ket2
-		$sFilterList = ew_Concat($sFilterList, $this->jml2->AdvancedSearch->ToJson(), ","); // Field jml2
+		$sFilterList = ew_Concat($sFilterList, $this->Level->AdvancedSearch->ToJson(), ","); // Field Level
+		$sFilterList = ew_Concat($sFilterList, $this->Urutan->AdvancedSearch->ToJson(), ","); // Field Urutan
+		$sFilterList = ew_Concat($sFilterList, $this->No_Urut->AdvancedSearch->ToJson(), ","); // Field No_Urut
+		$sFilterList = ew_Concat($sFilterList, $this->Keterangan->AdvancedSearch->ToJson(), ","); // Field Keterangan
+		$sFilterList = ew_Concat($sFilterList, $this->Volume->AdvancedSearch->ToJson(), ","); // Field Volume
+		$sFilterList = ew_Concat($sFilterList, $this->Alokasi->AdvancedSearch->ToJson(), ","); // Field Alokasi
+		$sFilterList = ew_Concat($sFilterList, $this->Unit_KOS->AdvancedSearch->ToJson(), ","); // Field Unit_KOS
+		$sFilterList = ew_Concat($sFilterList, $this->Jumlah->AdvancedSearch->ToJson(), ","); // Field Jumlah
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -1336,7 +1338,7 @@ class ct02_rkas_list extends ct02_rkas {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = @$_POST["filters"];
-			$UserProfile->SetSearchFilters(CurrentUserName(), "ft02_rkaslistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "ft03_rpulistsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -1366,69 +1368,69 @@ class ct02_rkas_list extends ct02_rkas {
 		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
 		$this->id->AdvancedSearch->Save();
 
-		// Field lvl
-		$this->lvl->AdvancedSearch->SearchValue = @$filter["x_lvl"];
-		$this->lvl->AdvancedSearch->SearchOperator = @$filter["z_lvl"];
-		$this->lvl->AdvancedSearch->SearchCondition = @$filter["v_lvl"];
-		$this->lvl->AdvancedSearch->SearchValue2 = @$filter["y_lvl"];
-		$this->lvl->AdvancedSearch->SearchOperator2 = @$filter["w_lvl"];
-		$this->lvl->AdvancedSearch->Save();
+		// Field Level
+		$this->Level->AdvancedSearch->SearchValue = @$filter["x_Level"];
+		$this->Level->AdvancedSearch->SearchOperator = @$filter["z_Level"];
+		$this->Level->AdvancedSearch->SearchCondition = @$filter["v_Level"];
+		$this->Level->AdvancedSearch->SearchValue2 = @$filter["y_Level"];
+		$this->Level->AdvancedSearch->SearchOperator2 = @$filter["w_Level"];
+		$this->Level->AdvancedSearch->Save();
 
-		// Field urutan
-		$this->urutan->AdvancedSearch->SearchValue = @$filter["x_urutan"];
-		$this->urutan->AdvancedSearch->SearchOperator = @$filter["z_urutan"];
-		$this->urutan->AdvancedSearch->SearchCondition = @$filter["v_urutan"];
-		$this->urutan->AdvancedSearch->SearchValue2 = @$filter["y_urutan"];
-		$this->urutan->AdvancedSearch->SearchOperator2 = @$filter["w_urutan"];
-		$this->urutan->AdvancedSearch->Save();
+		// Field Urutan
+		$this->Urutan->AdvancedSearch->SearchValue = @$filter["x_Urutan"];
+		$this->Urutan->AdvancedSearch->SearchOperator = @$filter["z_Urutan"];
+		$this->Urutan->AdvancedSearch->SearchCondition = @$filter["v_Urutan"];
+		$this->Urutan->AdvancedSearch->SearchValue2 = @$filter["y_Urutan"];
+		$this->Urutan->AdvancedSearch->SearchOperator2 = @$filter["w_Urutan"];
+		$this->Urutan->AdvancedSearch->Save();
 
-		// Field nour1
-		$this->nour1->AdvancedSearch->SearchValue = @$filter["x_nour1"];
-		$this->nour1->AdvancedSearch->SearchOperator = @$filter["z_nour1"];
-		$this->nour1->AdvancedSearch->SearchCondition = @$filter["v_nour1"];
-		$this->nour1->AdvancedSearch->SearchValue2 = @$filter["y_nour1"];
-		$this->nour1->AdvancedSearch->SearchOperator2 = @$filter["w_nour1"];
-		$this->nour1->AdvancedSearch->Save();
+		// Field No_Urut
+		$this->No_Urut->AdvancedSearch->SearchValue = @$filter["x_No_Urut"];
+		$this->No_Urut->AdvancedSearch->SearchOperator = @$filter["z_No_Urut"];
+		$this->No_Urut->AdvancedSearch->SearchCondition = @$filter["v_No_Urut"];
+		$this->No_Urut->AdvancedSearch->SearchValue2 = @$filter["y_No_Urut"];
+		$this->No_Urut->AdvancedSearch->SearchOperator2 = @$filter["w_No_Urut"];
+		$this->No_Urut->AdvancedSearch->Save();
 
-		// Field ket1
-		$this->ket1->AdvancedSearch->SearchValue = @$filter["x_ket1"];
-		$this->ket1->AdvancedSearch->SearchOperator = @$filter["z_ket1"];
-		$this->ket1->AdvancedSearch->SearchCondition = @$filter["v_ket1"];
-		$this->ket1->AdvancedSearch->SearchValue2 = @$filter["y_ket1"];
-		$this->ket1->AdvancedSearch->SearchOperator2 = @$filter["w_ket1"];
-		$this->ket1->AdvancedSearch->Save();
+		// Field Keterangan
+		$this->Keterangan->AdvancedSearch->SearchValue = @$filter["x_Keterangan"];
+		$this->Keterangan->AdvancedSearch->SearchOperator = @$filter["z_Keterangan"];
+		$this->Keterangan->AdvancedSearch->SearchCondition = @$filter["v_Keterangan"];
+		$this->Keterangan->AdvancedSearch->SearchValue2 = @$filter["y_Keterangan"];
+		$this->Keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_Keterangan"];
+		$this->Keterangan->AdvancedSearch->Save();
 
-		// Field jml1
-		$this->jml1->AdvancedSearch->SearchValue = @$filter["x_jml1"];
-		$this->jml1->AdvancedSearch->SearchOperator = @$filter["z_jml1"];
-		$this->jml1->AdvancedSearch->SearchCondition = @$filter["v_jml1"];
-		$this->jml1->AdvancedSearch->SearchValue2 = @$filter["y_jml1"];
-		$this->jml1->AdvancedSearch->SearchOperator2 = @$filter["w_jml1"];
-		$this->jml1->AdvancedSearch->Save();
+		// Field Volume
+		$this->Volume->AdvancedSearch->SearchValue = @$filter["x_Volume"];
+		$this->Volume->AdvancedSearch->SearchOperator = @$filter["z_Volume"];
+		$this->Volume->AdvancedSearch->SearchCondition = @$filter["v_Volume"];
+		$this->Volume->AdvancedSearch->SearchValue2 = @$filter["y_Volume"];
+		$this->Volume->AdvancedSearch->SearchOperator2 = @$filter["w_Volume"];
+		$this->Volume->AdvancedSearch->Save();
 
-		// Field nour2
-		$this->nour2->AdvancedSearch->SearchValue = @$filter["x_nour2"];
-		$this->nour2->AdvancedSearch->SearchOperator = @$filter["z_nour2"];
-		$this->nour2->AdvancedSearch->SearchCondition = @$filter["v_nour2"];
-		$this->nour2->AdvancedSearch->SearchValue2 = @$filter["y_nour2"];
-		$this->nour2->AdvancedSearch->SearchOperator2 = @$filter["w_nour2"];
-		$this->nour2->AdvancedSearch->Save();
+		// Field Alokasi
+		$this->Alokasi->AdvancedSearch->SearchValue = @$filter["x_Alokasi"];
+		$this->Alokasi->AdvancedSearch->SearchOperator = @$filter["z_Alokasi"];
+		$this->Alokasi->AdvancedSearch->SearchCondition = @$filter["v_Alokasi"];
+		$this->Alokasi->AdvancedSearch->SearchValue2 = @$filter["y_Alokasi"];
+		$this->Alokasi->AdvancedSearch->SearchOperator2 = @$filter["w_Alokasi"];
+		$this->Alokasi->AdvancedSearch->Save();
 
-		// Field ket2
-		$this->ket2->AdvancedSearch->SearchValue = @$filter["x_ket2"];
-		$this->ket2->AdvancedSearch->SearchOperator = @$filter["z_ket2"];
-		$this->ket2->AdvancedSearch->SearchCondition = @$filter["v_ket2"];
-		$this->ket2->AdvancedSearch->SearchValue2 = @$filter["y_ket2"];
-		$this->ket2->AdvancedSearch->SearchOperator2 = @$filter["w_ket2"];
-		$this->ket2->AdvancedSearch->Save();
+		// Field Unit_KOS
+		$this->Unit_KOS->AdvancedSearch->SearchValue = @$filter["x_Unit_KOS"];
+		$this->Unit_KOS->AdvancedSearch->SearchOperator = @$filter["z_Unit_KOS"];
+		$this->Unit_KOS->AdvancedSearch->SearchCondition = @$filter["v_Unit_KOS"];
+		$this->Unit_KOS->AdvancedSearch->SearchValue2 = @$filter["y_Unit_KOS"];
+		$this->Unit_KOS->AdvancedSearch->SearchOperator2 = @$filter["w_Unit_KOS"];
+		$this->Unit_KOS->AdvancedSearch->Save();
 
-		// Field jml2
-		$this->jml2->AdvancedSearch->SearchValue = @$filter["x_jml2"];
-		$this->jml2->AdvancedSearch->SearchOperator = @$filter["z_jml2"];
-		$this->jml2->AdvancedSearch->SearchCondition = @$filter["v_jml2"];
-		$this->jml2->AdvancedSearch->SearchValue2 = @$filter["y_jml2"];
-		$this->jml2->AdvancedSearch->SearchOperator2 = @$filter["w_jml2"];
-		$this->jml2->AdvancedSearch->Save();
+		// Field Jumlah
+		$this->Jumlah->AdvancedSearch->SearchValue = @$filter["x_Jumlah"];
+		$this->Jumlah->AdvancedSearch->SearchOperator = @$filter["z_Jumlah"];
+		$this->Jumlah->AdvancedSearch->SearchCondition = @$filter["v_Jumlah"];
+		$this->Jumlah->AdvancedSearch->SearchValue2 = @$filter["y_Jumlah"];
+		$this->Jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_Jumlah"];
+		$this->Jumlah->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -1436,8 +1438,8 @@ class ct02_rkas_list extends ct02_rkas {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->ket1, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->ket2, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->No_Urut, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->Keterangan, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -1587,14 +1589,14 @@ class ct02_rkas_list extends ct02_rkas {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->lvl, $bCtrl); // lvl
-			$this->UpdateSort($this->urutan, $bCtrl); // urutan
-			$this->UpdateSort($this->nour1, $bCtrl); // nour1
-			$this->UpdateSort($this->ket1, $bCtrl); // ket1
-			$this->UpdateSort($this->jml1, $bCtrl); // jml1
-			$this->UpdateSort($this->nour2, $bCtrl); // nour2
-			$this->UpdateSort($this->ket2, $bCtrl); // ket2
-			$this->UpdateSort($this->jml2, $bCtrl); // jml2
+			$this->UpdateSort($this->Level, $bCtrl); // Level
+			$this->UpdateSort($this->Urutan, $bCtrl); // Urutan
+			$this->UpdateSort($this->No_Urut, $bCtrl); // No_Urut
+			$this->UpdateSort($this->Keterangan, $bCtrl); // Keterangan
+			$this->UpdateSort($this->Volume, $bCtrl); // Volume
+			$this->UpdateSort($this->Alokasi, $bCtrl); // Alokasi
+			$this->UpdateSort($this->Unit_KOS, $bCtrl); // Unit_KOS
+			$this->UpdateSort($this->Jumlah, $bCtrl); // Jumlah
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1606,7 +1608,7 @@ class ct02_rkas_list extends ct02_rkas {
 			if ($this->getSqlOrderBy() <> "") {
 				$sOrderBy = $this->getSqlOrderBy();
 				$this->setSessionOrderBy($sOrderBy);
-				$this->urutan->setSort("ASC");
+				$this->Urutan->setSort("ASC");
 			}
 		}
 	}
@@ -1628,14 +1630,14 @@ class ct02_rkas_list extends ct02_rkas {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->lvl->setSort("");
-				$this->urutan->setSort("");
-				$this->nour1->setSort("");
-				$this->ket1->setSort("");
-				$this->jml1->setSort("");
-				$this->nour2->setSort("");
-				$this->ket2->setSort("");
-				$this->jml2->setSort("");
+				$this->Level->setSort("");
+				$this->Urutan->setSort("");
+				$this->No_Urut->setSort("");
+				$this->Keterangan->setSort("");
+				$this->Volume->setSort("");
+				$this->Alokasi->setSort("");
+				$this->Unit_KOS->setSort("");
+				$this->Jumlah->setSort("");
 			}
 
 			// Reset start position
@@ -1854,7 +1856,7 @@ class ct02_rkas_list extends ct02_rkas {
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft02_rkaslist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" title=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteSelectedLink")) . "\" href=\"\" onclick=\"ew_SubmitAction(event,{f:document.ft03_rpulist,url:'" . $this->MultiDeleteUrl . "'});return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = ($Security->CanDelete());
 
 		// Set up options default
@@ -1873,10 +1875,10 @@ class ct02_rkas_list extends ct02_rkas {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft02_rkaslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"ft03_rpulistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft02_rkaslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"ft03_rpulistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1901,7 +1903,7 @@ class ct02_rkas_list extends ct02_rkas {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft02_rkaslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.ft03_rpulist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -2055,7 +2057,7 @@ class ct02_rkas_list extends ct02_rkas {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft02_rkaslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft03_rpulistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -2132,22 +2134,22 @@ class ct02_rkas_list extends ct02_rkas {
 	function LoadDefaultValues() {
 		$this->id->CurrentValue = NULL;
 		$this->id->OldValue = $this->id->CurrentValue;
-		$this->lvl->CurrentValue = 1;
-		$this->lvl->OldValue = $this->lvl->CurrentValue;
-		$this->urutan->CurrentValue = NULL;
-		$this->urutan->OldValue = $this->urutan->CurrentValue;
-		$this->nour1->CurrentValue = NULL;
-		$this->nour1->OldValue = $this->nour1->CurrentValue;
-		$this->ket1->CurrentValue = NULL;
-		$this->ket1->OldValue = $this->ket1->CurrentValue;
-		$this->jml1->CurrentValue = 0;
-		$this->jml1->OldValue = $this->jml1->CurrentValue;
-		$this->nour2->CurrentValue = NULL;
-		$this->nour2->OldValue = $this->nour2->CurrentValue;
-		$this->ket2->CurrentValue = NULL;
-		$this->ket2->OldValue = $this->ket2->CurrentValue;
-		$this->jml2->CurrentValue = 0;
-		$this->jml2->OldValue = $this->jml2->CurrentValue;
+		$this->Level->CurrentValue = NULL;
+		$this->Level->OldValue = $this->Level->CurrentValue;
+		$this->Urutan->CurrentValue = NULL;
+		$this->Urutan->OldValue = $this->Urutan->CurrentValue;
+		$this->No_Urut->CurrentValue = NULL;
+		$this->No_Urut->OldValue = $this->No_Urut->CurrentValue;
+		$this->Keterangan->CurrentValue = NULL;
+		$this->Keterangan->OldValue = $this->Keterangan->CurrentValue;
+		$this->Volume->CurrentValue = 0.00;
+		$this->Volume->OldValue = $this->Volume->CurrentValue;
+		$this->Alokasi->CurrentValue = 0.00;
+		$this->Alokasi->OldValue = $this->Alokasi->CurrentValue;
+		$this->Unit_KOS->CurrentValue = 0.00;
+		$this->Unit_KOS->OldValue = $this->Unit_KOS->CurrentValue;
+		$this->Jumlah->CurrentValue = 0.00;
+		$this->Jumlah->OldValue = $this->Jumlah->CurrentValue;
 	}
 
 	// Load basic search values
@@ -2162,38 +2164,38 @@ class ct02_rkas_list extends ct02_rkas {
 
 		// Load from form
 		global $objForm;
-		if (!$this->lvl->FldIsDetailKey) {
-			$this->lvl->setFormValue($objForm->GetValue("x_lvl"));
+		if (!$this->Level->FldIsDetailKey) {
+			$this->Level->setFormValue($objForm->GetValue("x_Level"));
 		}
-		$this->lvl->setOldValue($objForm->GetValue("o_lvl"));
-		if (!$this->urutan->FldIsDetailKey) {
-			$this->urutan->setFormValue($objForm->GetValue("x_urutan"));
+		$this->Level->setOldValue($objForm->GetValue("o_Level"));
+		if (!$this->Urutan->FldIsDetailKey) {
+			$this->Urutan->setFormValue($objForm->GetValue("x_Urutan"));
 		}
-		$this->urutan->setOldValue($objForm->GetValue("o_urutan"));
-		if (!$this->nour1->FldIsDetailKey) {
-			$this->nour1->setFormValue($objForm->GetValue("x_nour1"));
+		$this->Urutan->setOldValue($objForm->GetValue("o_Urutan"));
+		if (!$this->No_Urut->FldIsDetailKey) {
+			$this->No_Urut->setFormValue($objForm->GetValue("x_No_Urut"));
 		}
-		$this->nour1->setOldValue($objForm->GetValue("o_nour1"));
-		if (!$this->ket1->FldIsDetailKey) {
-			$this->ket1->setFormValue($objForm->GetValue("x_ket1"));
+		$this->No_Urut->setOldValue($objForm->GetValue("o_No_Urut"));
+		if (!$this->Keterangan->FldIsDetailKey) {
+			$this->Keterangan->setFormValue($objForm->GetValue("x_Keterangan"));
 		}
-		$this->ket1->setOldValue($objForm->GetValue("o_ket1"));
-		if (!$this->jml1->FldIsDetailKey) {
-			$this->jml1->setFormValue($objForm->GetValue("x_jml1"));
+		$this->Keterangan->setOldValue($objForm->GetValue("o_Keterangan"));
+		if (!$this->Volume->FldIsDetailKey) {
+			$this->Volume->setFormValue($objForm->GetValue("x_Volume"));
 		}
-		$this->jml1->setOldValue($objForm->GetValue("o_jml1"));
-		if (!$this->nour2->FldIsDetailKey) {
-			$this->nour2->setFormValue($objForm->GetValue("x_nour2"));
+		$this->Volume->setOldValue($objForm->GetValue("o_Volume"));
+		if (!$this->Alokasi->FldIsDetailKey) {
+			$this->Alokasi->setFormValue($objForm->GetValue("x_Alokasi"));
 		}
-		$this->nour2->setOldValue($objForm->GetValue("o_nour2"));
-		if (!$this->ket2->FldIsDetailKey) {
-			$this->ket2->setFormValue($objForm->GetValue("x_ket2"));
+		$this->Alokasi->setOldValue($objForm->GetValue("o_Alokasi"));
+		if (!$this->Unit_KOS->FldIsDetailKey) {
+			$this->Unit_KOS->setFormValue($objForm->GetValue("x_Unit_KOS"));
 		}
-		$this->ket2->setOldValue($objForm->GetValue("o_ket2"));
-		if (!$this->jml2->FldIsDetailKey) {
-			$this->jml2->setFormValue($objForm->GetValue("x_jml2"));
+		$this->Unit_KOS->setOldValue($objForm->GetValue("o_Unit_KOS"));
+		if (!$this->Jumlah->FldIsDetailKey) {
+			$this->Jumlah->setFormValue($objForm->GetValue("x_Jumlah"));
 		}
-		$this->jml2->setOldValue($objForm->GetValue("o_jml2"));
+		$this->Jumlah->setOldValue($objForm->GetValue("o_Jumlah"));
 		if (!$this->id->FldIsDetailKey && $this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
 			$this->id->setFormValue($objForm->GetValue("x_id"));
 	}
@@ -2203,14 +2205,14 @@ class ct02_rkas_list extends ct02_rkas {
 		global $objForm;
 		if ($this->CurrentAction <> "gridadd" && $this->CurrentAction <> "add")
 			$this->id->CurrentValue = $this->id->FormValue;
-		$this->lvl->CurrentValue = $this->lvl->FormValue;
-		$this->urutan->CurrentValue = $this->urutan->FormValue;
-		$this->nour1->CurrentValue = $this->nour1->FormValue;
-		$this->ket1->CurrentValue = $this->ket1->FormValue;
-		$this->jml1->CurrentValue = $this->jml1->FormValue;
-		$this->nour2->CurrentValue = $this->nour2->FormValue;
-		$this->ket2->CurrentValue = $this->ket2->FormValue;
-		$this->jml2->CurrentValue = $this->jml2->FormValue;
+		$this->Level->CurrentValue = $this->Level->FormValue;
+		$this->Urutan->CurrentValue = $this->Urutan->FormValue;
+		$this->No_Urut->CurrentValue = $this->No_Urut->FormValue;
+		$this->Keterangan->CurrentValue = $this->Keterangan->FormValue;
+		$this->Volume->CurrentValue = $this->Volume->FormValue;
+		$this->Alokasi->CurrentValue = $this->Alokasi->FormValue;
+		$this->Unit_KOS->CurrentValue = $this->Unit_KOS->FormValue;
+		$this->Jumlah->CurrentValue = $this->Jumlah->FormValue;
 	}
 
 	// Load recordset
@@ -2273,14 +2275,14 @@ class ct02_rkas_list extends ct02_rkas {
 		if (!$rs || $rs->EOF)
 			return;
 		$this->id->setDbValue($row['id']);
-		$this->lvl->setDbValue($row['lvl']);
-		$this->urutan->setDbValue($row['urutan']);
-		$this->nour1->setDbValue($row['nour1']);
-		$this->ket1->setDbValue($row['ket1']);
-		$this->jml1->setDbValue($row['jml1']);
-		$this->nour2->setDbValue($row['nour2']);
-		$this->ket2->setDbValue($row['ket2']);
-		$this->jml2->setDbValue($row['jml2']);
+		$this->Level->setDbValue($row['Level']);
+		$this->Urutan->setDbValue($row['Urutan']);
+		$this->No_Urut->setDbValue($row['No_Urut']);
+		$this->Keterangan->setDbValue($row['Keterangan']);
+		$this->Volume->setDbValue($row['Volume']);
+		$this->Alokasi->setDbValue($row['Alokasi']);
+		$this->Unit_KOS->setDbValue($row['Unit_KOS']);
+		$this->Jumlah->setDbValue($row['Jumlah']);
 	}
 
 	// Return a row with default values
@@ -2288,14 +2290,14 @@ class ct02_rkas_list extends ct02_rkas {
 		$this->LoadDefaultValues();
 		$row = array();
 		$row['id'] = $this->id->CurrentValue;
-		$row['lvl'] = $this->lvl->CurrentValue;
-		$row['urutan'] = $this->urutan->CurrentValue;
-		$row['nour1'] = $this->nour1->CurrentValue;
-		$row['ket1'] = $this->ket1->CurrentValue;
-		$row['jml1'] = $this->jml1->CurrentValue;
-		$row['nour2'] = $this->nour2->CurrentValue;
-		$row['ket2'] = $this->ket2->CurrentValue;
-		$row['jml2'] = $this->jml2->CurrentValue;
+		$row['Level'] = $this->Level->CurrentValue;
+		$row['Urutan'] = $this->Urutan->CurrentValue;
+		$row['No_Urut'] = $this->No_Urut->CurrentValue;
+		$row['Keterangan'] = $this->Keterangan->CurrentValue;
+		$row['Volume'] = $this->Volume->CurrentValue;
+		$row['Alokasi'] = $this->Alokasi->CurrentValue;
+		$row['Unit_KOS'] = $this->Unit_KOS->CurrentValue;
+		$row['Jumlah'] = $this->Jumlah->CurrentValue;
 		return $row;
 	}
 
@@ -2305,14 +2307,14 @@ class ct02_rkas_list extends ct02_rkas {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->lvl->DbValue = $row['lvl'];
-		$this->urutan->DbValue = $row['urutan'];
-		$this->nour1->DbValue = $row['nour1'];
-		$this->ket1->DbValue = $row['ket1'];
-		$this->jml1->DbValue = $row['jml1'];
-		$this->nour2->DbValue = $row['nour2'];
-		$this->ket2->DbValue = $row['ket2'];
-		$this->jml2->DbValue = $row['jml2'];
+		$this->Level->DbValue = $row['Level'];
+		$this->Urutan->DbValue = $row['Urutan'];
+		$this->No_Urut->DbValue = $row['No_Urut'];
+		$this->Keterangan->DbValue = $row['Keterangan'];
+		$this->Volume->DbValue = $row['Volume'];
+		$this->Alokasi->DbValue = $row['Alokasi'];
+		$this->Unit_KOS->DbValue = $row['Unit_KOS'];
+		$this->Jumlah->DbValue = $row['Jumlah'];
 	}
 
 	// Load old record
@@ -2350,26 +2352,34 @@ class ct02_rkas_list extends ct02_rkas {
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
 		// Convert decimal values if posted back
-		if ($this->jml1->FormValue == $this->jml1->CurrentValue && is_numeric(ew_StrToFloat($this->jml1->CurrentValue)))
-			$this->jml1->CurrentValue = ew_StrToFloat($this->jml1->CurrentValue);
+		if ($this->Volume->FormValue == $this->Volume->CurrentValue && is_numeric(ew_StrToFloat($this->Volume->CurrentValue)))
+			$this->Volume->CurrentValue = ew_StrToFloat($this->Volume->CurrentValue);
 
 		// Convert decimal values if posted back
-		if ($this->jml2->FormValue == $this->jml2->CurrentValue && is_numeric(ew_StrToFloat($this->jml2->CurrentValue)))
-			$this->jml2->CurrentValue = ew_StrToFloat($this->jml2->CurrentValue);
+		if ($this->Alokasi->FormValue == $this->Alokasi->CurrentValue && is_numeric(ew_StrToFloat($this->Alokasi->CurrentValue)))
+			$this->Alokasi->CurrentValue = ew_StrToFloat($this->Alokasi->CurrentValue);
+
+		// Convert decimal values if posted back
+		if ($this->Unit_KOS->FormValue == $this->Unit_KOS->CurrentValue && is_numeric(ew_StrToFloat($this->Unit_KOS->CurrentValue)))
+			$this->Unit_KOS->CurrentValue = ew_StrToFloat($this->Unit_KOS->CurrentValue);
+
+		// Convert decimal values if posted back
+		if ($this->Jumlah->FormValue == $this->Jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->Jumlah->CurrentValue)))
+			$this->Jumlah->CurrentValue = ew_StrToFloat($this->Jumlah->CurrentValue);
 
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
 		// id
-		// lvl
-		// urutan
-		// nour1
-		// ket1
-		// jml1
-		// nour2
-		// ket2
-		// jml2
+		// Level
+		// Urutan
+		// No_Urut
+		// Keterangan
+		// Volume
+		// Alokasi
+		// Unit_KOS
+		// Jumlah
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -2377,263 +2387,283 @@ class ct02_rkas_list extends ct02_rkas {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// lvl
-		$this->lvl->ViewValue = $this->lvl->CurrentValue;
-		$this->lvl->ViewCustomAttributes = "";
+		// Level
+		$this->Level->ViewValue = $this->Level->CurrentValue;
+		$this->Level->ViewCustomAttributes = "";
 
-		// urutan
-		$this->urutan->ViewValue = $this->urutan->CurrentValue;
-		$this->urutan->ViewCustomAttributes = "";
+		// Urutan
+		$this->Urutan->ViewValue = $this->Urutan->CurrentValue;
+		$this->Urutan->ViewCustomAttributes = "";
 
-		// nour1
-		$this->nour1->ViewValue = $this->nour1->CurrentValue;
-		$this->nour1->ViewCustomAttributes = "";
+		// No_Urut
+		$this->No_Urut->ViewValue = $this->No_Urut->CurrentValue;
+		$this->No_Urut->ViewCustomAttributes = "";
 
-		// ket1
-		$this->ket1->ViewValue = $this->ket1->CurrentValue;
-		$this->ket1->ViewCustomAttributes = "";
+		// Keterangan
+		$this->Keterangan->ViewValue = $this->Keterangan->CurrentValue;
+		$this->Keterangan->ViewCustomAttributes = "";
 
-		// jml1
-		$this->jml1->ViewValue = $this->jml1->CurrentValue;
-		$this->jml1->ViewValue = ew_FormatNumber($this->jml1->ViewValue, 0, -2, -2, -2);
-		$this->jml1->CellCssStyle .= "text-align: right;";
-		$this->jml1->ViewCustomAttributes = "";
+		// Volume
+		$this->Volume->ViewValue = $this->Volume->CurrentValue;
+		$this->Volume->ViewValue = ew_FormatNumber($this->Volume->ViewValue, 0, -2, -2, -2);
+		$this->Volume->CellCssStyle .= "text-align: right;";
+		$this->Volume->ViewCustomAttributes = "";
 
-		// nour2
-		$this->nour2->ViewValue = $this->nour2->CurrentValue;
-		$this->nour2->ViewCustomAttributes = "";
+		// Alokasi
+		$this->Alokasi->ViewValue = $this->Alokasi->CurrentValue;
+		$this->Alokasi->ViewValue = ew_FormatNumber($this->Alokasi->ViewValue, 0, -2, -2, -2);
+		$this->Alokasi->CellCssStyle .= "text-align: right;";
+		$this->Alokasi->ViewCustomAttributes = "";
 
-		// ket2
-		$this->ket2->ViewValue = $this->ket2->CurrentValue;
-		$this->ket2->ViewCustomAttributes = "";
+		// Unit_KOS
+		$this->Unit_KOS->ViewValue = $this->Unit_KOS->CurrentValue;
+		$this->Unit_KOS->ViewValue = ew_FormatNumber($this->Unit_KOS->ViewValue, 0, -2, -2, -2);
+		$this->Unit_KOS->CellCssStyle .= "text-align: right;";
+		$this->Unit_KOS->ViewCustomAttributes = "";
 
-		// jml2
-		$this->jml2->ViewValue = $this->jml2->CurrentValue;
-		$this->jml2->ViewValue = ew_FormatNumber($this->jml2->ViewValue, 0, -2, -2, -2);
-		$this->jml2->CellCssStyle .= "text-align: right;";
-		$this->jml2->ViewCustomAttributes = "";
+		// Jumlah
+		$this->Jumlah->ViewValue = $this->Jumlah->CurrentValue;
+		$this->Jumlah->ViewValue = ew_FormatNumber($this->Jumlah->ViewValue, 0, -2, -2, -2);
+		$this->Jumlah->CellCssStyle .= "text-align: right;";
+		$this->Jumlah->ViewCustomAttributes = "";
 
-			// lvl
-			$this->lvl->LinkCustomAttributes = "";
-			$this->lvl->HrefValue = "";
-			$this->lvl->TooltipValue = "";
+			// Level
+			$this->Level->LinkCustomAttributes = "";
+			$this->Level->HrefValue = "";
+			$this->Level->TooltipValue = "";
 
-			// urutan
-			$this->urutan->LinkCustomAttributes = "";
-			$this->urutan->HrefValue = "";
-			$this->urutan->TooltipValue = "";
+			// Urutan
+			$this->Urutan->LinkCustomAttributes = "";
+			$this->Urutan->HrefValue = "";
+			$this->Urutan->TooltipValue = "";
 
-			// nour1
-			$this->nour1->LinkCustomAttributes = "";
-			$this->nour1->HrefValue = "";
-			$this->nour1->TooltipValue = "";
+			// No_Urut
+			$this->No_Urut->LinkCustomAttributes = "";
+			$this->No_Urut->HrefValue = "";
+			$this->No_Urut->TooltipValue = "";
 
-			// ket1
-			$this->ket1->LinkCustomAttributes = "";
-			$this->ket1->HrefValue = "";
-			$this->ket1->TooltipValue = "";
+			// Keterangan
+			$this->Keterangan->LinkCustomAttributes = "";
+			$this->Keterangan->HrefValue = "";
+			$this->Keterangan->TooltipValue = "";
 
-			// jml1
-			$this->jml1->LinkCustomAttributes = "";
-			$this->jml1->HrefValue = "";
-			$this->jml1->TooltipValue = "";
+			// Volume
+			$this->Volume->LinkCustomAttributes = "";
+			$this->Volume->HrefValue = "";
+			$this->Volume->TooltipValue = "";
 
-			// nour2
-			$this->nour2->LinkCustomAttributes = "";
-			$this->nour2->HrefValue = "";
-			$this->nour2->TooltipValue = "";
+			// Alokasi
+			$this->Alokasi->LinkCustomAttributes = "";
+			$this->Alokasi->HrefValue = "";
+			$this->Alokasi->TooltipValue = "";
 
-			// ket2
-			$this->ket2->LinkCustomAttributes = "";
-			$this->ket2->HrefValue = "";
-			$this->ket2->TooltipValue = "";
+			// Unit_KOS
+			$this->Unit_KOS->LinkCustomAttributes = "";
+			$this->Unit_KOS->HrefValue = "";
+			$this->Unit_KOS->TooltipValue = "";
 
-			// jml2
-			$this->jml2->LinkCustomAttributes = "";
-			$this->jml2->HrefValue = "";
-			$this->jml2->TooltipValue = "";
+			// Jumlah
+			$this->Jumlah->LinkCustomAttributes = "";
+			$this->Jumlah->HrefValue = "";
+			$this->Jumlah->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
-			// lvl
-			$this->lvl->EditAttrs["class"] = "form-control";
-			$this->lvl->EditCustomAttributes = "";
-			$this->lvl->EditValue = ew_HtmlEncode($this->lvl->CurrentValue);
-			$this->lvl->PlaceHolder = ew_RemoveHtml($this->lvl->FldCaption());
+			// Level
+			$this->Level->EditAttrs["class"] = "form-control";
+			$this->Level->EditCustomAttributes = "";
+			$this->Level->EditValue = ew_HtmlEncode($this->Level->CurrentValue);
+			$this->Level->PlaceHolder = ew_RemoveHtml($this->Level->FldCaption());
 
-			// urutan
-			$this->urutan->EditAttrs["class"] = "form-control";
-			$this->urutan->EditCustomAttributes = "";
-			$this->urutan->EditValue = ew_HtmlEncode($this->urutan->CurrentValue);
-			$this->urutan->PlaceHolder = ew_RemoveHtml($this->urutan->FldCaption());
+			// Urutan
+			$this->Urutan->EditAttrs["class"] = "form-control";
+			$this->Urutan->EditCustomAttributes = "";
+			$this->Urutan->EditValue = ew_HtmlEncode($this->Urutan->CurrentValue);
+			$this->Urutan->PlaceHolder = ew_RemoveHtml($this->Urutan->FldCaption());
 
-			// nour1
-			$this->nour1->EditAttrs["class"] = "form-control";
-			$this->nour1->EditCustomAttributes = "";
-			$this->nour1->EditValue = ew_HtmlEncode($this->nour1->CurrentValue);
-			$this->nour1->PlaceHolder = ew_RemoveHtml($this->nour1->FldCaption());
+			// No_Urut
+			$this->No_Urut->EditAttrs["class"] = "form-control";
+			$this->No_Urut->EditCustomAttributes = "";
+			$this->No_Urut->EditValue = ew_HtmlEncode($this->No_Urut->CurrentValue);
+			$this->No_Urut->PlaceHolder = ew_RemoveHtml($this->No_Urut->FldCaption());
 
-			// ket1
-			$this->ket1->EditAttrs["class"] = "form-control";
-			$this->ket1->EditCustomAttributes = "";
-			$this->ket1->EditValue = ew_HtmlEncode($this->ket1->CurrentValue);
-			$this->ket1->PlaceHolder = ew_RemoveHtml($this->ket1->FldCaption());
+			// Keterangan
+			$this->Keterangan->EditAttrs["class"] = "form-control";
+			$this->Keterangan->EditCustomAttributes = "";
+			$this->Keterangan->EditValue = ew_HtmlEncode($this->Keterangan->CurrentValue);
+			$this->Keterangan->PlaceHolder = ew_RemoveHtml($this->Keterangan->FldCaption());
 
-			// jml1
-			$this->jml1->EditAttrs["class"] = "form-control";
-			$this->jml1->EditCustomAttributes = "";
-			$this->jml1->EditValue = ew_HtmlEncode($this->jml1->CurrentValue);
-			$this->jml1->PlaceHolder = ew_RemoveHtml($this->jml1->FldCaption());
-			if (strval($this->jml1->EditValue) <> "" && is_numeric($this->jml1->EditValue)) {
-			$this->jml1->EditValue = ew_FormatNumber($this->jml1->EditValue, -2, -2, -2, -2);
-			$this->jml1->OldValue = $this->jml1->EditValue;
+			// Volume
+			$this->Volume->EditAttrs["class"] = "form-control";
+			$this->Volume->EditCustomAttributes = "";
+			$this->Volume->EditValue = ew_HtmlEncode($this->Volume->CurrentValue);
+			$this->Volume->PlaceHolder = ew_RemoveHtml($this->Volume->FldCaption());
+			if (strval($this->Volume->EditValue) <> "" && is_numeric($this->Volume->EditValue)) {
+			$this->Volume->EditValue = ew_FormatNumber($this->Volume->EditValue, -2, -2, -2, -2);
+			$this->Volume->OldValue = $this->Volume->EditValue;
 			}
 
-			// nour2
-			$this->nour2->EditAttrs["class"] = "form-control";
-			$this->nour2->EditCustomAttributes = "";
-			$this->nour2->EditValue = ew_HtmlEncode($this->nour2->CurrentValue);
-			$this->nour2->PlaceHolder = ew_RemoveHtml($this->nour2->FldCaption());
+			// Alokasi
+			$this->Alokasi->EditAttrs["class"] = "form-control";
+			$this->Alokasi->EditCustomAttributes = "";
+			$this->Alokasi->EditValue = ew_HtmlEncode($this->Alokasi->CurrentValue);
+			$this->Alokasi->PlaceHolder = ew_RemoveHtml($this->Alokasi->FldCaption());
+			if (strval($this->Alokasi->EditValue) <> "" && is_numeric($this->Alokasi->EditValue)) {
+			$this->Alokasi->EditValue = ew_FormatNumber($this->Alokasi->EditValue, -2, -2, -2, -2);
+			$this->Alokasi->OldValue = $this->Alokasi->EditValue;
+			}
 
-			// ket2
-			$this->ket2->EditAttrs["class"] = "form-control";
-			$this->ket2->EditCustomAttributes = "";
-			$this->ket2->EditValue = ew_HtmlEncode($this->ket2->CurrentValue);
-			$this->ket2->PlaceHolder = ew_RemoveHtml($this->ket2->FldCaption());
+			// Unit_KOS
+			$this->Unit_KOS->EditAttrs["class"] = "form-control";
+			$this->Unit_KOS->EditCustomAttributes = "";
+			$this->Unit_KOS->EditValue = ew_HtmlEncode($this->Unit_KOS->CurrentValue);
+			$this->Unit_KOS->PlaceHolder = ew_RemoveHtml($this->Unit_KOS->FldCaption());
+			if (strval($this->Unit_KOS->EditValue) <> "" && is_numeric($this->Unit_KOS->EditValue)) {
+			$this->Unit_KOS->EditValue = ew_FormatNumber($this->Unit_KOS->EditValue, -2, -2, -2, -2);
+			$this->Unit_KOS->OldValue = $this->Unit_KOS->EditValue;
+			}
 
-			// jml2
-			$this->jml2->EditAttrs["class"] = "form-control";
-			$this->jml2->EditCustomAttributes = "";
-			$this->jml2->EditValue = ew_HtmlEncode($this->jml2->CurrentValue);
-			$this->jml2->PlaceHolder = ew_RemoveHtml($this->jml2->FldCaption());
-			if (strval($this->jml2->EditValue) <> "" && is_numeric($this->jml2->EditValue)) {
-			$this->jml2->EditValue = ew_FormatNumber($this->jml2->EditValue, -2, -2, -2, -2);
-			$this->jml2->OldValue = $this->jml2->EditValue;
+			// Jumlah
+			$this->Jumlah->EditAttrs["class"] = "form-control";
+			$this->Jumlah->EditCustomAttributes = "";
+			$this->Jumlah->EditValue = ew_HtmlEncode($this->Jumlah->CurrentValue);
+			$this->Jumlah->PlaceHolder = ew_RemoveHtml($this->Jumlah->FldCaption());
+			if (strval($this->Jumlah->EditValue) <> "" && is_numeric($this->Jumlah->EditValue)) {
+			$this->Jumlah->EditValue = ew_FormatNumber($this->Jumlah->EditValue, -2, -2, -2, -2);
+			$this->Jumlah->OldValue = $this->Jumlah->EditValue;
 			}
 
 			// Add refer script
-			// lvl
+			// Level
 
-			$this->lvl->LinkCustomAttributes = "";
-			$this->lvl->HrefValue = "";
+			$this->Level->LinkCustomAttributes = "";
+			$this->Level->HrefValue = "";
 
-			// urutan
-			$this->urutan->LinkCustomAttributes = "";
-			$this->urutan->HrefValue = "";
+			// Urutan
+			$this->Urutan->LinkCustomAttributes = "";
+			$this->Urutan->HrefValue = "";
 
-			// nour1
-			$this->nour1->LinkCustomAttributes = "";
-			$this->nour1->HrefValue = "";
+			// No_Urut
+			$this->No_Urut->LinkCustomAttributes = "";
+			$this->No_Urut->HrefValue = "";
 
-			// ket1
-			$this->ket1->LinkCustomAttributes = "";
-			$this->ket1->HrefValue = "";
+			// Keterangan
+			$this->Keterangan->LinkCustomAttributes = "";
+			$this->Keterangan->HrefValue = "";
 
-			// jml1
-			$this->jml1->LinkCustomAttributes = "";
-			$this->jml1->HrefValue = "";
+			// Volume
+			$this->Volume->LinkCustomAttributes = "";
+			$this->Volume->HrefValue = "";
 
-			// nour2
-			$this->nour2->LinkCustomAttributes = "";
-			$this->nour2->HrefValue = "";
+			// Alokasi
+			$this->Alokasi->LinkCustomAttributes = "";
+			$this->Alokasi->HrefValue = "";
 
-			// ket2
-			$this->ket2->LinkCustomAttributes = "";
-			$this->ket2->HrefValue = "";
+			// Unit_KOS
+			$this->Unit_KOS->LinkCustomAttributes = "";
+			$this->Unit_KOS->HrefValue = "";
 
-			// jml2
-			$this->jml2->LinkCustomAttributes = "";
-			$this->jml2->HrefValue = "";
+			// Jumlah
+			$this->Jumlah->LinkCustomAttributes = "";
+			$this->Jumlah->HrefValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// lvl
-			$this->lvl->EditAttrs["class"] = "form-control";
-			$this->lvl->EditCustomAttributes = "";
-			$this->lvl->EditValue = ew_HtmlEncode($this->lvl->CurrentValue);
-			$this->lvl->PlaceHolder = ew_RemoveHtml($this->lvl->FldCaption());
+			// Level
+			$this->Level->EditAttrs["class"] = "form-control";
+			$this->Level->EditCustomAttributes = "";
+			$this->Level->EditValue = ew_HtmlEncode($this->Level->CurrentValue);
+			$this->Level->PlaceHolder = ew_RemoveHtml($this->Level->FldCaption());
 
-			// urutan
-			$this->urutan->EditAttrs["class"] = "form-control";
-			$this->urutan->EditCustomAttributes = "";
-			$this->urutan->EditValue = ew_HtmlEncode($this->urutan->CurrentValue);
-			$this->urutan->PlaceHolder = ew_RemoveHtml($this->urutan->FldCaption());
+			// Urutan
+			$this->Urutan->EditAttrs["class"] = "form-control";
+			$this->Urutan->EditCustomAttributes = "";
+			$this->Urutan->EditValue = ew_HtmlEncode($this->Urutan->CurrentValue);
+			$this->Urutan->PlaceHolder = ew_RemoveHtml($this->Urutan->FldCaption());
 
-			// nour1
-			$this->nour1->EditAttrs["class"] = "form-control";
-			$this->nour1->EditCustomAttributes = "";
-			$this->nour1->EditValue = ew_HtmlEncode($this->nour1->CurrentValue);
-			$this->nour1->PlaceHolder = ew_RemoveHtml($this->nour1->FldCaption());
+			// No_Urut
+			$this->No_Urut->EditAttrs["class"] = "form-control";
+			$this->No_Urut->EditCustomAttributes = "";
+			$this->No_Urut->EditValue = ew_HtmlEncode($this->No_Urut->CurrentValue);
+			$this->No_Urut->PlaceHolder = ew_RemoveHtml($this->No_Urut->FldCaption());
 
-			// ket1
-			$this->ket1->EditAttrs["class"] = "form-control";
-			$this->ket1->EditCustomAttributes = "";
-			$this->ket1->EditValue = ew_HtmlEncode($this->ket1->CurrentValue);
-			$this->ket1->PlaceHolder = ew_RemoveHtml($this->ket1->FldCaption());
+			// Keterangan
+			$this->Keterangan->EditAttrs["class"] = "form-control";
+			$this->Keterangan->EditCustomAttributes = "";
+			$this->Keterangan->EditValue = ew_HtmlEncode($this->Keterangan->CurrentValue);
+			$this->Keterangan->PlaceHolder = ew_RemoveHtml($this->Keterangan->FldCaption());
 
-			// jml1
-			$this->jml1->EditAttrs["class"] = "form-control";
-			$this->jml1->EditCustomAttributes = "";
-			$this->jml1->EditValue = ew_HtmlEncode($this->jml1->CurrentValue);
-			$this->jml1->PlaceHolder = ew_RemoveHtml($this->jml1->FldCaption());
-			if (strval($this->jml1->EditValue) <> "" && is_numeric($this->jml1->EditValue)) {
-			$this->jml1->EditValue = ew_FormatNumber($this->jml1->EditValue, -2, -2, -2, -2);
-			$this->jml1->OldValue = $this->jml1->EditValue;
+			// Volume
+			$this->Volume->EditAttrs["class"] = "form-control";
+			$this->Volume->EditCustomAttributes = "";
+			$this->Volume->EditValue = ew_HtmlEncode($this->Volume->CurrentValue);
+			$this->Volume->PlaceHolder = ew_RemoveHtml($this->Volume->FldCaption());
+			if (strval($this->Volume->EditValue) <> "" && is_numeric($this->Volume->EditValue)) {
+			$this->Volume->EditValue = ew_FormatNumber($this->Volume->EditValue, -2, -2, -2, -2);
+			$this->Volume->OldValue = $this->Volume->EditValue;
 			}
 
-			// nour2
-			$this->nour2->EditAttrs["class"] = "form-control";
-			$this->nour2->EditCustomAttributes = "";
-			$this->nour2->EditValue = ew_HtmlEncode($this->nour2->CurrentValue);
-			$this->nour2->PlaceHolder = ew_RemoveHtml($this->nour2->FldCaption());
+			// Alokasi
+			$this->Alokasi->EditAttrs["class"] = "form-control";
+			$this->Alokasi->EditCustomAttributes = "";
+			$this->Alokasi->EditValue = ew_HtmlEncode($this->Alokasi->CurrentValue);
+			$this->Alokasi->PlaceHolder = ew_RemoveHtml($this->Alokasi->FldCaption());
+			if (strval($this->Alokasi->EditValue) <> "" && is_numeric($this->Alokasi->EditValue)) {
+			$this->Alokasi->EditValue = ew_FormatNumber($this->Alokasi->EditValue, -2, -2, -2, -2);
+			$this->Alokasi->OldValue = $this->Alokasi->EditValue;
+			}
 
-			// ket2
-			$this->ket2->EditAttrs["class"] = "form-control";
-			$this->ket2->EditCustomAttributes = "";
-			$this->ket2->EditValue = ew_HtmlEncode($this->ket2->CurrentValue);
-			$this->ket2->PlaceHolder = ew_RemoveHtml($this->ket2->FldCaption());
+			// Unit_KOS
+			$this->Unit_KOS->EditAttrs["class"] = "form-control";
+			$this->Unit_KOS->EditCustomAttributes = "";
+			$this->Unit_KOS->EditValue = ew_HtmlEncode($this->Unit_KOS->CurrentValue);
+			$this->Unit_KOS->PlaceHolder = ew_RemoveHtml($this->Unit_KOS->FldCaption());
+			if (strval($this->Unit_KOS->EditValue) <> "" && is_numeric($this->Unit_KOS->EditValue)) {
+			$this->Unit_KOS->EditValue = ew_FormatNumber($this->Unit_KOS->EditValue, -2, -2, -2, -2);
+			$this->Unit_KOS->OldValue = $this->Unit_KOS->EditValue;
+			}
 
-			// jml2
-			$this->jml2->EditAttrs["class"] = "form-control";
-			$this->jml2->EditCustomAttributes = "";
-			$this->jml2->EditValue = ew_HtmlEncode($this->jml2->CurrentValue);
-			$this->jml2->PlaceHolder = ew_RemoveHtml($this->jml2->FldCaption());
-			if (strval($this->jml2->EditValue) <> "" && is_numeric($this->jml2->EditValue)) {
-			$this->jml2->EditValue = ew_FormatNumber($this->jml2->EditValue, -2, -2, -2, -2);
-			$this->jml2->OldValue = $this->jml2->EditValue;
+			// Jumlah
+			$this->Jumlah->EditAttrs["class"] = "form-control";
+			$this->Jumlah->EditCustomAttributes = "";
+			$this->Jumlah->EditValue = ew_HtmlEncode($this->Jumlah->CurrentValue);
+			$this->Jumlah->PlaceHolder = ew_RemoveHtml($this->Jumlah->FldCaption());
+			if (strval($this->Jumlah->EditValue) <> "" && is_numeric($this->Jumlah->EditValue)) {
+			$this->Jumlah->EditValue = ew_FormatNumber($this->Jumlah->EditValue, -2, -2, -2, -2);
+			$this->Jumlah->OldValue = $this->Jumlah->EditValue;
 			}
 
 			// Edit refer script
-			// lvl
+			// Level
 
-			$this->lvl->LinkCustomAttributes = "";
-			$this->lvl->HrefValue = "";
+			$this->Level->LinkCustomAttributes = "";
+			$this->Level->HrefValue = "";
 
-			// urutan
-			$this->urutan->LinkCustomAttributes = "";
-			$this->urutan->HrefValue = "";
+			// Urutan
+			$this->Urutan->LinkCustomAttributes = "";
+			$this->Urutan->HrefValue = "";
 
-			// nour1
-			$this->nour1->LinkCustomAttributes = "";
-			$this->nour1->HrefValue = "";
+			// No_Urut
+			$this->No_Urut->LinkCustomAttributes = "";
+			$this->No_Urut->HrefValue = "";
 
-			// ket1
-			$this->ket1->LinkCustomAttributes = "";
-			$this->ket1->HrefValue = "";
+			// Keterangan
+			$this->Keterangan->LinkCustomAttributes = "";
+			$this->Keterangan->HrefValue = "";
 
-			// jml1
-			$this->jml1->LinkCustomAttributes = "";
-			$this->jml1->HrefValue = "";
+			// Volume
+			$this->Volume->LinkCustomAttributes = "";
+			$this->Volume->HrefValue = "";
 
-			// nour2
-			$this->nour2->LinkCustomAttributes = "";
-			$this->nour2->HrefValue = "";
+			// Alokasi
+			$this->Alokasi->LinkCustomAttributes = "";
+			$this->Alokasi->HrefValue = "";
 
-			// ket2
-			$this->ket2->LinkCustomAttributes = "";
-			$this->ket2->HrefValue = "";
+			// Unit_KOS
+			$this->Unit_KOS->LinkCustomAttributes = "";
+			$this->Unit_KOS->HrefValue = "";
 
-			// jml2
-			$this->jml2->LinkCustomAttributes = "";
-			$this->jml2->HrefValue = "";
+			// Jumlah
+			$this->Jumlah->LinkCustomAttributes = "";
+			$this->Jumlah->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -2653,23 +2683,29 @@ class ct02_rkas_list extends ct02_rkas {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->lvl->FldIsDetailKey && !is_null($this->lvl->FormValue) && $this->lvl->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->lvl->FldCaption(), $this->lvl->ReqErrMsg));
+		if (!$this->Level->FldIsDetailKey && !is_null($this->Level->FormValue) && $this->Level->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->Level->FldCaption(), $this->Level->ReqErrMsg));
 		}
-		if (!ew_CheckInteger($this->lvl->FormValue)) {
-			ew_AddMessage($gsFormError, $this->lvl->FldErrMsg());
+		if (!ew_CheckInteger($this->Level->FormValue)) {
+			ew_AddMessage($gsFormError, $this->Level->FldErrMsg());
 		}
-		if (!$this->urutan->FldIsDetailKey && !is_null($this->urutan->FormValue) && $this->urutan->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->urutan->FldCaption(), $this->urutan->ReqErrMsg));
+		if (!$this->Urutan->FldIsDetailKey && !is_null($this->Urutan->FormValue) && $this->Urutan->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->Urutan->FldCaption(), $this->Urutan->ReqErrMsg));
 		}
-		if (!ew_CheckInteger($this->urutan->FormValue)) {
-			ew_AddMessage($gsFormError, $this->urutan->FldErrMsg());
+		if (!ew_CheckInteger($this->Urutan->FormValue)) {
+			ew_AddMessage($gsFormError, $this->Urutan->FldErrMsg());
 		}
-		if (!ew_CheckNumber($this->jml1->FormValue)) {
-			ew_AddMessage($gsFormError, $this->jml1->FldErrMsg());
+		if (!ew_CheckNumber($this->Volume->FormValue)) {
+			ew_AddMessage($gsFormError, $this->Volume->FldErrMsg());
 		}
-		if (!ew_CheckNumber($this->jml2->FormValue)) {
-			ew_AddMessage($gsFormError, $this->jml2->FldErrMsg());
+		if (!ew_CheckNumber($this->Alokasi->FormValue)) {
+			ew_AddMessage($gsFormError, $this->Alokasi->FldErrMsg());
+		}
+		if (!ew_CheckNumber($this->Unit_KOS->FormValue)) {
+			ew_AddMessage($gsFormError, $this->Unit_KOS->FldErrMsg());
+		}
+		if (!ew_CheckNumber($this->Jumlah->FormValue)) {
+			ew_AddMessage($gsFormError, $this->Jumlah->FldErrMsg());
 		}
 
 		// Return validate result
@@ -2786,29 +2822,29 @@ class ct02_rkas_list extends ct02_rkas {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// lvl
-			$this->lvl->SetDbValueDef($rsnew, $this->lvl->CurrentValue, 0, $this->lvl->ReadOnly);
+			// Level
+			$this->Level->SetDbValueDef($rsnew, $this->Level->CurrentValue, 0, $this->Level->ReadOnly);
 
-			// urutan
-			$this->urutan->SetDbValueDef($rsnew, $this->urutan->CurrentValue, 0, $this->urutan->ReadOnly);
+			// Urutan
+			$this->Urutan->SetDbValueDef($rsnew, $this->Urutan->CurrentValue, 0, $this->Urutan->ReadOnly);
 
-			// nour1
-			$this->nour1->SetDbValueDef($rsnew, $this->nour1->CurrentValue, NULL, $this->nour1->ReadOnly);
+			// No_Urut
+			$this->No_Urut->SetDbValueDef($rsnew, $this->No_Urut->CurrentValue, NULL, $this->No_Urut->ReadOnly);
 
-			// ket1
-			$this->ket1->SetDbValueDef($rsnew, $this->ket1->CurrentValue, NULL, $this->ket1->ReadOnly);
+			// Keterangan
+			$this->Keterangan->SetDbValueDef($rsnew, $this->Keterangan->CurrentValue, NULL, $this->Keterangan->ReadOnly);
 
-			// jml1
-			$this->jml1->SetDbValueDef($rsnew, $this->jml1->CurrentValue, NULL, $this->jml1->ReadOnly);
+			// Volume
+			$this->Volume->SetDbValueDef($rsnew, $this->Volume->CurrentValue, 0, $this->Volume->ReadOnly);
 
-			// nour2
-			$this->nour2->SetDbValueDef($rsnew, $this->nour2->CurrentValue, NULL, $this->nour2->ReadOnly);
+			// Alokasi
+			$this->Alokasi->SetDbValueDef($rsnew, $this->Alokasi->CurrentValue, 0, $this->Alokasi->ReadOnly);
 
-			// ket2
-			$this->ket2->SetDbValueDef($rsnew, $this->ket2->CurrentValue, NULL, $this->ket2->ReadOnly);
+			// Unit_KOS
+			$this->Unit_KOS->SetDbValueDef($rsnew, $this->Unit_KOS->CurrentValue, 0, $this->Unit_KOS->ReadOnly);
 
-			// jml2
-			$this->jml2->SetDbValueDef($rsnew, $this->jml2->CurrentValue, NULL, $this->jml2->ReadOnly);
+			// Jumlah
+			$this->Jumlah->SetDbValueDef($rsnew, $this->Jumlah->CurrentValue, NULL, $this->Jumlah->ReadOnly);
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -2853,29 +2889,29 @@ class ct02_rkas_list extends ct02_rkas {
 		}
 		$rsnew = array();
 
-		// lvl
-		$this->lvl->SetDbValueDef($rsnew, $this->lvl->CurrentValue, 0, FALSE);
+		// Level
+		$this->Level->SetDbValueDef($rsnew, $this->Level->CurrentValue, 0, FALSE);
 
-		// urutan
-		$this->urutan->SetDbValueDef($rsnew, $this->urutan->CurrentValue, 0, FALSE);
+		// Urutan
+		$this->Urutan->SetDbValueDef($rsnew, $this->Urutan->CurrentValue, 0, FALSE);
 
-		// nour1
-		$this->nour1->SetDbValueDef($rsnew, $this->nour1->CurrentValue, NULL, FALSE);
+		// No_Urut
+		$this->No_Urut->SetDbValueDef($rsnew, $this->No_Urut->CurrentValue, NULL, FALSE);
 
-		// ket1
-		$this->ket1->SetDbValueDef($rsnew, $this->ket1->CurrentValue, NULL, FALSE);
+		// Keterangan
+		$this->Keterangan->SetDbValueDef($rsnew, $this->Keterangan->CurrentValue, NULL, FALSE);
 
-		// jml1
-		$this->jml1->SetDbValueDef($rsnew, $this->jml1->CurrentValue, NULL, strval($this->jml1->CurrentValue) == "");
+		// Volume
+		$this->Volume->SetDbValueDef($rsnew, $this->Volume->CurrentValue, 0, strval($this->Volume->CurrentValue) == "");
 
-		// nour2
-		$this->nour2->SetDbValueDef($rsnew, $this->nour2->CurrentValue, NULL, FALSE);
+		// Alokasi
+		$this->Alokasi->SetDbValueDef($rsnew, $this->Alokasi->CurrentValue, 0, strval($this->Alokasi->CurrentValue) == "");
 
-		// ket2
-		$this->ket2->SetDbValueDef($rsnew, $this->ket2->CurrentValue, NULL, FALSE);
+		// Unit_KOS
+		$this->Unit_KOS->SetDbValueDef($rsnew, $this->Unit_KOS->CurrentValue, 0, strval($this->Unit_KOS->CurrentValue) == "");
 
-		// jml2
-		$this->jml2->SetDbValueDef($rsnew, $this->jml2->CurrentValue, NULL, strval($this->jml2->CurrentValue) == "");
+		// Jumlah
+		$this->Jumlah->SetDbValueDef($rsnew, $this->Jumlah->CurrentValue, NULL, strval($this->Jumlah->CurrentValue) == "");
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
@@ -2949,7 +2985,7 @@ class ct02_rkas_list extends ct02_rkas {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t02_rkas\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t02_rkas',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft02_rkaslist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t03_rpu\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t03_rpu',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft03_rpulist,sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -3330,31 +3366,31 @@ class ct02_rkas_list extends ct02_rkas {
 <?php
 
 // Create page object
-if (!isset($t02_rkas_list)) $t02_rkas_list = new ct02_rkas_list();
+if (!isset($t03_rpu_list)) $t03_rpu_list = new ct03_rpu_list();
 
 // Page init
-$t02_rkas_list->Page_Init();
+$t03_rpu_list->Page_Init();
 
 // Page main
-$t02_rkas_list->Page_Main();
+$t03_rpu_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t02_rkas_list->Page_Render();
+$t03_rpu_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t02_rkas->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = ft02_rkaslist = new ew_Form("ft02_rkaslist", "list");
-ft02_rkaslist.FormKeyCountName = '<?php echo $t02_rkas_list->FormKeyCountName ?>';
+var CurrentForm = ft03_rpulist = new ew_Form("ft03_rpulist", "list");
+ft03_rpulist.FormKeyCountName = '<?php echo $t03_rpu_list->FormKeyCountName ?>';
 
 // Validate form
-ft02_rkaslist.Validate = function() {
+ft03_rpulist.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -3371,24 +3407,30 @@ ft02_rkaslist.Validate = function() {
 		var checkrow = (gridinsert) ? !this.EmptyRow(infix) : true;
 		if (checkrow) {
 			addcnt++;
-			elm = this.GetElements("x" + infix + "_lvl");
+			elm = this.GetElements("x" + infix + "_Level");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t02_rkas->lvl->FldCaption(), $t02_rkas->lvl->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_lvl");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t03_rpu->Level->FldCaption(), $t03_rpu->Level->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_Level");
 			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t02_rkas->lvl->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_urutan");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t03_rpu->Level->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_Urutan");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t02_rkas->urutan->FldCaption(), $t02_rkas->urutan->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_urutan");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t03_rpu->Urutan->FldCaption(), $t03_rpu->Urutan->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_Urutan");
 			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t02_rkas->urutan->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_jml1");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t03_rpu->Urutan->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_Volume");
 			if (elm && !ew_CheckNumber(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t02_rkas->jml1->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_jml2");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t03_rpu->Volume->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_Alokasi");
 			if (elm && !ew_CheckNumber(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($t02_rkas->jml2->FldErrMsg()) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t03_rpu->Alokasi->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_Unit_KOS");
+			if (elm && !ew_CheckNumber(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t03_rpu->Unit_KOS->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_Jumlah");
+			if (elm && !ew_CheckNumber(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t03_rpu->Jumlah->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -3403,21 +3445,21 @@ ft02_rkaslist.Validate = function() {
 }
 
 // Check empty row
-ft02_rkaslist.EmptyRow = function(infix) {
+ft03_rpulist.EmptyRow = function(infix) {
 	var fobj = this.Form;
-	if (ew_ValueChanged(fobj, infix, "lvl", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "urutan", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "nour1", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "ket1", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "jml1", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "nour2", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "ket2", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "jml2", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "Level", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "Urutan", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "No_Urut", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "Keterangan", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "Volume", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "Alokasi", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "Unit_KOS", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "Jumlah", false)) return false;
 	return true;
 }
 
 // Form_CustomValidate event
-ft02_rkaslist.Form_CustomValidate = 
+ft03_rpulist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -3425,94 +3467,94 @@ ft02_rkaslist.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft02_rkaslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft03_rpulist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
 
-var CurrentSearchForm = ft02_rkaslistsrch = new ew_Form("ft02_rkaslistsrch");
+var CurrentSearchForm = ft03_rpulistsrch = new ew_Form("ft03_rpulistsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t02_rkas->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <div class="ewToolbar">
-<?php if ($t02_rkas_list->TotalRecs > 0 && $t02_rkas_list->ExportOptions->Visible()) { ?>
-<?php $t02_rkas_list->ExportOptions->Render("body") ?>
+<?php if ($t03_rpu_list->TotalRecs > 0 && $t03_rpu_list->ExportOptions->Visible()) { ?>
+<?php $t03_rpu_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t02_rkas_list->SearchOptions->Visible()) { ?>
-<?php $t02_rkas_list->SearchOptions->Render("body") ?>
+<?php if ($t03_rpu_list->SearchOptions->Visible()) { ?>
+<?php $t03_rpu_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($t02_rkas_list->FilterOptions->Visible()) { ?>
-<?php $t02_rkas_list->FilterOptions->Render("body") ?>
+<?php if ($t03_rpu_list->FilterOptions->Visible()) { ?>
+<?php $t03_rpu_list->FilterOptions->Render("body") ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
-if ($t02_rkas->CurrentAction == "gridadd") {
-	$t02_rkas->CurrentFilter = "0=1";
-	$t02_rkas_list->StartRec = 1;
-	$t02_rkas_list->DisplayRecs = $t02_rkas->GridAddRowCount;
-	$t02_rkas_list->TotalRecs = $t02_rkas_list->DisplayRecs;
-	$t02_rkas_list->StopRec = $t02_rkas_list->DisplayRecs;
+if ($t03_rpu->CurrentAction == "gridadd") {
+	$t03_rpu->CurrentFilter = "0=1";
+	$t03_rpu_list->StartRec = 1;
+	$t03_rpu_list->DisplayRecs = $t03_rpu->GridAddRowCount;
+	$t03_rpu_list->TotalRecs = $t03_rpu_list->DisplayRecs;
+	$t03_rpu_list->StopRec = $t03_rpu_list->DisplayRecs;
 } else {
-	$bSelectLimit = $t02_rkas_list->UseSelectLimit;
+	$bSelectLimit = $t03_rpu_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($t02_rkas_list->TotalRecs <= 0)
-			$t02_rkas_list->TotalRecs = $t02_rkas->ListRecordCount();
+		if ($t03_rpu_list->TotalRecs <= 0)
+			$t03_rpu_list->TotalRecs = $t03_rpu->ListRecordCount();
 	} else {
-		if (!$t02_rkas_list->Recordset && ($t02_rkas_list->Recordset = $t02_rkas_list->LoadRecordset()))
-			$t02_rkas_list->TotalRecs = $t02_rkas_list->Recordset->RecordCount();
+		if (!$t03_rpu_list->Recordset && ($t03_rpu_list->Recordset = $t03_rpu_list->LoadRecordset()))
+			$t03_rpu_list->TotalRecs = $t03_rpu_list->Recordset->RecordCount();
 	}
-	$t02_rkas_list->StartRec = 1;
-	if ($t02_rkas_list->DisplayRecs <= 0 || ($t02_rkas->Export <> "" && $t02_rkas->ExportAll)) // Display all records
-		$t02_rkas_list->DisplayRecs = $t02_rkas_list->TotalRecs;
-	if (!($t02_rkas->Export <> "" && $t02_rkas->ExportAll))
-		$t02_rkas_list->SetupStartRec(); // Set up start record position
+	$t03_rpu_list->StartRec = 1;
+	if ($t03_rpu_list->DisplayRecs <= 0 || ($t03_rpu->Export <> "" && $t03_rpu->ExportAll)) // Display all records
+		$t03_rpu_list->DisplayRecs = $t03_rpu_list->TotalRecs;
+	if (!($t03_rpu->Export <> "" && $t03_rpu->ExportAll))
+		$t03_rpu_list->SetupStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$t02_rkas_list->Recordset = $t02_rkas_list->LoadRecordset($t02_rkas_list->StartRec-1, $t02_rkas_list->DisplayRecs);
+		$t03_rpu_list->Recordset = $t03_rpu_list->LoadRecordset($t03_rpu_list->StartRec-1, $t03_rpu_list->DisplayRecs);
 
 	// Set no record found message
-	if ($t02_rkas->CurrentAction == "" && $t02_rkas_list->TotalRecs == 0) {
+	if ($t03_rpu->CurrentAction == "" && $t03_rpu_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$t02_rkas_list->setWarningMessage(ew_DeniedMsg());
-		if ($t02_rkas_list->SearchWhere == "0=101")
-			$t02_rkas_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$t03_rpu_list->setWarningMessage(ew_DeniedMsg());
+		if ($t03_rpu_list->SearchWhere == "0=101")
+			$t03_rpu_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$t02_rkas_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$t03_rpu_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
 
 	// Audit trail on search
-	if ($t02_rkas_list->AuditTrailOnSearch && $t02_rkas_list->Command == "search" && !$t02_rkas_list->RestoreSearch) {
+	if ($t03_rpu_list->AuditTrailOnSearch && $t03_rpu_list->Command == "search" && !$t03_rpu_list->RestoreSearch) {
 		$searchparm = ew_ServerVar("QUERY_STRING");
-		$searchsql = $t02_rkas_list->getSessionWhere();
-		$t02_rkas_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
+		$searchsql = $t03_rpu_list->getSessionWhere();
+		$t03_rpu_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
 	}
 }
-$t02_rkas_list->RenderOtherOptions();
+$t03_rpu_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($t02_rkas->Export == "" && $t02_rkas->CurrentAction == "") { ?>
-<form name="ft02_rkaslistsrch" id="ft02_rkaslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($t02_rkas_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="ft02_rkaslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($t03_rpu->Export == "" && $t03_rpu->CurrentAction == "") { ?>
+<form name="ft03_rpulistsrch" id="ft03_rpulistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($t03_rpu_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="ft03_rpulistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="t02_rkas">
+<input type="hidden" name="t" value="t03_rpu">
 	<div class="ewBasicSearch">
 <div id="xsr_1" class="ewRow">
 	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t02_rkas_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t02_rkas_list->BasicSearch->getType()) ?>">
+	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($t03_rpu_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
+	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($t03_rpu_list->BasicSearch->getType()) ?>">
 	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t02_rkas_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $t03_rpu_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
 		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($t02_rkas_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($t02_rkas_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($t02_rkas_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($t02_rkas_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
+			<li<?php if ($t03_rpu_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
+			<li<?php if ($t03_rpu_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
+			<li<?php if ($t03_rpu_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
+			<li<?php if ($t03_rpu_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
 		</ul>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("SearchBtn") ?></button>
 	</div>
@@ -3523,70 +3565,70 @@ $t02_rkas_list->RenderOtherOptions();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $t02_rkas_list->ShowPageHeader(); ?>
+<?php $t03_rpu_list->ShowPageHeader(); ?>
 <?php
-$t02_rkas_list->ShowMessage();
+$t03_rpu_list->ShowMessage();
 ?>
-<?php if ($t02_rkas_list->TotalRecs > 0 || $t02_rkas->CurrentAction <> "") { ?>
-<div class="box ewBox ewGrid<?php if ($t02_rkas_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t02_rkas">
-<?php if ($t02_rkas->Export == "") { ?>
+<?php if ($t03_rpu_list->TotalRecs > 0 || $t03_rpu->CurrentAction <> "") { ?>
+<div class="box ewBox ewGrid<?php if ($t03_rpu_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> t03_rpu">
+<?php if ($t03_rpu->Export == "") { ?>
 <div class="box-header ewGridUpperPanel">
-<?php if ($t02_rkas->CurrentAction <> "gridadd" && $t02_rkas->CurrentAction <> "gridedit") { ?>
+<?php if ($t03_rpu->CurrentAction <> "gridadd" && $t03_rpu->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t02_rkas_list->Pager)) $t02_rkas_list->Pager = new cPrevNextPager($t02_rkas_list->StartRec, $t02_rkas_list->DisplayRecs, $t02_rkas_list->TotalRecs, $t02_rkas_list->AutoHidePager) ?>
-<?php if ($t02_rkas_list->Pager->RecordCount > 0 && $t02_rkas_list->Pager->Visible) { ?>
+<?php if (!isset($t03_rpu_list->Pager)) $t03_rpu_list->Pager = new cPrevNextPager($t03_rpu_list->StartRec, $t03_rpu_list->DisplayRecs, $t03_rpu_list->TotalRecs, $t03_rpu_list->AutoHidePager) ?>
+<?php if ($t03_rpu_list->Pager->RecordCount > 0 && $t03_rpu_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t02_rkas_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t02_rkas_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t03_rpu_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t02_rkas_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t02_rkas_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t03_rpu_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t02_rkas_list->Pager->RecordCount > 0) { ?>
+<?php if ($t03_rpu_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t02_rkas_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t02_rkas_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t02_rkas_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t03_rpu_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t03_rpu_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t03_rpu_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t02_rkas_list->TotalRecs > 0 && (!$t02_rkas_list->AutoHidePageSizeSelector || $t02_rkas_list->Pager->Visible)) { ?>
+<?php if ($t03_rpu_list->TotalRecs > 0 && (!$t03_rpu_list->AutoHidePageSizeSelector || $t03_rpu_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t02_rkas">
+<input type="hidden" name="t" value="t03_rpu">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t02_rkas_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t02_rkas_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t02_rkas_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t02_rkas_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t02_rkas->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t03_rpu_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t03_rpu_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t03_rpu_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t03_rpu_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t03_rpu->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -3594,503 +3636,503 @@ $t02_rkas_list->ShowMessage();
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t02_rkas_list->OtherOptions as &$option)
+	foreach ($t03_rpu_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<form name="ft02_rkaslist" id="ft02_rkaslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t02_rkas_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t02_rkas_list->Token ?>">
+<form name="ft03_rpulist" id="ft03_rpulist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t03_rpu_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t03_rpu_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t02_rkas">
-<div id="gmp_t02_rkas" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
-<?php if ($t02_rkas_list->TotalRecs > 0 || $t02_rkas->CurrentAction == "add" || $t02_rkas->CurrentAction == "copy" || $t02_rkas->CurrentAction == "gridedit") { ?>
-<table id="tbl_t02_rkaslist" class="table ewTable">
+<input type="hidden" name="t" value="t03_rpu">
+<div id="gmp_t03_rpu" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
+<?php if ($t03_rpu_list->TotalRecs > 0 || $t03_rpu->CurrentAction == "add" || $t03_rpu->CurrentAction == "copy" || $t03_rpu->CurrentAction == "gridedit") { ?>
+<table id="tbl_t03_rpulist" class="table ewTable">
 <thead>
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$t02_rkas_list->RowType = EW_ROWTYPE_HEADER;
+$t03_rpu_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$t02_rkas_list->RenderListOptions();
+$t03_rpu_list->RenderListOptions();
 
 // Render list options (header, left)
-$t02_rkas_list->ListOptions->Render("header", "left");
+$t03_rpu_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($t02_rkas->lvl->Visible) { // lvl ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->lvl) == "") { ?>
-		<th data-name="lvl" class="<?php echo $t02_rkas->lvl->HeaderCellClass() ?>"><div id="elh_t02_rkas_lvl" class="t02_rkas_lvl"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->lvl->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->Level->Visible) { // Level ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->Level) == "") { ?>
+		<th data-name="Level" class="<?php echo $t03_rpu->Level->HeaderCellClass() ?>"><div id="elh_t03_rpu_Level" class="t03_rpu_Level"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->Level->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="lvl" class="<?php echo $t02_rkas->lvl->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->lvl) ?>',2);"><div id="elh_t02_rkas_lvl" class="t02_rkas_lvl">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->lvl->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->lvl->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->lvl->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Level" class="<?php echo $t03_rpu->Level->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->Level) ?>',2);"><div id="elh_t03_rpu_Level" class="t03_rpu_Level">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->Level->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->Level->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->Level->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t02_rkas->urutan->Visible) { // urutan ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->urutan) == "") { ?>
-		<th data-name="urutan" class="<?php echo $t02_rkas->urutan->HeaderCellClass() ?>"><div id="elh_t02_rkas_urutan" class="t02_rkas_urutan"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->urutan->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->Urutan->Visible) { // Urutan ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->Urutan) == "") { ?>
+		<th data-name="Urutan" class="<?php echo $t03_rpu->Urutan->HeaderCellClass() ?>"><div id="elh_t03_rpu_Urutan" class="t03_rpu_Urutan"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->Urutan->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="urutan" class="<?php echo $t02_rkas->urutan->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->urutan) ?>',2);"><div id="elh_t02_rkas_urutan" class="t02_rkas_urutan">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->urutan->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->urutan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->urutan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Urutan" class="<?php echo $t03_rpu->Urutan->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->Urutan) ?>',2);"><div id="elh_t03_rpu_Urutan" class="t03_rpu_Urutan">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->Urutan->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->Urutan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->Urutan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t02_rkas->nour1->Visible) { // nour1 ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->nour1) == "") { ?>
-		<th data-name="nour1" class="<?php echo $t02_rkas->nour1->HeaderCellClass() ?>"><div id="elh_t02_rkas_nour1" class="t02_rkas_nour1"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->nour1->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->No_Urut->Visible) { // No_Urut ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->No_Urut) == "") { ?>
+		<th data-name="No_Urut" class="<?php echo $t03_rpu->No_Urut->HeaderCellClass() ?>"><div id="elh_t03_rpu_No_Urut" class="t03_rpu_No_Urut"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->No_Urut->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="nour1" class="<?php echo $t02_rkas->nour1->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->nour1) ?>',2);"><div id="elh_t02_rkas_nour1" class="t02_rkas_nour1">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->nour1->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->nour1->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->nour1->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="No_Urut" class="<?php echo $t03_rpu->No_Urut->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->No_Urut) ?>',2);"><div id="elh_t03_rpu_No_Urut" class="t03_rpu_No_Urut">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->No_Urut->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->No_Urut->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->No_Urut->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t02_rkas->ket1->Visible) { // ket1 ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->ket1) == "") { ?>
-		<th data-name="ket1" class="<?php echo $t02_rkas->ket1->HeaderCellClass() ?>"><div id="elh_t02_rkas_ket1" class="t02_rkas_ket1"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->ket1->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->Keterangan->Visible) { // Keterangan ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->Keterangan) == "") { ?>
+		<th data-name="Keterangan" class="<?php echo $t03_rpu->Keterangan->HeaderCellClass() ?>"><div id="elh_t03_rpu_Keterangan" class="t03_rpu_Keterangan"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->Keterangan->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="ket1" class="<?php echo $t02_rkas->ket1->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->ket1) ?>',2);"><div id="elh_t02_rkas_ket1" class="t02_rkas_ket1">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->ket1->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->ket1->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->ket1->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Keterangan" class="<?php echo $t03_rpu->Keterangan->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->Keterangan) ?>',2);"><div id="elh_t03_rpu_Keterangan" class="t03_rpu_Keterangan">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->Keterangan->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->Keterangan->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->Keterangan->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t02_rkas->jml1->Visible) { // jml1 ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->jml1) == "") { ?>
-		<th data-name="jml1" class="<?php echo $t02_rkas->jml1->HeaderCellClass() ?>"><div id="elh_t02_rkas_jml1" class="t02_rkas_jml1"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->jml1->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->Volume->Visible) { // Volume ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->Volume) == "") { ?>
+		<th data-name="Volume" class="<?php echo $t03_rpu->Volume->HeaderCellClass() ?>"><div id="elh_t03_rpu_Volume" class="t03_rpu_Volume"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->Volume->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="jml1" class="<?php echo $t02_rkas->jml1->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->jml1) ?>',2);"><div id="elh_t02_rkas_jml1" class="t02_rkas_jml1">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->jml1->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->jml1->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->jml1->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Volume" class="<?php echo $t03_rpu->Volume->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->Volume) ?>',2);"><div id="elh_t03_rpu_Volume" class="t03_rpu_Volume">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->Volume->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->Volume->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->Volume->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t02_rkas->nour2->Visible) { // nour2 ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->nour2) == "") { ?>
-		<th data-name="nour2" class="<?php echo $t02_rkas->nour2->HeaderCellClass() ?>"><div id="elh_t02_rkas_nour2" class="t02_rkas_nour2"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->nour2->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->Alokasi->Visible) { // Alokasi ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->Alokasi) == "") { ?>
+		<th data-name="Alokasi" class="<?php echo $t03_rpu->Alokasi->HeaderCellClass() ?>"><div id="elh_t03_rpu_Alokasi" class="t03_rpu_Alokasi"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->Alokasi->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="nour2" class="<?php echo $t02_rkas->nour2->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->nour2) ?>',2);"><div id="elh_t02_rkas_nour2" class="t02_rkas_nour2">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->nour2->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->nour2->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->nour2->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Alokasi" class="<?php echo $t03_rpu->Alokasi->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->Alokasi) ?>',2);"><div id="elh_t03_rpu_Alokasi" class="t03_rpu_Alokasi">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->Alokasi->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->Alokasi->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->Alokasi->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t02_rkas->ket2->Visible) { // ket2 ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->ket2) == "") { ?>
-		<th data-name="ket2" class="<?php echo $t02_rkas->ket2->HeaderCellClass() ?>"><div id="elh_t02_rkas_ket2" class="t02_rkas_ket2"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->ket2->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->Unit_KOS->Visible) { // Unit_KOS ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->Unit_KOS) == "") { ?>
+		<th data-name="Unit_KOS" class="<?php echo $t03_rpu->Unit_KOS->HeaderCellClass() ?>"><div id="elh_t03_rpu_Unit_KOS" class="t03_rpu_Unit_KOS"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->Unit_KOS->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="ket2" class="<?php echo $t02_rkas->ket2->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->ket2) ?>',2);"><div id="elh_t02_rkas_ket2" class="t02_rkas_ket2">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->ket2->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->ket2->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->ket2->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Unit_KOS" class="<?php echo $t03_rpu->Unit_KOS->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->Unit_KOS) ?>',2);"><div id="elh_t03_rpu_Unit_KOS" class="t03_rpu_Unit_KOS">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->Unit_KOS->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->Unit_KOS->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->Unit_KOS->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($t02_rkas->jml2->Visible) { // jml2 ?>
-	<?php if ($t02_rkas->SortUrl($t02_rkas->jml2) == "") { ?>
-		<th data-name="jml2" class="<?php echo $t02_rkas->jml2->HeaderCellClass() ?>"><div id="elh_t02_rkas_jml2" class="t02_rkas_jml2"><div class="ewTableHeaderCaption"><?php echo $t02_rkas->jml2->FldCaption() ?></div></div></th>
+<?php if ($t03_rpu->Jumlah->Visible) { // Jumlah ?>
+	<?php if ($t03_rpu->SortUrl($t03_rpu->Jumlah) == "") { ?>
+		<th data-name="Jumlah" class="<?php echo $t03_rpu->Jumlah->HeaderCellClass() ?>"><div id="elh_t03_rpu_Jumlah" class="t03_rpu_Jumlah"><div class="ewTableHeaderCaption"><?php echo $t03_rpu->Jumlah->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="jml2" class="<?php echo $t02_rkas->jml2->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t02_rkas->SortUrl($t02_rkas->jml2) ?>',2);"><div id="elh_t02_rkas_jml2" class="t02_rkas_jml2">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t02_rkas->jml2->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t02_rkas->jml2->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t02_rkas->jml2->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="Jumlah" class="<?php echo $t03_rpu->Jumlah->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t03_rpu->SortUrl($t03_rpu->Jumlah) ?>',2);"><div id="elh_t03_rpu_Jumlah" class="t03_rpu_Jumlah">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t03_rpu->Jumlah->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t03_rpu->Jumlah->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t03_rpu->Jumlah->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php
 
 // Render list options (header, right)
-$t02_rkas_list->ListOptions->Render("header", "right");
+$t03_rpu_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-	if ($t02_rkas->CurrentAction == "add" || $t02_rkas->CurrentAction == "copy") {
-		$t02_rkas_list->RowIndex = 0;
-		$t02_rkas_list->KeyCount = $t02_rkas_list->RowIndex;
-		if ($t02_rkas->CurrentAction == "copy" && !$t02_rkas_list->LoadRow())
-			$t02_rkas->CurrentAction = "add";
-		if ($t02_rkas->CurrentAction == "add")
-			$t02_rkas_list->LoadRowValues();
-		if ($t02_rkas->EventCancelled) // Insert failed
-			$t02_rkas_list->RestoreFormValues(); // Restore form values
+	if ($t03_rpu->CurrentAction == "add" || $t03_rpu->CurrentAction == "copy") {
+		$t03_rpu_list->RowIndex = 0;
+		$t03_rpu_list->KeyCount = $t03_rpu_list->RowIndex;
+		if ($t03_rpu->CurrentAction == "copy" && !$t03_rpu_list->LoadRow())
+			$t03_rpu->CurrentAction = "add";
+		if ($t03_rpu->CurrentAction == "add")
+			$t03_rpu_list->LoadRowValues();
+		if ($t03_rpu->EventCancelled) // Insert failed
+			$t03_rpu_list->RestoreFormValues(); // Restore form values
 
 		// Set row properties
-		$t02_rkas->ResetAttrs();
-		$t02_rkas->RowAttrs = array_merge($t02_rkas->RowAttrs, array('data-rowindex'=>0, 'id'=>'r0_t02_rkas', 'data-rowtype'=>EW_ROWTYPE_ADD));
-		$t02_rkas->RowType = EW_ROWTYPE_ADD;
+		$t03_rpu->ResetAttrs();
+		$t03_rpu->RowAttrs = array_merge($t03_rpu->RowAttrs, array('data-rowindex'=>0, 'id'=>'r0_t03_rpu', 'data-rowtype'=>EW_ROWTYPE_ADD));
+		$t03_rpu->RowType = EW_ROWTYPE_ADD;
 
 		// Render row
-		$t02_rkas_list->RenderRow();
+		$t03_rpu_list->RenderRow();
 
 		// Render list options
-		$t02_rkas_list->RenderListOptions();
-		$t02_rkas_list->StartRowCnt = 0;
+		$t03_rpu_list->RenderListOptions();
+		$t03_rpu_list->StartRowCnt = 0;
 ?>
-	<tr<?php echo $t02_rkas->RowAttributes() ?>>
+	<tr<?php echo $t03_rpu->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$t02_rkas_list->ListOptions->Render("body", "left", $t02_rkas_list->RowCnt);
+$t03_rpu_list->ListOptions->Render("body", "left", $t03_rpu_list->RowCnt);
 ?>
-	<?php if ($t02_rkas->lvl->Visible) { // lvl ?>
-		<td data-name="lvl">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_lvl" class="form-group t02_rkas_lvl">
-<input type="text" data-table="t02_rkas" data-field="x_lvl" name="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" id="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->lvl->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->lvl->EditValue ?>"<?php echo $t02_rkas->lvl->EditAttributes() ?>>
+	<?php if ($t03_rpu->Level->Visible) { // Level ?>
+		<td data-name="Level">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Level" class="form-group t03_rpu_Level">
+<input type="text" data-table="t03_rpu" data-field="x_Level" name="x<?php echo $t03_rpu_list->RowIndex ?>_Level" id="x<?php echo $t03_rpu_list->RowIndex ?>_Level" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Level->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Level->EditValue ?>"<?php echo $t03_rpu->Level->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_lvl" name="o<?php echo $t02_rkas_list->RowIndex ?>_lvl" id="o<?php echo $t02_rkas_list->RowIndex ?>_lvl" value="<?php echo ew_HtmlEncode($t02_rkas->lvl->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Level" name="o<?php echo $t03_rpu_list->RowIndex ?>_Level" id="o<?php echo $t03_rpu_list->RowIndex ?>_Level" value="<?php echo ew_HtmlEncode($t03_rpu->Level->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->urutan->Visible) { // urutan ?>
-		<td data-name="urutan">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_urutan" class="form-group t02_rkas_urutan">
-<input type="text" data-table="t02_rkas" data-field="x_urutan" name="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" id="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->urutan->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->urutan->EditValue ?>"<?php echo $t02_rkas->urutan->EditAttributes() ?>>
+	<?php if ($t03_rpu->Urutan->Visible) { // Urutan ?>
+		<td data-name="Urutan">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Urutan" class="form-group t03_rpu_Urutan">
+<input type="text" data-table="t03_rpu" data-field="x_Urutan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Urutan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Urutan->EditValue ?>"<?php echo $t03_rpu->Urutan->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_urutan" name="o<?php echo $t02_rkas_list->RowIndex ?>_urutan" id="o<?php echo $t02_rkas_list->RowIndex ?>_urutan" value="<?php echo ew_HtmlEncode($t02_rkas->urutan->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Urutan" name="o<?php echo $t03_rpu_list->RowIndex ?>_Urutan" id="o<?php echo $t03_rpu_list->RowIndex ?>_Urutan" value="<?php echo ew_HtmlEncode($t03_rpu->Urutan->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->nour1->Visible) { // nour1 ?>
-		<td data-name="nour1">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour1" class="form-group t02_rkas_nour1">
-<input type="text" data-table="t02_rkas" data-field="x_nour1" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour1->EditValue ?>"<?php echo $t02_rkas->nour1->EditAttributes() ?>>
+	<?php if ($t03_rpu->No_Urut->Visible) { // No_Urut ?>
+		<td data-name="No_Urut">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_No_Urut" class="form-group t03_rpu_No_Urut">
+<input type="text" data-table="t03_rpu" data-field="x_No_Urut" name="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" id="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" size="5" maxlength="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->No_Urut->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->No_Urut->EditValue ?>"<?php echo $t03_rpu->No_Urut->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_nour1" name="o<?php echo $t02_rkas_list->RowIndex ?>_nour1" id="o<?php echo $t02_rkas_list->RowIndex ?>_nour1" value="<?php echo ew_HtmlEncode($t02_rkas->nour1->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_No_Urut" name="o<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" id="o<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" value="<?php echo ew_HtmlEncode($t03_rpu->No_Urut->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->ket1->Visible) { // ket1 ?>
-		<td data-name="ket1">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket1" class="form-group t02_rkas_ket1">
-<input type="text" data-table="t02_rkas" data-field="x_ket1" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket1->EditValue ?>"<?php echo $t02_rkas->ket1->EditAttributes() ?>>
+	<?php if ($t03_rpu->Keterangan->Visible) { // Keterangan ?>
+		<td data-name="Keterangan">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Keterangan" class="form-group t03_rpu_Keterangan">
+<input type="text" data-table="t03_rpu" data-field="x_Keterangan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Keterangan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Keterangan->EditValue ?>"<?php echo $t03_rpu->Keterangan->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_ket1" name="o<?php echo $t02_rkas_list->RowIndex ?>_ket1" id="o<?php echo $t02_rkas_list->RowIndex ?>_ket1" value="<?php echo ew_HtmlEncode($t02_rkas->ket1->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Keterangan" name="o<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" id="o<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" value="<?php echo ew_HtmlEncode($t03_rpu->Keterangan->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->jml1->Visible) { // jml1 ?>
-		<td data-name="jml1">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml1" class="form-group t02_rkas_jml1">
-<input type="text" data-table="t02_rkas" data-field="x_jml1" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml1->EditValue ?>"<?php echo $t02_rkas->jml1->EditAttributes() ?>>
+	<?php if ($t03_rpu->Volume->Visible) { // Volume ?>
+		<td data-name="Volume">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Volume" class="form-group t03_rpu_Volume">
+<input type="text" data-table="t03_rpu" data-field="x_Volume" name="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" id="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Volume->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Volume->EditValue ?>"<?php echo $t03_rpu->Volume->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_jml1" name="o<?php echo $t02_rkas_list->RowIndex ?>_jml1" id="o<?php echo $t02_rkas_list->RowIndex ?>_jml1" value="<?php echo ew_HtmlEncode($t02_rkas->jml1->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Volume" name="o<?php echo $t03_rpu_list->RowIndex ?>_Volume" id="o<?php echo $t03_rpu_list->RowIndex ?>_Volume" value="<?php echo ew_HtmlEncode($t03_rpu->Volume->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->nour2->Visible) { // nour2 ?>
-		<td data-name="nour2">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour2" class="form-group t02_rkas_nour2">
-<input type="text" data-table="t02_rkas" data-field="x_nour2" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour2->EditValue ?>"<?php echo $t02_rkas->nour2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Alokasi->Visible) { // Alokasi ?>
+		<td data-name="Alokasi">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Alokasi" class="form-group t03_rpu_Alokasi">
+<input type="text" data-table="t03_rpu" data-field="x_Alokasi" name="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" id="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Alokasi->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Alokasi->EditValue ?>"<?php echo $t03_rpu->Alokasi->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_nour2" name="o<?php echo $t02_rkas_list->RowIndex ?>_nour2" id="o<?php echo $t02_rkas_list->RowIndex ?>_nour2" value="<?php echo ew_HtmlEncode($t02_rkas->nour2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Alokasi" name="o<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" id="o<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" value="<?php echo ew_HtmlEncode($t03_rpu->Alokasi->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->ket2->Visible) { // ket2 ?>
-		<td data-name="ket2">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket2" class="form-group t02_rkas_ket2">
-<input type="text" data-table="t02_rkas" data-field="x_ket2" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket2->EditValue ?>"<?php echo $t02_rkas->ket2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Unit_KOS->Visible) { // Unit_KOS ?>
+		<td data-name="Unit_KOS">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Unit_KOS" class="form-group t03_rpu_Unit_KOS">
+<input type="text" data-table="t03_rpu" data-field="x_Unit_KOS" name="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" id="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Unit_KOS->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Unit_KOS->EditValue ?>"<?php echo $t03_rpu->Unit_KOS->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_ket2" name="o<?php echo $t02_rkas_list->RowIndex ?>_ket2" id="o<?php echo $t02_rkas_list->RowIndex ?>_ket2" value="<?php echo ew_HtmlEncode($t02_rkas->ket2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Unit_KOS" name="o<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" id="o<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" value="<?php echo ew_HtmlEncode($t03_rpu->Unit_KOS->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->jml2->Visible) { // jml2 ?>
-		<td data-name="jml2">
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml2" class="form-group t02_rkas_jml2">
-<input type="text" data-table="t02_rkas" data-field="x_jml2" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml2->EditValue ?>"<?php echo $t02_rkas->jml2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Jumlah->Visible) { // Jumlah ?>
+		<td data-name="Jumlah">
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Jumlah" class="form-group t03_rpu_Jumlah">
+<input type="text" data-table="t03_rpu" data-field="x_Jumlah" name="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" id="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Jumlah->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Jumlah->EditValue ?>"<?php echo $t03_rpu->Jumlah->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_jml2" name="o<?php echo $t02_rkas_list->RowIndex ?>_jml2" id="o<?php echo $t02_rkas_list->RowIndex ?>_jml2" value="<?php echo ew_HtmlEncode($t02_rkas->jml2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Jumlah" name="o<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" id="o<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" value="<?php echo ew_HtmlEncode($t03_rpu->Jumlah->OldValue) ?>">
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$t02_rkas_list->ListOptions->Render("body", "right", $t02_rkas_list->RowCnt);
+$t03_rpu_list->ListOptions->Render("body", "right", $t03_rpu_list->RowCnt);
 ?>
 <script type="text/javascript">
-ft02_rkaslist.UpdateOpts(<?php echo $t02_rkas_list->RowIndex ?>);
+ft03_rpulist.UpdateOpts(<?php echo $t03_rpu_list->RowIndex ?>);
 </script>
 	</tr>
 <?php
 }
 ?>
 <?php
-if ($t02_rkas->ExportAll && $t02_rkas->Export <> "") {
-	$t02_rkas_list->StopRec = $t02_rkas_list->TotalRecs;
+if ($t03_rpu->ExportAll && $t03_rpu->Export <> "") {
+	$t03_rpu_list->StopRec = $t03_rpu_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($t02_rkas_list->TotalRecs > $t02_rkas_list->StartRec + $t02_rkas_list->DisplayRecs - 1)
-		$t02_rkas_list->StopRec = $t02_rkas_list->StartRec + $t02_rkas_list->DisplayRecs - 1;
+	if ($t03_rpu_list->TotalRecs > $t03_rpu_list->StartRec + $t03_rpu_list->DisplayRecs - 1)
+		$t03_rpu_list->StopRec = $t03_rpu_list->StartRec + $t03_rpu_list->DisplayRecs - 1;
 	else
-		$t02_rkas_list->StopRec = $t02_rkas_list->TotalRecs;
+		$t03_rpu_list->StopRec = $t03_rpu_list->TotalRecs;
 }
 
 // Restore number of post back records
 if ($objForm) {
 	$objForm->Index = -1;
-	if ($objForm->HasValue($t02_rkas_list->FormKeyCountName) && ($t02_rkas->CurrentAction == "gridadd" || $t02_rkas->CurrentAction == "gridedit" || $t02_rkas->CurrentAction == "F")) {
-		$t02_rkas_list->KeyCount = $objForm->GetValue($t02_rkas_list->FormKeyCountName);
-		$t02_rkas_list->StopRec = $t02_rkas_list->StartRec + $t02_rkas_list->KeyCount - 1;
+	if ($objForm->HasValue($t03_rpu_list->FormKeyCountName) && ($t03_rpu->CurrentAction == "gridadd" || $t03_rpu->CurrentAction == "gridedit" || $t03_rpu->CurrentAction == "F")) {
+		$t03_rpu_list->KeyCount = $objForm->GetValue($t03_rpu_list->FormKeyCountName);
+		$t03_rpu_list->StopRec = $t03_rpu_list->StartRec + $t03_rpu_list->KeyCount - 1;
 	}
 }
-$t02_rkas_list->RecCnt = $t02_rkas_list->StartRec - 1;
-if ($t02_rkas_list->Recordset && !$t02_rkas_list->Recordset->EOF) {
-	$t02_rkas_list->Recordset->MoveFirst();
-	$bSelectLimit = $t02_rkas_list->UseSelectLimit;
-	if (!$bSelectLimit && $t02_rkas_list->StartRec > 1)
-		$t02_rkas_list->Recordset->Move($t02_rkas_list->StartRec - 1);
-} elseif (!$t02_rkas->AllowAddDeleteRow && $t02_rkas_list->StopRec == 0) {
-	$t02_rkas_list->StopRec = $t02_rkas->GridAddRowCount;
+$t03_rpu_list->RecCnt = $t03_rpu_list->StartRec - 1;
+if ($t03_rpu_list->Recordset && !$t03_rpu_list->Recordset->EOF) {
+	$t03_rpu_list->Recordset->MoveFirst();
+	$bSelectLimit = $t03_rpu_list->UseSelectLimit;
+	if (!$bSelectLimit && $t03_rpu_list->StartRec > 1)
+		$t03_rpu_list->Recordset->Move($t03_rpu_list->StartRec - 1);
+} elseif (!$t03_rpu->AllowAddDeleteRow && $t03_rpu_list->StopRec == 0) {
+	$t03_rpu_list->StopRec = $t03_rpu->GridAddRowCount;
 }
 
 // Initialize aggregate
-$t02_rkas->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$t02_rkas->ResetAttrs();
-$t02_rkas_list->RenderRow();
-$t02_rkas_list->EditRowCnt = 0;
-if ($t02_rkas->CurrentAction == "edit")
-	$t02_rkas_list->RowIndex = 1;
-if ($t02_rkas->CurrentAction == "gridadd")
-	$t02_rkas_list->RowIndex = 0;
-if ($t02_rkas->CurrentAction == "gridedit")
-	$t02_rkas_list->RowIndex = 0;
-while ($t02_rkas_list->RecCnt < $t02_rkas_list->StopRec) {
-	$t02_rkas_list->RecCnt++;
-	if (intval($t02_rkas_list->RecCnt) >= intval($t02_rkas_list->StartRec)) {
-		$t02_rkas_list->RowCnt++;
-		if ($t02_rkas->CurrentAction == "gridadd" || $t02_rkas->CurrentAction == "gridedit" || $t02_rkas->CurrentAction == "F") {
-			$t02_rkas_list->RowIndex++;
-			$objForm->Index = $t02_rkas_list->RowIndex;
-			if ($objForm->HasValue($t02_rkas_list->FormActionName))
-				$t02_rkas_list->RowAction = strval($objForm->GetValue($t02_rkas_list->FormActionName));
-			elseif ($t02_rkas->CurrentAction == "gridadd")
-				$t02_rkas_list->RowAction = "insert";
+$t03_rpu->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$t03_rpu->ResetAttrs();
+$t03_rpu_list->RenderRow();
+$t03_rpu_list->EditRowCnt = 0;
+if ($t03_rpu->CurrentAction == "edit")
+	$t03_rpu_list->RowIndex = 1;
+if ($t03_rpu->CurrentAction == "gridadd")
+	$t03_rpu_list->RowIndex = 0;
+if ($t03_rpu->CurrentAction == "gridedit")
+	$t03_rpu_list->RowIndex = 0;
+while ($t03_rpu_list->RecCnt < $t03_rpu_list->StopRec) {
+	$t03_rpu_list->RecCnt++;
+	if (intval($t03_rpu_list->RecCnt) >= intval($t03_rpu_list->StartRec)) {
+		$t03_rpu_list->RowCnt++;
+		if ($t03_rpu->CurrentAction == "gridadd" || $t03_rpu->CurrentAction == "gridedit" || $t03_rpu->CurrentAction == "F") {
+			$t03_rpu_list->RowIndex++;
+			$objForm->Index = $t03_rpu_list->RowIndex;
+			if ($objForm->HasValue($t03_rpu_list->FormActionName))
+				$t03_rpu_list->RowAction = strval($objForm->GetValue($t03_rpu_list->FormActionName));
+			elseif ($t03_rpu->CurrentAction == "gridadd")
+				$t03_rpu_list->RowAction = "insert";
 			else
-				$t02_rkas_list->RowAction = "";
+				$t03_rpu_list->RowAction = "";
 		}
 
 		// Set up key count
-		$t02_rkas_list->KeyCount = $t02_rkas_list->RowIndex;
+		$t03_rpu_list->KeyCount = $t03_rpu_list->RowIndex;
 
 		// Init row class and style
-		$t02_rkas->ResetAttrs();
-		$t02_rkas->CssClass = "";
-		if ($t02_rkas->CurrentAction == "gridadd") {
-			$t02_rkas_list->LoadRowValues(); // Load default values
+		$t03_rpu->ResetAttrs();
+		$t03_rpu->CssClass = "";
+		if ($t03_rpu->CurrentAction == "gridadd") {
+			$t03_rpu_list->LoadRowValues(); // Load default values
 		} else {
-			$t02_rkas_list->LoadRowValues($t02_rkas_list->Recordset); // Load row values
+			$t03_rpu_list->LoadRowValues($t03_rpu_list->Recordset); // Load row values
 		}
-		$t02_rkas->RowType = EW_ROWTYPE_VIEW; // Render view
-		if ($t02_rkas->CurrentAction == "gridadd") // Grid add
-			$t02_rkas->RowType = EW_ROWTYPE_ADD; // Render add
-		if ($t02_rkas->CurrentAction == "gridadd" && $t02_rkas->EventCancelled && !$objForm->HasValue("k_blankrow")) // Insert failed
-			$t02_rkas_list->RestoreCurrentRowFormValues($t02_rkas_list->RowIndex); // Restore form values
-		if ($t02_rkas->CurrentAction == "edit") {
-			if ($t02_rkas_list->CheckInlineEditKey() && $t02_rkas_list->EditRowCnt == 0) { // Inline edit
-				$t02_rkas->RowType = EW_ROWTYPE_EDIT; // Render edit
+		$t03_rpu->RowType = EW_ROWTYPE_VIEW; // Render view
+		if ($t03_rpu->CurrentAction == "gridadd") // Grid add
+			$t03_rpu->RowType = EW_ROWTYPE_ADD; // Render add
+		if ($t03_rpu->CurrentAction == "gridadd" && $t03_rpu->EventCancelled && !$objForm->HasValue("k_blankrow")) // Insert failed
+			$t03_rpu_list->RestoreCurrentRowFormValues($t03_rpu_list->RowIndex); // Restore form values
+		if ($t03_rpu->CurrentAction == "edit") {
+			if ($t03_rpu_list->CheckInlineEditKey() && $t03_rpu_list->EditRowCnt == 0) { // Inline edit
+				$t03_rpu->RowType = EW_ROWTYPE_EDIT; // Render edit
 			}
 		}
-		if ($t02_rkas->CurrentAction == "gridedit") { // Grid edit
-			if ($t02_rkas->EventCancelled) {
-				$t02_rkas_list->RestoreCurrentRowFormValues($t02_rkas_list->RowIndex); // Restore form values
+		if ($t03_rpu->CurrentAction == "gridedit") { // Grid edit
+			if ($t03_rpu->EventCancelled) {
+				$t03_rpu_list->RestoreCurrentRowFormValues($t03_rpu_list->RowIndex); // Restore form values
 			}
-			if ($t02_rkas_list->RowAction == "insert")
-				$t02_rkas->RowType = EW_ROWTYPE_ADD; // Render add
+			if ($t03_rpu_list->RowAction == "insert")
+				$t03_rpu->RowType = EW_ROWTYPE_ADD; // Render add
 			else
-				$t02_rkas->RowType = EW_ROWTYPE_EDIT; // Render edit
+				$t03_rpu->RowType = EW_ROWTYPE_EDIT; // Render edit
 		}
-		if ($t02_rkas->CurrentAction == "edit" && $t02_rkas->RowType == EW_ROWTYPE_EDIT && $t02_rkas->EventCancelled) { // Update failed
+		if ($t03_rpu->CurrentAction == "edit" && $t03_rpu->RowType == EW_ROWTYPE_EDIT && $t03_rpu->EventCancelled) { // Update failed
 			$objForm->Index = 1;
-			$t02_rkas_list->RestoreFormValues(); // Restore form values
+			$t03_rpu_list->RestoreFormValues(); // Restore form values
 		}
-		if ($t02_rkas->CurrentAction == "gridedit" && ($t02_rkas->RowType == EW_ROWTYPE_EDIT || $t02_rkas->RowType == EW_ROWTYPE_ADD) && $t02_rkas->EventCancelled) // Update failed
-			$t02_rkas_list->RestoreCurrentRowFormValues($t02_rkas_list->RowIndex); // Restore form values
-		if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) // Edit row
-			$t02_rkas_list->EditRowCnt++;
+		if ($t03_rpu->CurrentAction == "gridedit" && ($t03_rpu->RowType == EW_ROWTYPE_EDIT || $t03_rpu->RowType == EW_ROWTYPE_ADD) && $t03_rpu->EventCancelled) // Update failed
+			$t03_rpu_list->RestoreCurrentRowFormValues($t03_rpu_list->RowIndex); // Restore form values
+		if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) // Edit row
+			$t03_rpu_list->EditRowCnt++;
 
 		// Set up row id / data-rowindex
-		$t02_rkas->RowAttrs = array_merge($t02_rkas->RowAttrs, array('data-rowindex'=>$t02_rkas_list->RowCnt, 'id'=>'r' . $t02_rkas_list->RowCnt . '_t02_rkas', 'data-rowtype'=>$t02_rkas->RowType));
+		$t03_rpu->RowAttrs = array_merge($t03_rpu->RowAttrs, array('data-rowindex'=>$t03_rpu_list->RowCnt, 'id'=>'r' . $t03_rpu_list->RowCnt . '_t03_rpu', 'data-rowtype'=>$t03_rpu->RowType));
 
 		// Render row
-		$t02_rkas_list->RenderRow();
+		$t03_rpu_list->RenderRow();
 
 		// Render list options
-		$t02_rkas_list->RenderListOptions();
+		$t03_rpu_list->RenderListOptions();
 
 		// Skip delete row / empty row for confirm page
-		if ($t02_rkas_list->RowAction <> "delete" && $t02_rkas_list->RowAction <> "insertdelete" && !($t02_rkas_list->RowAction == "insert" && $t02_rkas->CurrentAction == "F" && $t02_rkas_list->EmptyRow())) {
+		if ($t03_rpu_list->RowAction <> "delete" && $t03_rpu_list->RowAction <> "insertdelete" && !($t03_rpu_list->RowAction == "insert" && $t03_rpu->CurrentAction == "F" && $t03_rpu_list->EmptyRow())) {
 ?>
-	<tr<?php echo $t02_rkas->RowAttributes() ?>>
+	<tr<?php echo $t03_rpu->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$t02_rkas_list->ListOptions->Render("body", "left", $t02_rkas_list->RowCnt);
+$t03_rpu_list->ListOptions->Render("body", "left", $t03_rpu_list->RowCnt);
 ?>
-	<?php if ($t02_rkas->lvl->Visible) { // lvl ?>
-		<td data-name="lvl"<?php echo $t02_rkas->lvl->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_lvl" class="form-group t02_rkas_lvl">
-<input type="text" data-table="t02_rkas" data-field="x_lvl" name="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" id="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->lvl->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->lvl->EditValue ?>"<?php echo $t02_rkas->lvl->EditAttributes() ?>>
+	<?php if ($t03_rpu->Level->Visible) { // Level ?>
+		<td data-name="Level"<?php echo $t03_rpu->Level->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Level" class="form-group t03_rpu_Level">
+<input type="text" data-table="t03_rpu" data-field="x_Level" name="x<?php echo $t03_rpu_list->RowIndex ?>_Level" id="x<?php echo $t03_rpu_list->RowIndex ?>_Level" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Level->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Level->EditValue ?>"<?php echo $t03_rpu->Level->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_lvl" name="o<?php echo $t02_rkas_list->RowIndex ?>_lvl" id="o<?php echo $t02_rkas_list->RowIndex ?>_lvl" value="<?php echo ew_HtmlEncode($t02_rkas->lvl->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Level" name="o<?php echo $t03_rpu_list->RowIndex ?>_Level" id="o<?php echo $t03_rpu_list->RowIndex ?>_Level" value="<?php echo ew_HtmlEncode($t03_rpu->Level->OldValue) ?>">
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_lvl" class="form-group t02_rkas_lvl">
-<input type="text" data-table="t02_rkas" data-field="x_lvl" name="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" id="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->lvl->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->lvl->EditValue ?>"<?php echo $t02_rkas->lvl->EditAttributes() ?>>
-</span>
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_lvl" class="t02_rkas_lvl">
-<span<?php echo $t02_rkas->lvl->ViewAttributes() ?>>
-<?php echo $t02_rkas->lvl->ListViewValue() ?></span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Level" class="form-group t03_rpu_Level">
+<input type="text" data-table="t03_rpu" data-field="x_Level" name="x<?php echo $t03_rpu_list->RowIndex ?>_Level" id="x<?php echo $t03_rpu_list->RowIndex ?>_Level" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Level->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Level->EditValue ?>"<?php echo $t03_rpu->Level->EditAttributes() ?>>
 </span>
 <?php } ?>
-</td>
-	<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<input type="hidden" data-table="t02_rkas" data-field="x_id" name="x<?php echo $t02_rkas_list->RowIndex ?>_id" id="x<?php echo $t02_rkas_list->RowIndex ?>_id" value="<?php echo ew_HtmlEncode($t02_rkas->id->CurrentValue) ?>">
-<input type="hidden" data-table="t02_rkas" data-field="x_id" name="o<?php echo $t02_rkas_list->RowIndex ?>_id" id="o<?php echo $t02_rkas_list->RowIndex ?>_id" value="<?php echo ew_HtmlEncode($t02_rkas->id->OldValue) ?>">
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT || $t02_rkas->CurrentMode == "edit") { ?>
-<input type="hidden" data-table="t02_rkas" data-field="x_id" name="x<?php echo $t02_rkas_list->RowIndex ?>_id" id="x<?php echo $t02_rkas_list->RowIndex ?>_id" value="<?php echo ew_HtmlEncode($t02_rkas->id->CurrentValue) ?>">
-<?php } ?>
-	<?php if ($t02_rkas->urutan->Visible) { // urutan ?>
-		<td data-name="urutan"<?php echo $t02_rkas->urutan->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_urutan" class="form-group t02_rkas_urutan">
-<input type="text" data-table="t02_rkas" data-field="x_urutan" name="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" id="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->urutan->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->urutan->EditValue ?>"<?php echo $t02_rkas->urutan->EditAttributes() ?>>
-</span>
-<input type="hidden" data-table="t02_rkas" data-field="x_urutan" name="o<?php echo $t02_rkas_list->RowIndex ?>_urutan" id="o<?php echo $t02_rkas_list->RowIndex ?>_urutan" value="<?php echo ew_HtmlEncode($t02_rkas->urutan->OldValue) ?>">
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_urutan" class="form-group t02_rkas_urutan">
-<input type="text" data-table="t02_rkas" data-field="x_urutan" name="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" id="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->urutan->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->urutan->EditValue ?>"<?php echo $t02_rkas->urutan->EditAttributes() ?>>
-</span>
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_urutan" class="t02_rkas_urutan">
-<span<?php echo $t02_rkas->urutan->ViewAttributes() ?>>
-<?php echo $t02_rkas->urutan->ListViewValue() ?></span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Level" class="t03_rpu_Level">
+<span<?php echo $t03_rpu->Level->ViewAttributes() ?>>
+<?php echo $t03_rpu->Level->ListViewValue() ?></span>
 </span>
 <?php } ?>
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->nour1->Visible) { // nour1 ?>
-		<td data-name="nour1"<?php echo $t02_rkas->nour1->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour1" class="form-group t02_rkas_nour1">
-<input type="text" data-table="t02_rkas" data-field="x_nour1" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour1->EditValue ?>"<?php echo $t02_rkas->nour1->EditAttributes() ?>>
-</span>
-<input type="hidden" data-table="t02_rkas" data-field="x_nour1" name="o<?php echo $t02_rkas_list->RowIndex ?>_nour1" id="o<?php echo $t02_rkas_list->RowIndex ?>_nour1" value="<?php echo ew_HtmlEncode($t02_rkas->nour1->OldValue) ?>">
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<input type="hidden" data-table="t03_rpu" data-field="x_id" name="x<?php echo $t03_rpu_list->RowIndex ?>_id" id="x<?php echo $t03_rpu_list->RowIndex ?>_id" value="<?php echo ew_HtmlEncode($t03_rpu->id->CurrentValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_id" name="o<?php echo $t03_rpu_list->RowIndex ?>_id" id="o<?php echo $t03_rpu_list->RowIndex ?>_id" value="<?php echo ew_HtmlEncode($t03_rpu->id->OldValue) ?>">
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour1" class="form-group t02_rkas_nour1">
-<input type="text" data-table="t02_rkas" data-field="x_nour1" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour1->EditValue ?>"<?php echo $t02_rkas->nour1->EditAttributes() ?>>
-</span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT || $t03_rpu->CurrentMode == "edit") { ?>
+<input type="hidden" data-table="t03_rpu" data-field="x_id" name="x<?php echo $t03_rpu_list->RowIndex ?>_id" id="x<?php echo $t03_rpu_list->RowIndex ?>_id" value="<?php echo ew_HtmlEncode($t03_rpu->id->CurrentValue) ?>">
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour1" class="t02_rkas_nour1">
-<span<?php echo $t02_rkas->nour1->ViewAttributes() ?>>
-<?php echo $t02_rkas->nour1->ListViewValue() ?></span>
+	<?php if ($t03_rpu->Urutan->Visible) { // Urutan ?>
+		<td data-name="Urutan"<?php echo $t03_rpu->Urutan->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Urutan" class="form-group t03_rpu_Urutan">
+<input type="text" data-table="t03_rpu" data-field="x_Urutan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Urutan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Urutan->EditValue ?>"<?php echo $t03_rpu->Urutan->EditAttributes() ?>>
 </span>
+<input type="hidden" data-table="t03_rpu" data-field="x_Urutan" name="o<?php echo $t03_rpu_list->RowIndex ?>_Urutan" id="o<?php echo $t03_rpu_list->RowIndex ?>_Urutan" value="<?php echo ew_HtmlEncode($t03_rpu->Urutan->OldValue) ?>">
 <?php } ?>
-</td>
-	<?php } ?>
-	<?php if ($t02_rkas->ket1->Visible) { // ket1 ?>
-		<td data-name="ket1"<?php echo $t02_rkas->ket1->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket1" class="form-group t02_rkas_ket1">
-<input type="text" data-table="t02_rkas" data-field="x_ket1" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket1->EditValue ?>"<?php echo $t02_rkas->ket1->EditAttributes() ?>>
-</span>
-<input type="hidden" data-table="t02_rkas" data-field="x_ket1" name="o<?php echo $t02_rkas_list->RowIndex ?>_ket1" id="o<?php echo $t02_rkas_list->RowIndex ?>_ket1" value="<?php echo ew_HtmlEncode($t02_rkas->ket1->OldValue) ?>">
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket1" class="form-group t02_rkas_ket1">
-<input type="text" data-table="t02_rkas" data-field="x_ket1" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket1->EditValue ?>"<?php echo $t02_rkas->ket1->EditAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Urutan" class="form-group t03_rpu_Urutan">
+<input type="text" data-table="t03_rpu" data-field="x_Urutan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Urutan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Urutan->EditValue ?>"<?php echo $t03_rpu->Urutan->EditAttributes() ?>>
 </span>
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket1" class="t02_rkas_ket1">
-<span<?php echo $t02_rkas->ket1->ViewAttributes() ?>>
-<?php echo $t02_rkas->ket1->ListViewValue() ?></span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Urutan" class="t03_rpu_Urutan">
+<span<?php echo $t03_rpu->Urutan->ViewAttributes() ?>>
+<?php echo $t03_rpu->Urutan->ListViewValue() ?></span>
 </span>
 <?php } ?>
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->jml1->Visible) { // jml1 ?>
-		<td data-name="jml1"<?php echo $t02_rkas->jml1->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml1" class="form-group t02_rkas_jml1">
-<input type="text" data-table="t02_rkas" data-field="x_jml1" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml1->EditValue ?>"<?php echo $t02_rkas->jml1->EditAttributes() ?>>
+	<?php if ($t03_rpu->No_Urut->Visible) { // No_Urut ?>
+		<td data-name="No_Urut"<?php echo $t03_rpu->No_Urut->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_No_Urut" class="form-group t03_rpu_No_Urut">
+<input type="text" data-table="t03_rpu" data-field="x_No_Urut" name="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" id="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" size="5" maxlength="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->No_Urut->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->No_Urut->EditValue ?>"<?php echo $t03_rpu->No_Urut->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_jml1" name="o<?php echo $t02_rkas_list->RowIndex ?>_jml1" id="o<?php echo $t02_rkas_list->RowIndex ?>_jml1" value="<?php echo ew_HtmlEncode($t02_rkas->jml1->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_No_Urut" name="o<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" id="o<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" value="<?php echo ew_HtmlEncode($t03_rpu->No_Urut->OldValue) ?>">
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml1" class="form-group t02_rkas_jml1">
-<input type="text" data-table="t02_rkas" data-field="x_jml1" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml1->EditValue ?>"<?php echo $t02_rkas->jml1->EditAttributes() ?>>
-</span>
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml1" class="t02_rkas_jml1">
-<span<?php echo $t02_rkas->jml1->ViewAttributes() ?>>
-<?php echo $t02_rkas->jml1->ListViewValue() ?></span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_No_Urut" class="form-group t03_rpu_No_Urut">
+<input type="text" data-table="t03_rpu" data-field="x_No_Urut" name="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" id="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" size="5" maxlength="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->No_Urut->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->No_Urut->EditValue ?>"<?php echo $t03_rpu->No_Urut->EditAttributes() ?>>
 </span>
 <?php } ?>
-</td>
-	<?php } ?>
-	<?php if ($t02_rkas->nour2->Visible) { // nour2 ?>
-		<td data-name="nour2"<?php echo $t02_rkas->nour2->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour2" class="form-group t02_rkas_nour2">
-<input type="text" data-table="t02_rkas" data-field="x_nour2" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour2->EditValue ?>"<?php echo $t02_rkas->nour2->EditAttributes() ?>>
-</span>
-<input type="hidden" data-table="t02_rkas" data-field="x_nour2" name="o<?php echo $t02_rkas_list->RowIndex ?>_nour2" id="o<?php echo $t02_rkas_list->RowIndex ?>_nour2" value="<?php echo ew_HtmlEncode($t02_rkas->nour2->OldValue) ?>">
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour2" class="form-group t02_rkas_nour2">
-<input type="text" data-table="t02_rkas" data-field="x_nour2" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour2->EditValue ?>"<?php echo $t02_rkas->nour2->EditAttributes() ?>>
-</span>
-<?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_nour2" class="t02_rkas_nour2">
-<span<?php echo $t02_rkas->nour2->ViewAttributes() ?>>
-<?php echo $t02_rkas->nour2->ListViewValue() ?></span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_No_Urut" class="t03_rpu_No_Urut">
+<span<?php echo $t03_rpu->No_Urut->ViewAttributes() ?>>
+<?php echo $t03_rpu->No_Urut->ListViewValue() ?></span>
 </span>
 <?php } ?>
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->ket2->Visible) { // ket2 ?>
-		<td data-name="ket2"<?php echo $t02_rkas->ket2->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket2" class="form-group t02_rkas_ket2">
-<input type="text" data-table="t02_rkas" data-field="x_ket2" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket2->EditValue ?>"<?php echo $t02_rkas->ket2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Keterangan->Visible) { // Keterangan ?>
+		<td data-name="Keterangan"<?php echo $t03_rpu->Keterangan->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Keterangan" class="form-group t03_rpu_Keterangan">
+<input type="text" data-table="t03_rpu" data-field="x_Keterangan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Keterangan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Keterangan->EditValue ?>"<?php echo $t03_rpu->Keterangan->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_ket2" name="o<?php echo $t02_rkas_list->RowIndex ?>_ket2" id="o<?php echo $t02_rkas_list->RowIndex ?>_ket2" value="<?php echo ew_HtmlEncode($t02_rkas->ket2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Keterangan" name="o<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" id="o<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" value="<?php echo ew_HtmlEncode($t03_rpu->Keterangan->OldValue) ?>">
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket2" class="form-group t02_rkas_ket2">
-<input type="text" data-table="t02_rkas" data-field="x_ket2" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket2->EditValue ?>"<?php echo $t02_rkas->ket2->EditAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Keterangan" class="form-group t03_rpu_Keterangan">
+<input type="text" data-table="t03_rpu" data-field="x_Keterangan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Keterangan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Keterangan->EditValue ?>"<?php echo $t03_rpu->Keterangan->EditAttributes() ?>>
 </span>
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_ket2" class="t02_rkas_ket2">
-<span<?php echo $t02_rkas->ket2->ViewAttributes() ?>>
-<?php echo $t02_rkas->ket2->ListViewValue() ?></span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Keterangan" class="t03_rpu_Keterangan">
+<span<?php echo $t03_rpu->Keterangan->ViewAttributes() ?>>
+<?php echo $t03_rpu->Keterangan->ListViewValue() ?></span>
 </span>
 <?php } ?>
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->jml2->Visible) { // jml2 ?>
-		<td data-name="jml2"<?php echo $t02_rkas->jml2->CellAttributes() ?>>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml2" class="form-group t02_rkas_jml2">
-<input type="text" data-table="t02_rkas" data-field="x_jml2" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml2->EditValue ?>"<?php echo $t02_rkas->jml2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Volume->Visible) { // Volume ?>
+		<td data-name="Volume"<?php echo $t03_rpu->Volume->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Volume" class="form-group t03_rpu_Volume">
+<input type="text" data-table="t03_rpu" data-field="x_Volume" name="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" id="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Volume->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Volume->EditValue ?>"<?php echo $t03_rpu->Volume->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_jml2" name="o<?php echo $t02_rkas_list->RowIndex ?>_jml2" id="o<?php echo $t02_rkas_list->RowIndex ?>_jml2" value="<?php echo ew_HtmlEncode($t02_rkas->jml2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Volume" name="o<?php echo $t03_rpu_list->RowIndex ?>_Volume" id="o<?php echo $t03_rpu_list->RowIndex ?>_Volume" value="<?php echo ew_HtmlEncode($t03_rpu->Volume->OldValue) ?>">
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml2" class="form-group t02_rkas_jml2">
-<input type="text" data-table="t02_rkas" data-field="x_jml2" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml2->EditValue ?>"<?php echo $t02_rkas->jml2->EditAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Volume" class="form-group t03_rpu_Volume">
+<input type="text" data-table="t03_rpu" data-field="x_Volume" name="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" id="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Volume->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Volume->EditValue ?>"<?php echo $t03_rpu->Volume->EditAttributes() ?>>
 </span>
 <?php } ?>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t02_rkas_list->RowCnt ?>_t02_rkas_jml2" class="t02_rkas_jml2">
-<span<?php echo $t02_rkas->jml2->ViewAttributes() ?>>
-<?php echo $t02_rkas->jml2->ListViewValue() ?></span>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Volume" class="t03_rpu_Volume">
+<span<?php echo $t03_rpu->Volume->ViewAttributes() ?>>
+<?php echo $t03_rpu->Volume->ListViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
+	<?php if ($t03_rpu->Alokasi->Visible) { // Alokasi ?>
+		<td data-name="Alokasi"<?php echo $t03_rpu->Alokasi->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Alokasi" class="form-group t03_rpu_Alokasi">
+<input type="text" data-table="t03_rpu" data-field="x_Alokasi" name="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" id="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Alokasi->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Alokasi->EditValue ?>"<?php echo $t03_rpu->Alokasi->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t03_rpu" data-field="x_Alokasi" name="o<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" id="o<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" value="<?php echo ew_HtmlEncode($t03_rpu->Alokasi->OldValue) ?>">
+<?php } ?>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Alokasi" class="form-group t03_rpu_Alokasi">
+<input type="text" data-table="t03_rpu" data-field="x_Alokasi" name="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" id="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Alokasi->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Alokasi->EditValue ?>"<?php echo $t03_rpu->Alokasi->EditAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Alokasi" class="t03_rpu_Alokasi">
+<span<?php echo $t03_rpu->Alokasi->ViewAttributes() ?>>
+<?php echo $t03_rpu->Alokasi->ListViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
+	<?php if ($t03_rpu->Unit_KOS->Visible) { // Unit_KOS ?>
+		<td data-name="Unit_KOS"<?php echo $t03_rpu->Unit_KOS->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Unit_KOS" class="form-group t03_rpu_Unit_KOS">
+<input type="text" data-table="t03_rpu" data-field="x_Unit_KOS" name="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" id="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Unit_KOS->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Unit_KOS->EditValue ?>"<?php echo $t03_rpu->Unit_KOS->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t03_rpu" data-field="x_Unit_KOS" name="o<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" id="o<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" value="<?php echo ew_HtmlEncode($t03_rpu->Unit_KOS->OldValue) ?>">
+<?php } ?>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Unit_KOS" class="form-group t03_rpu_Unit_KOS">
+<input type="text" data-table="t03_rpu" data-field="x_Unit_KOS" name="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" id="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Unit_KOS->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Unit_KOS->EditValue ?>"<?php echo $t03_rpu->Unit_KOS->EditAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Unit_KOS" class="t03_rpu_Unit_KOS">
+<span<?php echo $t03_rpu->Unit_KOS->ViewAttributes() ?>>
+<?php echo $t03_rpu->Unit_KOS->ListViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
+	<?php if ($t03_rpu->Jumlah->Visible) { // Jumlah ?>
+		<td data-name="Jumlah"<?php echo $t03_rpu->Jumlah->CellAttributes() ?>>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Jumlah" class="form-group t03_rpu_Jumlah">
+<input type="text" data-table="t03_rpu" data-field="x_Jumlah" name="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" id="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Jumlah->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Jumlah->EditValue ?>"<?php echo $t03_rpu->Jumlah->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t03_rpu" data-field="x_Jumlah" name="o<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" id="o<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" value="<?php echo ew_HtmlEncode($t03_rpu->Jumlah->OldValue) ?>">
+<?php } ?>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Jumlah" class="form-group t03_rpu_Jumlah">
+<input type="text" data-table="t03_rpu" data-field="x_Jumlah" name="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" id="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Jumlah->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Jumlah->EditValue ?>"<?php echo $t03_rpu->Jumlah->EditAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t03_rpu_list->RowCnt ?>_t03_rpu_Jumlah" class="t03_rpu_Jumlah">
+<span<?php echo $t03_rpu->Jumlah->ViewAttributes() ?>>
+<?php echo $t03_rpu->Jumlah->ListViewValue() ?></span>
 </span>
 <?php } ?>
 </td>
@@ -4098,116 +4140,116 @@ $t02_rkas_list->ListOptions->Render("body", "left", $t02_rkas_list->RowCnt);
 <?php
 
 // Render list options (body, right)
-$t02_rkas_list->ListOptions->Render("body", "right", $t02_rkas_list->RowCnt);
+$t03_rpu_list->ListOptions->Render("body", "right", $t03_rpu_list->RowCnt);
 ?>
 	</tr>
-<?php if ($t02_rkas->RowType == EW_ROWTYPE_ADD || $t02_rkas->RowType == EW_ROWTYPE_EDIT) { ?>
+<?php if ($t03_rpu->RowType == EW_ROWTYPE_ADD || $t03_rpu->RowType == EW_ROWTYPE_EDIT) { ?>
 <script type="text/javascript">
-ft02_rkaslist.UpdateOpts(<?php echo $t02_rkas_list->RowIndex ?>);
+ft03_rpulist.UpdateOpts(<?php echo $t03_rpu_list->RowIndex ?>);
 </script>
 <?php } ?>
 <?php
 	}
 	} // End delete row checking
-	if ($t02_rkas->CurrentAction <> "gridadd")
-		if (!$t02_rkas_list->Recordset->EOF) $t02_rkas_list->Recordset->MoveNext();
+	if ($t03_rpu->CurrentAction <> "gridadd")
+		if (!$t03_rpu_list->Recordset->EOF) $t03_rpu_list->Recordset->MoveNext();
 }
 ?>
 <?php
-	if ($t02_rkas->CurrentAction == "gridadd" || $t02_rkas->CurrentAction == "gridedit") {
-		$t02_rkas_list->RowIndex = '$rowindex$';
-		$t02_rkas_list->LoadRowValues();
+	if ($t03_rpu->CurrentAction == "gridadd" || $t03_rpu->CurrentAction == "gridedit") {
+		$t03_rpu_list->RowIndex = '$rowindex$';
+		$t03_rpu_list->LoadRowValues();
 
 		// Set row properties
-		$t02_rkas->ResetAttrs();
-		$t02_rkas->RowAttrs = array_merge($t02_rkas->RowAttrs, array('data-rowindex'=>$t02_rkas_list->RowIndex, 'id'=>'r0_t02_rkas', 'data-rowtype'=>EW_ROWTYPE_ADD));
-		ew_AppendClass($t02_rkas->RowAttrs["class"], "ewTemplate");
-		$t02_rkas->RowType = EW_ROWTYPE_ADD;
+		$t03_rpu->ResetAttrs();
+		$t03_rpu->RowAttrs = array_merge($t03_rpu->RowAttrs, array('data-rowindex'=>$t03_rpu_list->RowIndex, 'id'=>'r0_t03_rpu', 'data-rowtype'=>EW_ROWTYPE_ADD));
+		ew_AppendClass($t03_rpu->RowAttrs["class"], "ewTemplate");
+		$t03_rpu->RowType = EW_ROWTYPE_ADD;
 
 		// Render row
-		$t02_rkas_list->RenderRow();
+		$t03_rpu_list->RenderRow();
 
 		// Render list options
-		$t02_rkas_list->RenderListOptions();
-		$t02_rkas_list->StartRowCnt = 0;
+		$t03_rpu_list->RenderListOptions();
+		$t03_rpu_list->StartRowCnt = 0;
 ?>
-	<tr<?php echo $t02_rkas->RowAttributes() ?>>
+	<tr<?php echo $t03_rpu->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$t02_rkas_list->ListOptions->Render("body", "left", $t02_rkas_list->RowIndex);
+$t03_rpu_list->ListOptions->Render("body", "left", $t03_rpu_list->RowIndex);
 ?>
-	<?php if ($t02_rkas->lvl->Visible) { // lvl ?>
-		<td data-name="lvl">
-<span id="el$rowindex$_t02_rkas_lvl" class="form-group t02_rkas_lvl">
-<input type="text" data-table="t02_rkas" data-field="x_lvl" name="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" id="x<?php echo $t02_rkas_list->RowIndex ?>_lvl" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->lvl->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->lvl->EditValue ?>"<?php echo $t02_rkas->lvl->EditAttributes() ?>>
+	<?php if ($t03_rpu->Level->Visible) { // Level ?>
+		<td data-name="Level">
+<span id="el$rowindex$_t03_rpu_Level" class="form-group t03_rpu_Level">
+<input type="text" data-table="t03_rpu" data-field="x_Level" name="x<?php echo $t03_rpu_list->RowIndex ?>_Level" id="x<?php echo $t03_rpu_list->RowIndex ?>_Level" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Level->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Level->EditValue ?>"<?php echo $t03_rpu->Level->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_lvl" name="o<?php echo $t02_rkas_list->RowIndex ?>_lvl" id="o<?php echo $t02_rkas_list->RowIndex ?>_lvl" value="<?php echo ew_HtmlEncode($t02_rkas->lvl->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Level" name="o<?php echo $t03_rpu_list->RowIndex ?>_Level" id="o<?php echo $t03_rpu_list->RowIndex ?>_Level" value="<?php echo ew_HtmlEncode($t03_rpu->Level->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->urutan->Visible) { // urutan ?>
-		<td data-name="urutan">
-<span id="el$rowindex$_t02_rkas_urutan" class="form-group t02_rkas_urutan">
-<input type="text" data-table="t02_rkas" data-field="x_urutan" name="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" id="x<?php echo $t02_rkas_list->RowIndex ?>_urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t02_rkas->urutan->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->urutan->EditValue ?>"<?php echo $t02_rkas->urutan->EditAttributes() ?>>
+	<?php if ($t03_rpu->Urutan->Visible) { // Urutan ?>
+		<td data-name="Urutan">
+<span id="el$rowindex$_t03_rpu_Urutan" class="form-group t03_rpu_Urutan">
+<input type="text" data-table="t03_rpu" data-field="x_Urutan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Urutan" size="1" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Urutan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Urutan->EditValue ?>"<?php echo $t03_rpu->Urutan->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_urutan" name="o<?php echo $t02_rkas_list->RowIndex ?>_urutan" id="o<?php echo $t02_rkas_list->RowIndex ?>_urutan" value="<?php echo ew_HtmlEncode($t02_rkas->urutan->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Urutan" name="o<?php echo $t03_rpu_list->RowIndex ?>_Urutan" id="o<?php echo $t03_rpu_list->RowIndex ?>_Urutan" value="<?php echo ew_HtmlEncode($t03_rpu->Urutan->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->nour1->Visible) { // nour1 ?>
-		<td data-name="nour1">
-<span id="el$rowindex$_t02_rkas_nour1" class="form-group t02_rkas_nour1">
-<input type="text" data-table="t02_rkas" data-field="x_nour1" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour1" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour1->EditValue ?>"<?php echo $t02_rkas->nour1->EditAttributes() ?>>
+	<?php if ($t03_rpu->No_Urut->Visible) { // No_Urut ?>
+		<td data-name="No_Urut">
+<span id="el$rowindex$_t03_rpu_No_Urut" class="form-group t03_rpu_No_Urut">
+<input type="text" data-table="t03_rpu" data-field="x_No_Urut" name="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" id="x<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" size="5" maxlength="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->No_Urut->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->No_Urut->EditValue ?>"<?php echo $t03_rpu->No_Urut->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_nour1" name="o<?php echo $t02_rkas_list->RowIndex ?>_nour1" id="o<?php echo $t02_rkas_list->RowIndex ?>_nour1" value="<?php echo ew_HtmlEncode($t02_rkas->nour1->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_No_Urut" name="o<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" id="o<?php echo $t03_rpu_list->RowIndex ?>_No_Urut" value="<?php echo ew_HtmlEncode($t03_rpu->No_Urut->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->ket1->Visible) { // ket1 ?>
-		<td data-name="ket1">
-<span id="el$rowindex$_t02_rkas_ket1" class="form-group t02_rkas_ket1">
-<input type="text" data-table="t02_rkas" data-field="x_ket1" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket1" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket1->EditValue ?>"<?php echo $t02_rkas->ket1->EditAttributes() ?>>
+	<?php if ($t03_rpu->Keterangan->Visible) { // Keterangan ?>
+		<td data-name="Keterangan">
+<span id="el$rowindex$_t03_rpu_Keterangan" class="form-group t03_rpu_Keterangan">
+<input type="text" data-table="t03_rpu" data-field="x_Keterangan" name="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" id="x<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Keterangan->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Keterangan->EditValue ?>"<?php echo $t03_rpu->Keterangan->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_ket1" name="o<?php echo $t02_rkas_list->RowIndex ?>_ket1" id="o<?php echo $t02_rkas_list->RowIndex ?>_ket1" value="<?php echo ew_HtmlEncode($t02_rkas->ket1->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Keterangan" name="o<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" id="o<?php echo $t03_rpu_list->RowIndex ?>_Keterangan" value="<?php echo ew_HtmlEncode($t03_rpu->Keterangan->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->jml1->Visible) { // jml1 ?>
-		<td data-name="jml1">
-<span id="el$rowindex$_t02_rkas_jml1" class="form-group t02_rkas_jml1">
-<input type="text" data-table="t02_rkas" data-field="x_jml1" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml1" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml1->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml1->EditValue ?>"<?php echo $t02_rkas->jml1->EditAttributes() ?>>
+	<?php if ($t03_rpu->Volume->Visible) { // Volume ?>
+		<td data-name="Volume">
+<span id="el$rowindex$_t03_rpu_Volume" class="form-group t03_rpu_Volume">
+<input type="text" data-table="t03_rpu" data-field="x_Volume" name="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" id="x<?php echo $t03_rpu_list->RowIndex ?>_Volume" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Volume->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Volume->EditValue ?>"<?php echo $t03_rpu->Volume->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_jml1" name="o<?php echo $t02_rkas_list->RowIndex ?>_jml1" id="o<?php echo $t02_rkas_list->RowIndex ?>_jml1" value="<?php echo ew_HtmlEncode($t02_rkas->jml1->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Volume" name="o<?php echo $t03_rpu_list->RowIndex ?>_Volume" id="o<?php echo $t03_rpu_list->RowIndex ?>_Volume" value="<?php echo ew_HtmlEncode($t03_rpu->Volume->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->nour2->Visible) { // nour2 ?>
-		<td data-name="nour2">
-<span id="el$rowindex$_t02_rkas_nour2" class="form-group t02_rkas_nour2">
-<input type="text" data-table="t02_rkas" data-field="x_nour2" name="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" id="x<?php echo $t02_rkas_list->RowIndex ?>_nour2" size="5" placeholder="<?php echo ew_HtmlEncode($t02_rkas->nour2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->nour2->EditValue ?>"<?php echo $t02_rkas->nour2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Alokasi->Visible) { // Alokasi ?>
+		<td data-name="Alokasi">
+<span id="el$rowindex$_t03_rpu_Alokasi" class="form-group t03_rpu_Alokasi">
+<input type="text" data-table="t03_rpu" data-field="x_Alokasi" name="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" id="x<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Alokasi->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Alokasi->EditValue ?>"<?php echo $t03_rpu->Alokasi->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_nour2" name="o<?php echo $t02_rkas_list->RowIndex ?>_nour2" id="o<?php echo $t02_rkas_list->RowIndex ?>_nour2" value="<?php echo ew_HtmlEncode($t02_rkas->nour2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Alokasi" name="o<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" id="o<?php echo $t03_rpu_list->RowIndex ?>_Alokasi" value="<?php echo ew_HtmlEncode($t03_rpu->Alokasi->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->ket2->Visible) { // ket2 ?>
-		<td data-name="ket2">
-<span id="el$rowindex$_t02_rkas_ket2" class="form-group t02_rkas_ket2">
-<input type="text" data-table="t02_rkas" data-field="x_ket2" name="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" id="x<?php echo $t02_rkas_list->RowIndex ?>_ket2" size="20" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t02_rkas->ket2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->ket2->EditValue ?>"<?php echo $t02_rkas->ket2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Unit_KOS->Visible) { // Unit_KOS ?>
+		<td data-name="Unit_KOS">
+<span id="el$rowindex$_t03_rpu_Unit_KOS" class="form-group t03_rpu_Unit_KOS">
+<input type="text" data-table="t03_rpu" data-field="x_Unit_KOS" name="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" id="x<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Unit_KOS->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Unit_KOS->EditValue ?>"<?php echo $t03_rpu->Unit_KOS->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_ket2" name="o<?php echo $t02_rkas_list->RowIndex ?>_ket2" id="o<?php echo $t02_rkas_list->RowIndex ?>_ket2" value="<?php echo ew_HtmlEncode($t02_rkas->ket2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Unit_KOS" name="o<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" id="o<?php echo $t03_rpu_list->RowIndex ?>_Unit_KOS" value="<?php echo ew_HtmlEncode($t03_rpu->Unit_KOS->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($t02_rkas->jml2->Visible) { // jml2 ?>
-		<td data-name="jml2">
-<span id="el$rowindex$_t02_rkas_jml2" class="form-group t02_rkas_jml2">
-<input type="text" data-table="t02_rkas" data-field="x_jml2" name="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" id="x<?php echo $t02_rkas_list->RowIndex ?>_jml2" size="10" placeholder="<?php echo ew_HtmlEncode($t02_rkas->jml2->getPlaceHolder()) ?>" value="<?php echo $t02_rkas->jml2->EditValue ?>"<?php echo $t02_rkas->jml2->EditAttributes() ?>>
+	<?php if ($t03_rpu->Jumlah->Visible) { // Jumlah ?>
+		<td data-name="Jumlah">
+<span id="el$rowindex$_t03_rpu_Jumlah" class="form-group t03_rpu_Jumlah">
+<input type="text" data-table="t03_rpu" data-field="x_Jumlah" name="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" id="x<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" size="10" placeholder="<?php echo ew_HtmlEncode($t03_rpu->Jumlah->getPlaceHolder()) ?>" value="<?php echo $t03_rpu->Jumlah->EditValue ?>"<?php echo $t03_rpu->Jumlah->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="t02_rkas" data-field="x_jml2" name="o<?php echo $t02_rkas_list->RowIndex ?>_jml2" id="o<?php echo $t02_rkas_list->RowIndex ?>_jml2" value="<?php echo ew_HtmlEncode($t02_rkas->jml2->OldValue) ?>">
+<input type="hidden" data-table="t03_rpu" data-field="x_Jumlah" name="o<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" id="o<?php echo $t03_rpu_list->RowIndex ?>_Jumlah" value="<?php echo ew_HtmlEncode($t03_rpu->Jumlah->OldValue) ?>">
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$t02_rkas_list->ListOptions->Render("body", "right", $t02_rkas_list->RowIndex);
+$t03_rpu_list->ListOptions->Render("body", "right", $t03_rpu_list->RowIndex);
 ?>
 <script type="text/javascript">
-ft02_rkaslist.UpdateOpts(<?php echo $t02_rkas_list->RowIndex ?>);
+ft03_rpulist.UpdateOpts(<?php echo $t03_rpu_list->RowIndex ?>);
 </script>
 	</tr>
 <?php
@@ -4216,23 +4258,23 @@ ft02_rkaslist.UpdateOpts(<?php echo $t02_rkas_list->RowIndex ?>);
 </tbody>
 </table>
 <?php } ?>
-<?php if ($t02_rkas->CurrentAction == "add" || $t02_rkas->CurrentAction == "copy") { ?>
-<input type="hidden" name="<?php echo $t02_rkas_list->FormKeyCountName ?>" id="<?php echo $t02_rkas_list->FormKeyCountName ?>" value="<?php echo $t02_rkas_list->KeyCount ?>">
+<?php if ($t03_rpu->CurrentAction == "add" || $t03_rpu->CurrentAction == "copy") { ?>
+<input type="hidden" name="<?php echo $t03_rpu_list->FormKeyCountName ?>" id="<?php echo $t03_rpu_list->FormKeyCountName ?>" value="<?php echo $t03_rpu_list->KeyCount ?>">
 <?php } ?>
-<?php if ($t02_rkas->CurrentAction == "gridadd") { ?>
+<?php if ($t03_rpu->CurrentAction == "gridadd") { ?>
 <input type="hidden" name="a_list" id="a_list" value="gridinsert">
-<input type="hidden" name="<?php echo $t02_rkas_list->FormKeyCountName ?>" id="<?php echo $t02_rkas_list->FormKeyCountName ?>" value="<?php echo $t02_rkas_list->KeyCount ?>">
-<?php echo $t02_rkas_list->MultiSelectKey ?>
+<input type="hidden" name="<?php echo $t03_rpu_list->FormKeyCountName ?>" id="<?php echo $t03_rpu_list->FormKeyCountName ?>" value="<?php echo $t03_rpu_list->KeyCount ?>">
+<?php echo $t03_rpu_list->MultiSelectKey ?>
 <?php } ?>
-<?php if ($t02_rkas->CurrentAction == "edit") { ?>
-<input type="hidden" name="<?php echo $t02_rkas_list->FormKeyCountName ?>" id="<?php echo $t02_rkas_list->FormKeyCountName ?>" value="<?php echo $t02_rkas_list->KeyCount ?>">
+<?php if ($t03_rpu->CurrentAction == "edit") { ?>
+<input type="hidden" name="<?php echo $t03_rpu_list->FormKeyCountName ?>" id="<?php echo $t03_rpu_list->FormKeyCountName ?>" value="<?php echo $t03_rpu_list->KeyCount ?>">
 <?php } ?>
-<?php if ($t02_rkas->CurrentAction == "gridedit") { ?>
+<?php if ($t03_rpu->CurrentAction == "gridedit") { ?>
 <input type="hidden" name="a_list" id="a_list" value="gridupdate">
-<input type="hidden" name="<?php echo $t02_rkas_list->FormKeyCountName ?>" id="<?php echo $t02_rkas_list->FormKeyCountName ?>" value="<?php echo $t02_rkas_list->KeyCount ?>">
-<?php echo $t02_rkas_list->MultiSelectKey ?>
+<input type="hidden" name="<?php echo $t03_rpu_list->FormKeyCountName ?>" id="<?php echo $t03_rpu_list->FormKeyCountName ?>" value="<?php echo $t03_rpu_list->KeyCount ?>">
+<?php echo $t03_rpu_list->MultiSelectKey ?>
 <?php } ?>
-<?php if ($t02_rkas->CurrentAction == "") { ?>
+<?php if ($t03_rpu->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -4240,67 +4282,67 @@ ft02_rkaslist.UpdateOpts(<?php echo $t02_rkas_list->RowIndex ?>);
 <?php
 
 // Close recordset
-if ($t02_rkas_list->Recordset)
-	$t02_rkas_list->Recordset->Close();
+if ($t03_rpu_list->Recordset)
+	$t03_rpu_list->Recordset->Close();
 ?>
-<?php if ($t02_rkas->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <div class="box-footer ewGridLowerPanel">
-<?php if ($t02_rkas->CurrentAction <> "gridadd" && $t02_rkas->CurrentAction <> "gridedit") { ?>
+<?php if ($t03_rpu->CurrentAction <> "gridadd" && $t03_rpu->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t02_rkas_list->Pager)) $t02_rkas_list->Pager = new cPrevNextPager($t02_rkas_list->StartRec, $t02_rkas_list->DisplayRecs, $t02_rkas_list->TotalRecs, $t02_rkas_list->AutoHidePager) ?>
-<?php if ($t02_rkas_list->Pager->RecordCount > 0 && $t02_rkas_list->Pager->Visible) { ?>
+<?php if (!isset($t03_rpu_list->Pager)) $t03_rpu_list->Pager = new cPrevNextPager($t03_rpu_list->StartRec, $t03_rpu_list->DisplayRecs, $t03_rpu_list->TotalRecs, $t03_rpu_list->AutoHidePager) ?>
+<?php if ($t03_rpu_list->Pager->RecordCount > 0 && $t03_rpu_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t02_rkas_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t02_rkas_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t03_rpu_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t02_rkas_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t02_rkas_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas_list->PageUrl() ?>start=<?php echo $t02_rkas_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t03_rpu_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t03_rpu_list->PageUrl() ?>start=<?php echo $t03_rpu_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t03_rpu_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t02_rkas_list->Pager->RecordCount > 0) { ?>
+<?php if ($t03_rpu_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t02_rkas_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t02_rkas_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t02_rkas_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $t03_rpu_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $t03_rpu_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $t03_rpu_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($t02_rkas_list->TotalRecs > 0 && (!$t02_rkas_list->AutoHidePageSizeSelector || $t02_rkas_list->Pager->Visible)) { ?>
+<?php if ($t03_rpu_list->TotalRecs > 0 && (!$t03_rpu_list->AutoHidePageSizeSelector || $t03_rpu_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="t02_rkas">
+<input type="hidden" name="t" value="t03_rpu">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="10"<?php if ($t02_rkas_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
-<option value="20"<?php if ($t02_rkas_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="50"<?php if ($t02_rkas_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="100"<?php if ($t02_rkas_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
-<option value="ALL"<?php if ($t02_rkas->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="10"<?php if ($t03_rpu_list->DisplayRecs == 10) { ?> selected<?php } ?>>10</option>
+<option value="20"<?php if ($t03_rpu_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="50"<?php if ($t03_rpu_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="100"<?php if ($t03_rpu_list->DisplayRecs == 100) { ?> selected<?php } ?>>100</option>
+<option value="ALL"<?php if ($t03_rpu->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -4308,7 +4350,7 @@ if ($t02_rkas_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t02_rkas_list->OtherOptions as &$option)
+	foreach ($t03_rpu_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -4317,10 +4359,10 @@ if ($t02_rkas_list->Recordset)
 <?php } ?>
 </div>
 <?php } ?>
-<?php if ($t02_rkas_list->TotalRecs == 0 && $t02_rkas->CurrentAction == "") { // Show other options ?>
+<?php if ($t03_rpu_list->TotalRecs == 0 && $t03_rpu->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($t02_rkas_list->OtherOptions as &$option) {
+	foreach ($t03_rpu_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -4328,19 +4370,19 @@ if ($t02_rkas_list->Recordset)
 </div>
 <div class="clearfix"></div>
 <?php } ?>
-<?php if ($t02_rkas->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <script type="text/javascript">
-ft02_rkaslistsrch.FilterList = <?php echo $t02_rkas_list->GetFilterList() ?>;
-ft02_rkaslistsrch.Init();
-ft02_rkaslist.Init();
+ft03_rpulistsrch.FilterList = <?php echo $t03_rpu_list->GetFilterList() ?>;
+ft03_rpulistsrch.Init();
+ft03_rpulist.Init();
 </script>
 <?php } ?>
 <?php
-$t02_rkas_list->ShowPageFooter();
+$t03_rpu_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t02_rkas->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -4350,5 +4392,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t02_rkas_list->Page_Terminate();
+$t03_rpu_list->Page_Terminate();
 ?>

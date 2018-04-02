@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t04_rkas03info.php" ?>
+<?php include_once "t02_rkas01info.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t04_rkas03_view = NULL; // Initialize page object first
+$t02_rkas01_view = NULL; // Initialize page object first
 
-class ct04_rkas03_view extends ct04_rkas03 {
+class ct02_rkas01_view extends ct02_rkas01 {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +25,10 @@ class ct04_rkas03_view extends ct04_rkas03 {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't04_rkas03';
+	var $TableName = 't02_rkas01';
 
 	// Page object name
-	var $PageObjName = 't04_rkas03_view';
+	var $PageObjName = 't02_rkas01_view';
 
 	// Page headings
 	var $Heading = '';
@@ -288,10 +288,10 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t04_rkas03)
-		if (!isset($GLOBALS["t04_rkas03"]) || get_class($GLOBALS["t04_rkas03"]) == "ct04_rkas03") {
-			$GLOBALS["t04_rkas03"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t04_rkas03"];
+		// Table object (t02_rkas01)
+		if (!isset($GLOBALS["t02_rkas01"]) || get_class($GLOBALS["t02_rkas01"]) == "ct02_rkas01") {
+			$GLOBALS["t02_rkas01"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t02_rkas01"];
 		}
 		$KeyUrl = "";
 		if (@$_GET["id"] <> "") {
@@ -315,7 +315,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't04_rkas03', TRUE);
+			define("EW_TABLE_NAME", 't02_rkas01', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -370,7 +370,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t04_rkas03list.php"));
+				$this->Page_Terminate(ew_GetUrl("t02_rkas01list.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -431,8 +431,6 @@ class ct04_rkas03_view extends ct04_rkas03 {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->lv1_id->SetVisibility();
-		$this->lv2_id->SetVisibility();
 		$this->no_urut->SetVisibility();
 		$this->keterangan->SetVisibility();
 		$this->jumlah->SetVisibility();
@@ -467,13 +465,13 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t04_rkas03;
+		global $EW_EXPORT, $t02_rkas01;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t04_rkas03);
+				$doc = new $class($t02_rkas01);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -499,7 +497,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "t04_rkas03view.php")
+					if ($pageName == "t02_rkas01view.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -565,7 +563,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 					if ($this->TotalRecs <= 0) { // No record found
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$this->Page_Terminate("t04_rkas03list.php"); // Return to list page
+						$this->Page_Terminate("t02_rkas01list.php"); // Return to list page
 					} elseif ($bLoadCurrentRecord) { // Load current record position
 						$this->SetupStartRec(); // Set up start record position
 
@@ -589,7 +587,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 					if (!$bMatchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "t04_rkas03list.php"; // No matching record, return to list
+						$sReturnUrl = "t02_rkas01list.php"; // No matching record, return to list
 					} else {
 						$this->LoadRowValues($this->Recordset); // Load row values
 					}
@@ -602,7 +600,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "t04_rkas03list.php"; // Not page request, return to list
+			$sReturnUrl = "t02_rkas01list.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -662,7 +660,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		$option = &$options["action"];
 		$option->DropDownButtonPhrase = $Language->Phrase("ButtonActions");
 		$option->UseImageAndText = TRUE;
-		$option->UseDropDownButton = TRUE;
+		$option->UseDropDownButton = FALSE;
 		$option->UseButtonGroup = TRUE;
 		$item = &$option->Add($option->GroupOptionName);
 		$item->Body = "";
@@ -717,7 +715,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		if ($this->UseSelectLimit) {
 			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 			if ($dbtype == "MSSQL") {
-				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())));
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())));
 			} else {
 				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset);
 			}
@@ -766,18 +764,6 @@ class ct04_rkas03_view extends ct04_rkas03 {
 			return;
 		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->id->setDbValue($row['id']);
-		$this->lv1_id->setDbValue($row['lv1_id']);
-		if (array_key_exists('EV__lv1_id', $rs->fields)) {
-			$this->lv1_id->VirtualValue = $rs->fields('EV__lv1_id'); // Set up virtual field value
-		} else {
-			$this->lv1_id->VirtualValue = ""; // Clear value
-		}
-		$this->lv2_id->setDbValue($row['lv2_id']);
-		if (array_key_exists('EV__lv2_id', $rs->fields)) {
-			$this->lv2_id->VirtualValue = $rs->fields('EV__lv2_id'); // Set up virtual field value
-		} else {
-			$this->lv2_id->VirtualValue = ""; // Clear value
-		}
 		$this->no_urut->setDbValue($row['no_urut']);
 		$this->keterangan->setDbValue($row['keterangan']);
 		$this->jumlah->setDbValue($row['jumlah']);
@@ -787,8 +773,6 @@ class ct04_rkas03_view extends ct04_rkas03 {
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
-		$row['lv1_id'] = NULL;
-		$row['lv2_id'] = NULL;
 		$row['no_urut'] = NULL;
 		$row['keterangan'] = NULL;
 		$row['jumlah'] = NULL;
@@ -801,8 +785,6 @@ class ct04_rkas03_view extends ct04_rkas03 {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->lv1_id->DbValue = $row['lv1_id'];
-		$this->lv2_id->DbValue = $row['lv2_id'];
 		$this->no_urut->DbValue = $row['no_urut'];
 		$this->keterangan->DbValue = $row['keterangan'];
 		$this->jumlah->DbValue = $row['jumlah'];
@@ -829,8 +811,6 @@ class ct04_rkas03_view extends ct04_rkas03 {
 
 		// Common render codes for all row types
 		// id
-		// lv1_id
-		// lv2_id
 		// no_urut
 		// keterangan
 		// jumlah
@@ -840,64 +820,6 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
-
-		// lv1_id
-		if ($this->lv1_id->VirtualValue <> "") {
-			$this->lv1_id->ViewValue = $this->lv1_id->VirtualValue;
-		} else {
-			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
-		if (strval($this->lv1_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
-		$sWhereWrk = "";
-		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
-			}
-		} else {
-			$this->lv1_id->ViewValue = NULL;
-		}
-		}
-		$this->lv1_id->ViewCustomAttributes = "";
-
-		// lv2_id
-		if ($this->lv2_id->VirtualValue <> "") {
-			$this->lv2_id->ViewValue = $this->lv2_id->VirtualValue;
-		} else {
-			$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
-		if (strval($this->lv2_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
-		$sWhereWrk = "";
-		$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->lv2_id->ViewValue = $this->lv2_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
-			}
-		} else {
-			$this->lv2_id->ViewValue = NULL;
-		}
-		}
-		$this->lv2_id->ViewCustomAttributes = "";
 
 		// no_urut
 		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
@@ -912,16 +834,6 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
 		$this->jumlah->CellCssStyle .= "text-align: right;";
 		$this->jumlah->ViewCustomAttributes = "";
-
-			// lv1_id
-			$this->lv1_id->LinkCustomAttributes = "";
-			$this->lv1_id->HrefValue = "";
-			$this->lv1_id->TooltipValue = "";
-
-			// lv2_id
-			$this->lv2_id->LinkCustomAttributes = "";
-			$this->lv2_id->HrefValue = "";
-			$this->lv2_id->TooltipValue = "";
 
 			// no_urut
 			$this->no_urut->LinkCustomAttributes = "";
@@ -986,7 +898,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t04_rkas03\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t04_rkas03',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft04_rkas03view,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t02_rkas01\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t02_rkas01',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft02_rkas01view,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -1187,7 +1099,7 @@ class ct04_rkas03_view extends ct04_rkas03 {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t04_rkas03list.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t02_rkas01list.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1299,30 +1211,30 @@ class ct04_rkas03_view extends ct04_rkas03 {
 <?php
 
 // Create page object
-if (!isset($t04_rkas03_view)) $t04_rkas03_view = new ct04_rkas03_view();
+if (!isset($t02_rkas01_view)) $t02_rkas01_view = new ct02_rkas01_view();
 
 // Page init
-$t04_rkas03_view->Page_Init();
+$t02_rkas01_view->Page_Init();
 
 // Page main
-$t04_rkas03_view->Page_Main();
+$t02_rkas01_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t04_rkas03_view->Page_Render();
+$t02_rkas01_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t04_rkas03->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = ft04_rkas03view = new ew_Form("ft04_rkas03view", "view");
+var CurrentForm = ft02_rkas01view = new ew_Form("ft02_rkas01view", "view");
 
 // Form_CustomValidate event
-ft04_rkas03view.Form_CustomValidate = 
+ft02_rkas01view.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1330,204 +1242,176 @@ ft04_rkas03view.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft04_rkas03view.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft02_rkas01view.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ft04_rkas03view.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
-ft04_rkas03view.Lists["x_lv1_id"].Data = "<?php echo $t04_rkas03_view->lv1_id->LookupFilterQuery(FALSE, "view") ?>";
-ft04_rkas03view.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_view->lv1_id->LookupFilterQuery(TRUE, "view"))) ?>;
-ft04_rkas03view.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
-ft04_rkas03view.Lists["x_lv2_id"].Data = "<?php echo $t04_rkas03_view->lv2_id->LookupFilterQuery(FALSE, "view") ?>";
-ft04_rkas03view.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_view->lv2_id->LookupFilterQuery(TRUE, "view"))) ?>;
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t04_rkas03->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <div class="ewToolbar">
-<?php $t04_rkas03_view->ExportOptions->Render("body") ?>
+<?php $t02_rkas01_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($t04_rkas03_view->OtherOptions as &$option)
+	foreach ($t02_rkas01_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $t04_rkas03_view->ShowPageHeader(); ?>
+<?php $t02_rkas01_view->ShowPageHeader(); ?>
 <?php
-$t04_rkas03_view->ShowMessage();
+$t02_rkas01_view->ShowMessage();
 ?>
-<?php if (!$t04_rkas03_view->IsModal) { ?>
-<?php if ($t04_rkas03->Export == "") { ?>
+<?php if (!$t02_rkas01_view->IsModal) { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t04_rkas03_view->Pager)) $t04_rkas03_view->Pager = new cPrevNextPager($t04_rkas03_view->StartRec, $t04_rkas03_view->DisplayRecs, $t04_rkas03_view->TotalRecs, $t04_rkas03_view->AutoHidePager) ?>
-<?php if ($t04_rkas03_view->Pager->RecordCount > 0 && $t04_rkas03_view->Pager->Visible) { ?>
+<?php if (!isset($t02_rkas01_view->Pager)) $t02_rkas01_view->Pager = new cPrevNextPager($t02_rkas01_view->StartRec, $t02_rkas01_view->DisplayRecs, $t02_rkas01_view->TotalRecs, $t02_rkas01_view->AutoHidePager) ?>
+<?php if ($t02_rkas01_view->Pager->RecordCount > 0 && $t02_rkas01_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t04_rkas03_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t04_rkas03_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rkas03_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas01_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t04_rkas03_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t04_rkas03_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rkas03_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas01_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 </form>
 <?php } ?>
 <?php } ?>
-<form name="ft04_rkas03view" id="ft04_rkas03view" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t04_rkas03_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_rkas03_view->Token ?>">
+<form name="ft02_rkas01view" id="ft02_rkas01view" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t02_rkas01_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t02_rkas01_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t04_rkas03">
-<input type="hidden" name="modal" value="<?php echo intval($t04_rkas03_view->IsModal) ?>">
+<input type="hidden" name="t" value="t02_rkas01">
+<input type="hidden" name="modal" value="<?php echo intval($t02_rkas01_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($t04_rkas03->lv1_id->Visible) { // lv1_id ?>
-	<tr id="r_lv1_id">
-		<td class="col-sm-2"><span id="elh_t04_rkas03_lv1_id"><?php echo $t04_rkas03->lv1_id->FldCaption() ?></span></td>
-		<td data-name="lv1_id"<?php echo $t04_rkas03->lv1_id->CellAttributes() ?>>
-<span id="el_t04_rkas03_lv1_id">
-<span<?php echo $t04_rkas03->lv1_id->ViewAttributes() ?>>
-<?php echo $t04_rkas03->lv1_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t04_rkas03->lv2_id->Visible) { // lv2_id ?>
-	<tr id="r_lv2_id">
-		<td class="col-sm-2"><span id="elh_t04_rkas03_lv2_id"><?php echo $t04_rkas03->lv2_id->FldCaption() ?></span></td>
-		<td data-name="lv2_id"<?php echo $t04_rkas03->lv2_id->CellAttributes() ?>>
-<span id="el_t04_rkas03_lv2_id">
-<span<?php echo $t04_rkas03->lv2_id->ViewAttributes() ?>>
-<?php echo $t04_rkas03->lv2_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t04_rkas03->no_urut->Visible) { // no_urut ?>
+<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
 	<tr id="r_no_urut">
-		<td class="col-sm-2"><span id="elh_t04_rkas03_no_urut"><?php echo $t04_rkas03->no_urut->FldCaption() ?></span></td>
-		<td data-name="no_urut"<?php echo $t04_rkas03->no_urut->CellAttributes() ?>>
-<span id="el_t04_rkas03_no_urut">
-<span<?php echo $t04_rkas03->no_urut->ViewAttributes() ?>>
-<?php echo $t04_rkas03->no_urut->ViewValue ?></span>
+		<td class="col-sm-2"><span id="elh_t02_rkas01_no_urut"><?php echo $t02_rkas01->no_urut->FldCaption() ?></span></td>
+		<td data-name="no_urut"<?php echo $t02_rkas01->no_urut->CellAttributes() ?>>
+<span id="el_t02_rkas01_no_urut">
+<span<?php echo $t02_rkas01->no_urut->ViewAttributes() ?>>
+<?php echo $t02_rkas01->no_urut->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t04_rkas03->keterangan->Visible) { // keterangan ?>
+<?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
 	<tr id="r_keterangan">
-		<td class="col-sm-2"><span id="elh_t04_rkas03_keterangan"><?php echo $t04_rkas03->keterangan->FldCaption() ?></span></td>
-		<td data-name="keterangan"<?php echo $t04_rkas03->keterangan->CellAttributes() ?>>
-<span id="el_t04_rkas03_keterangan">
-<span<?php echo $t04_rkas03->keterangan->ViewAttributes() ?>>
-<?php echo $t04_rkas03->keterangan->ViewValue ?></span>
+		<td class="col-sm-2"><span id="elh_t02_rkas01_keterangan"><?php echo $t02_rkas01->keterangan->FldCaption() ?></span></td>
+		<td data-name="keterangan"<?php echo $t02_rkas01->keterangan->CellAttributes() ?>>
+<span id="el_t02_rkas01_keterangan">
+<span<?php echo $t02_rkas01->keterangan->ViewAttributes() ?>>
+<?php echo $t02_rkas01->keterangan->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t04_rkas03->jumlah->Visible) { // jumlah ?>
+<?php if ($t02_rkas01->jumlah->Visible) { // jumlah ?>
 	<tr id="r_jumlah">
-		<td class="col-sm-2"><span id="elh_t04_rkas03_jumlah"><?php echo $t04_rkas03->jumlah->FldCaption() ?></span></td>
-		<td data-name="jumlah"<?php echo $t04_rkas03->jumlah->CellAttributes() ?>>
-<span id="el_t04_rkas03_jumlah">
-<span<?php echo $t04_rkas03->jumlah->ViewAttributes() ?>>
-<?php echo $t04_rkas03->jumlah->ViewValue ?></span>
+		<td class="col-sm-2"><span id="elh_t02_rkas01_jumlah"><?php echo $t02_rkas01->jumlah->FldCaption() ?></span></td>
+		<td data-name="jumlah"<?php echo $t02_rkas01->jumlah->CellAttributes() ?>>
+<span id="el_t02_rkas01_jumlah">
+<span<?php echo $t02_rkas01->jumlah->ViewAttributes() ?>>
+<?php echo $t02_rkas01->jumlah->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
-<?php if (!$t04_rkas03_view->IsModal) { ?>
-<?php if ($t04_rkas03->Export == "") { ?>
-<?php if (!isset($t04_rkas03_view->Pager)) $t04_rkas03_view->Pager = new cPrevNextPager($t04_rkas03_view->StartRec, $t04_rkas03_view->DisplayRecs, $t04_rkas03_view->TotalRecs, $t04_rkas03_view->AutoHidePager) ?>
-<?php if ($t04_rkas03_view->Pager->RecordCount > 0 && $t04_rkas03_view->Pager->Visible) { ?>
+<?php if (!$t02_rkas01_view->IsModal) { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
+<?php if (!isset($t02_rkas01_view->Pager)) $t02_rkas01_view->Pager = new cPrevNextPager($t02_rkas01_view->StartRec, $t02_rkas01_view->DisplayRecs, $t02_rkas01_view->TotalRecs, $t02_rkas01_view->AutoHidePager) ?>
+<?php if ($t02_rkas01_view->Pager->RecordCount > 0 && $t02_rkas01_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t04_rkas03_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t04_rkas03_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rkas03_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas01_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t04_rkas03_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t04_rkas03_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t02_rkas01_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rkas03_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas01_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 <?php } ?>
 <?php } ?>
 </form>
-<?php if ($t04_rkas03->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <script type="text/javascript">
-ft04_rkas03view.Init();
+ft02_rkas01view.Init();
 </script>
 <?php } ?>
 <?php
-$t04_rkas03_view->ShowPageFooter();
+$t02_rkas01_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t04_rkas03->Export == "") { ?>
+<?php if ($t02_rkas01->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1537,5 +1421,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t04_rkas03_view->Page_Terminate();
+$t02_rkas01_view->Page_Terminate();
 ?>

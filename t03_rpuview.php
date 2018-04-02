@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t02_rkas01info.php" ?>
+<?php include_once "t03_rpuinfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t02_rkas01_view = NULL; // Initialize page object first
+$t03_rpu_view = NULL; // Initialize page object first
 
-class ct02_rkas01_view extends ct02_rkas01 {
+class ct03_rpu_view extends ct03_rpu {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +25,10 @@ class ct02_rkas01_view extends ct02_rkas01 {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't02_rkas01';
+	var $TableName = 't03_rpu';
 
 	// Page object name
-	var $PageObjName = 't02_rkas01_view';
+	var $PageObjName = 't03_rpu_view';
 
 	// Page headings
 	var $Heading = '';
@@ -97,12 +97,6 @@ class ct02_rkas01_view extends ct02_rkas01 {
 	var $GridEditUrl;
 	var $MultiDeleteUrl;
 	var $MultiUpdateUrl;
-	var $AuditTrailOnAdd = TRUE;
-	var $AuditTrailOnEdit = TRUE;
-	var $AuditTrailOnDelete = TRUE;
-	var $AuditTrailOnView = FALSE;
-	var $AuditTrailOnViewData = FALSE;
-	var $AuditTrailOnSearch = FALSE;
 
 	// Message
 	function getMessage() {
@@ -288,10 +282,10 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t02_rkas01)
-		if (!isset($GLOBALS["t02_rkas01"]) || get_class($GLOBALS["t02_rkas01"]) == "ct02_rkas01") {
-			$GLOBALS["t02_rkas01"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t02_rkas01"];
+		// Table object (t03_rpu)
+		if (!isset($GLOBALS["t03_rpu"]) || get_class($GLOBALS["t03_rpu"]) == "ct03_rpu") {
+			$GLOBALS["t03_rpu"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t03_rpu"];
 		}
 		$KeyUrl = "";
 		if (@$_GET["id"] <> "") {
@@ -315,7 +309,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't02_rkas01', TRUE);
+			define("EW_TABLE_NAME", 't03_rpu', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -370,7 +364,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t02_rkas01list.php"));
+				$this->Page_Terminate(ew_GetUrl("t03_rpulist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -431,9 +425,17 @@ class ct02_rkas01_view extends ct02_rkas01 {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->no_urut->SetVisibility();
-		$this->keterangan->SetVisibility();
-		$this->jumlah->SetVisibility();
+		$this->id->SetVisibility();
+		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
+			$this->id->Visible = FALSE;
+		$this->Level->SetVisibility();
+		$this->Urutan->SetVisibility();
+		$this->No_Urut->SetVisibility();
+		$this->Keterangan->SetVisibility();
+		$this->Volume->SetVisibility();
+		$this->Alokasi->SetVisibility();
+		$this->Unit_KOS->SetVisibility();
+		$this->Jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -465,13 +467,13 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t02_rkas01;
+		global $EW_EXPORT, $t03_rpu;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t02_rkas01);
+				$doc = new $class($t03_rpu);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -497,7 +499,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "t02_rkas01view.php")
+					if ($pageName == "t03_rpuview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -563,7 +565,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 					if ($this->TotalRecs <= 0) { // No record found
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$this->Page_Terminate("t02_rkas01list.php"); // Return to list page
+						$this->Page_Terminate("t03_rpulist.php"); // Return to list page
 					} elseif ($bLoadCurrentRecord) { // Load current record position
 						$this->SetupStartRec(); // Set up start record position
 
@@ -587,7 +589,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 					if (!$bMatchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "t02_rkas01list.php"; // No matching record, return to list
+						$sReturnUrl = "t03_rpulist.php"; // No matching record, return to list
 					} else {
 						$this->LoadRowValues($this->Recordset); // Load row values
 					}
@@ -600,7 +602,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "t02_rkas01list.php"; // Not page request, return to list
+			$sReturnUrl = "t03_rpulist.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -660,7 +662,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		$option = &$options["action"];
 		$option->DropDownButtonPhrase = $Language->Phrase("ButtonActions");
 		$option->UseImageAndText = TRUE;
-		$option->UseDropDownButton = TRUE;
+		$option->UseDropDownButton = FALSE;
 		$option->UseButtonGroup = TRUE;
 		$item = &$option->Add($option->GroupOptionName);
 		$item->Body = "";
@@ -762,20 +764,29 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->id->setDbValue($row['id']);
-		$this->no_urut->setDbValue($row['no_urut']);
-		$this->keterangan->setDbValue($row['keterangan']);
-		$this->jumlah->setDbValue($row['jumlah']);
+		$this->Level->setDbValue($row['Level']);
+		$this->Urutan->setDbValue($row['Urutan']);
+		$this->No_Urut->setDbValue($row['No_Urut']);
+		$this->Keterangan->setDbValue($row['Keterangan']);
+		$this->Volume->setDbValue($row['Volume']);
+		$this->Alokasi->setDbValue($row['Alokasi']);
+		$this->Unit_KOS->setDbValue($row['Unit_KOS']);
+		$this->Jumlah->setDbValue($row['Jumlah']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
-		$row['no_urut'] = NULL;
-		$row['keterangan'] = NULL;
-		$row['jumlah'] = NULL;
+		$row['Level'] = NULL;
+		$row['Urutan'] = NULL;
+		$row['No_Urut'] = NULL;
+		$row['Keterangan'] = NULL;
+		$row['Volume'] = NULL;
+		$row['Alokasi'] = NULL;
+		$row['Unit_KOS'] = NULL;
+		$row['Jumlah'] = NULL;
 		return $row;
 	}
 
@@ -785,9 +796,14 @@ class ct02_rkas01_view extends ct02_rkas01 {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->no_urut->DbValue = $row['no_urut'];
-		$this->keterangan->DbValue = $row['keterangan'];
-		$this->jumlah->DbValue = $row['jumlah'];
+		$this->Level->DbValue = $row['Level'];
+		$this->Urutan->DbValue = $row['Urutan'];
+		$this->No_Urut->DbValue = $row['No_Urut'];
+		$this->Keterangan->DbValue = $row['Keterangan'];
+		$this->Volume->DbValue = $row['Volume'];
+		$this->Alokasi->DbValue = $row['Alokasi'];
+		$this->Unit_KOS->DbValue = $row['Unit_KOS'];
+		$this->Jumlah->DbValue = $row['Jumlah'];
 	}
 
 	// Render row values based on field settings
@@ -803,17 +819,34 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		$this->SetupOtherOptions();
 
 		// Convert decimal values if posted back
-		if ($this->jumlah->FormValue == $this->jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->jumlah->CurrentValue)))
-			$this->jumlah->CurrentValue = ew_StrToFloat($this->jumlah->CurrentValue);
+		if ($this->Volume->FormValue == $this->Volume->CurrentValue && is_numeric(ew_StrToFloat($this->Volume->CurrentValue)))
+			$this->Volume->CurrentValue = ew_StrToFloat($this->Volume->CurrentValue);
+
+		// Convert decimal values if posted back
+		if ($this->Alokasi->FormValue == $this->Alokasi->CurrentValue && is_numeric(ew_StrToFloat($this->Alokasi->CurrentValue)))
+			$this->Alokasi->CurrentValue = ew_StrToFloat($this->Alokasi->CurrentValue);
+
+		// Convert decimal values if posted back
+		if ($this->Unit_KOS->FormValue == $this->Unit_KOS->CurrentValue && is_numeric(ew_StrToFloat($this->Unit_KOS->CurrentValue)))
+			$this->Unit_KOS->CurrentValue = ew_StrToFloat($this->Unit_KOS->CurrentValue);
+
+		// Convert decimal values if posted back
+		if ($this->Jumlah->FormValue == $this->Jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->Jumlah->CurrentValue)))
+			$this->Jumlah->CurrentValue = ew_StrToFloat($this->Jumlah->CurrentValue);
 
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
 		// id
-		// no_urut
-		// keterangan
-		// jumlah
+		// Level
+		// Urutan
+		// No_Urut
+		// Keterangan
+		// Volume
+		// Alokasi
+		// Unit_KOS
+		// Jumlah
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -821,34 +854,82 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// no_urut
-		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
-		$this->no_urut->ViewCustomAttributes = "";
+		// Level
+		$this->Level->ViewValue = $this->Level->CurrentValue;
+		$this->Level->ViewCustomAttributes = "";
 
-		// keterangan
-		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-		$this->keterangan->ViewCustomAttributes = "";
+		// Urutan
+		$this->Urutan->ViewValue = $this->Urutan->CurrentValue;
+		$this->Urutan->ViewCustomAttributes = "";
 
-		// jumlah
-		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
-		$this->jumlah->CellCssStyle .= "text-align: right;";
-		$this->jumlah->ViewCustomAttributes = "";
+		// No_Urut
+		$this->No_Urut->ViewValue = $this->No_Urut->CurrentValue;
+		$this->No_Urut->ViewCustomAttributes = "";
 
-			// no_urut
-			$this->no_urut->LinkCustomAttributes = "";
-			$this->no_urut->HrefValue = "";
-			$this->no_urut->TooltipValue = "";
+		// Keterangan
+		$this->Keterangan->ViewValue = $this->Keterangan->CurrentValue;
+		$this->Keterangan->ViewCustomAttributes = "";
 
-			// keterangan
-			$this->keterangan->LinkCustomAttributes = "";
-			$this->keterangan->HrefValue = "";
-			$this->keterangan->TooltipValue = "";
+		// Volume
+		$this->Volume->ViewValue = $this->Volume->CurrentValue;
+		$this->Volume->ViewCustomAttributes = "";
 
-			// jumlah
-			$this->jumlah->LinkCustomAttributes = "";
-			$this->jumlah->HrefValue = "";
-			$this->jumlah->TooltipValue = "";
+		// Alokasi
+		$this->Alokasi->ViewValue = $this->Alokasi->CurrentValue;
+		$this->Alokasi->ViewCustomAttributes = "";
+
+		// Unit_KOS
+		$this->Unit_KOS->ViewValue = $this->Unit_KOS->CurrentValue;
+		$this->Unit_KOS->ViewCustomAttributes = "";
+
+		// Jumlah
+		$this->Jumlah->ViewValue = $this->Jumlah->CurrentValue;
+		$this->Jumlah->ViewCustomAttributes = "";
+
+			// id
+			$this->id->LinkCustomAttributes = "";
+			$this->id->HrefValue = "";
+			$this->id->TooltipValue = "";
+
+			// Level
+			$this->Level->LinkCustomAttributes = "";
+			$this->Level->HrefValue = "";
+			$this->Level->TooltipValue = "";
+
+			// Urutan
+			$this->Urutan->LinkCustomAttributes = "";
+			$this->Urutan->HrefValue = "";
+			$this->Urutan->TooltipValue = "";
+
+			// No_Urut
+			$this->No_Urut->LinkCustomAttributes = "";
+			$this->No_Urut->HrefValue = "";
+			$this->No_Urut->TooltipValue = "";
+
+			// Keterangan
+			$this->Keterangan->LinkCustomAttributes = "";
+			$this->Keterangan->HrefValue = "";
+			$this->Keterangan->TooltipValue = "";
+
+			// Volume
+			$this->Volume->LinkCustomAttributes = "";
+			$this->Volume->HrefValue = "";
+			$this->Volume->TooltipValue = "";
+
+			// Alokasi
+			$this->Alokasi->LinkCustomAttributes = "";
+			$this->Alokasi->HrefValue = "";
+			$this->Alokasi->TooltipValue = "";
+
+			// Unit_KOS
+			$this->Unit_KOS->LinkCustomAttributes = "";
+			$this->Unit_KOS->HrefValue = "";
+			$this->Unit_KOS->TooltipValue = "";
+
+			// Jumlah
+			$this->Jumlah->LinkCustomAttributes = "";
+			$this->Jumlah->HrefValue = "";
+			$this->Jumlah->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -898,7 +979,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t02_rkas01\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t02_rkas01',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft02_rkas01view,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t03_rpu\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t03_rpu',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft03_rpuview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -1099,7 +1180,7 @@ class ct02_rkas01_view extends ct02_rkas01 {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t02_rkas01list.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t03_rpulist.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1211,30 +1292,30 @@ class ct02_rkas01_view extends ct02_rkas01 {
 <?php
 
 // Create page object
-if (!isset($t02_rkas01_view)) $t02_rkas01_view = new ct02_rkas01_view();
+if (!isset($t03_rpu_view)) $t03_rpu_view = new ct03_rpu_view();
 
 // Page init
-$t02_rkas01_view->Page_Init();
+$t03_rpu_view->Page_Init();
 
 // Page main
-$t02_rkas01_view->Page_Main();
+$t03_rpu_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t02_rkas01_view->Page_Render();
+$t03_rpu_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t02_rkas01->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = ft02_rkas01view = new ew_Form("ft02_rkas01view", "view");
+var CurrentForm = ft03_rpuview = new ew_Form("ft03_rpuview", "view");
 
 // Form_CustomValidate event
-ft02_rkas01view.Form_CustomValidate = 
+ft03_rpuview.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1242,7 +1323,7 @@ ft02_rkas01view.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft02_rkas01view.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft03_rpuview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
@@ -1253,165 +1334,231 @@ ft02_rkas01view.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t02_rkas01->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <div class="ewToolbar">
-<?php $t02_rkas01_view->ExportOptions->Render("body") ?>
+<?php $t03_rpu_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($t02_rkas01_view->OtherOptions as &$option)
+	foreach ($t03_rpu_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $t02_rkas01_view->ShowPageHeader(); ?>
+<?php $t03_rpu_view->ShowPageHeader(); ?>
 <?php
-$t02_rkas01_view->ShowMessage();
+$t03_rpu_view->ShowMessage();
 ?>
-<?php if (!$t02_rkas01_view->IsModal) { ?>
-<?php if ($t02_rkas01->Export == "") { ?>
+<?php if (!$t03_rpu_view->IsModal) { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t02_rkas01_view->Pager)) $t02_rkas01_view->Pager = new cPrevNextPager($t02_rkas01_view->StartRec, $t02_rkas01_view->DisplayRecs, $t02_rkas01_view->TotalRecs, $t02_rkas01_view->AutoHidePager) ?>
-<?php if ($t02_rkas01_view->Pager->RecordCount > 0 && $t02_rkas01_view->Pager->Visible) { ?>
+<?php if (!isset($t03_rpu_view->Pager)) $t03_rpu_view->Pager = new cPrevNextPager($t03_rpu_view->StartRec, $t03_rpu_view->DisplayRecs, $t03_rpu_view->TotalRecs, $t03_rpu_view->AutoHidePager) ?>
+<?php if ($t03_rpu_view->Pager->RecordCount > 0 && $t03_rpu_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t02_rkas01_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t02_rkas01_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas01_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t03_rpu_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t02_rkas01_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t02_rkas01_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas01_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t03_rpu_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 </form>
 <?php } ?>
 <?php } ?>
-<form name="ft02_rkas01view" id="ft02_rkas01view" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t02_rkas01_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t02_rkas01_view->Token ?>">
+<form name="ft03_rpuview" id="ft03_rpuview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t03_rpu_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t03_rpu_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t02_rkas01">
-<input type="hidden" name="modal" value="<?php echo intval($t02_rkas01_view->IsModal) ?>">
+<input type="hidden" name="t" value="t03_rpu">
+<input type="hidden" name="modal" value="<?php echo intval($t03_rpu_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($t02_rkas01->no_urut->Visible) { // no_urut ?>
-	<tr id="r_no_urut">
-		<td class="col-sm-2"><span id="elh_t02_rkas01_no_urut"><?php echo $t02_rkas01->no_urut->FldCaption() ?></span></td>
-		<td data-name="no_urut"<?php echo $t02_rkas01->no_urut->CellAttributes() ?>>
-<span id="el_t02_rkas01_no_urut">
-<span<?php echo $t02_rkas01->no_urut->ViewAttributes() ?>>
-<?php echo $t02_rkas01->no_urut->ViewValue ?></span>
+<?php if ($t03_rpu->id->Visible) { // id ?>
+	<tr id="r_id">
+		<td class="col-sm-2"><span id="elh_t03_rpu_id"><?php echo $t03_rpu->id->FldCaption() ?></span></td>
+		<td data-name="id"<?php echo $t03_rpu->id->CellAttributes() ?>>
+<span id="el_t03_rpu_id">
+<span<?php echo $t03_rpu->id->ViewAttributes() ?>>
+<?php echo $t03_rpu->id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t02_rkas01->keterangan->Visible) { // keterangan ?>
-	<tr id="r_keterangan">
-		<td class="col-sm-2"><span id="elh_t02_rkas01_keterangan"><?php echo $t02_rkas01->keterangan->FldCaption() ?></span></td>
-		<td data-name="keterangan"<?php echo $t02_rkas01->keterangan->CellAttributes() ?>>
-<span id="el_t02_rkas01_keterangan">
-<span<?php echo $t02_rkas01->keterangan->ViewAttributes() ?>>
-<?php echo $t02_rkas01->keterangan->ViewValue ?></span>
+<?php if ($t03_rpu->Level->Visible) { // Level ?>
+	<tr id="r_Level">
+		<td class="col-sm-2"><span id="elh_t03_rpu_Level"><?php echo $t03_rpu->Level->FldCaption() ?></span></td>
+		<td data-name="Level"<?php echo $t03_rpu->Level->CellAttributes() ?>>
+<span id="el_t03_rpu_Level">
+<span<?php echo $t03_rpu->Level->ViewAttributes() ?>>
+<?php echo $t03_rpu->Level->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t02_rkas01->jumlah->Visible) { // jumlah ?>
-	<tr id="r_jumlah">
-		<td class="col-sm-2"><span id="elh_t02_rkas01_jumlah"><?php echo $t02_rkas01->jumlah->FldCaption() ?></span></td>
-		<td data-name="jumlah"<?php echo $t02_rkas01->jumlah->CellAttributes() ?>>
-<span id="el_t02_rkas01_jumlah">
-<span<?php echo $t02_rkas01->jumlah->ViewAttributes() ?>>
-<?php echo $t02_rkas01->jumlah->ViewValue ?></span>
+<?php if ($t03_rpu->Urutan->Visible) { // Urutan ?>
+	<tr id="r_Urutan">
+		<td class="col-sm-2"><span id="elh_t03_rpu_Urutan"><?php echo $t03_rpu->Urutan->FldCaption() ?></span></td>
+		<td data-name="Urutan"<?php echo $t03_rpu->Urutan->CellAttributes() ?>>
+<span id="el_t03_rpu_Urutan">
+<span<?php echo $t03_rpu->Urutan->ViewAttributes() ?>>
+<?php echo $t03_rpu->Urutan->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t03_rpu->No_Urut->Visible) { // No_Urut ?>
+	<tr id="r_No_Urut">
+		<td class="col-sm-2"><span id="elh_t03_rpu_No_Urut"><?php echo $t03_rpu->No_Urut->FldCaption() ?></span></td>
+		<td data-name="No_Urut"<?php echo $t03_rpu->No_Urut->CellAttributes() ?>>
+<span id="el_t03_rpu_No_Urut">
+<span<?php echo $t03_rpu->No_Urut->ViewAttributes() ?>>
+<?php echo $t03_rpu->No_Urut->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t03_rpu->Keterangan->Visible) { // Keterangan ?>
+	<tr id="r_Keterangan">
+		<td class="col-sm-2"><span id="elh_t03_rpu_Keterangan"><?php echo $t03_rpu->Keterangan->FldCaption() ?></span></td>
+		<td data-name="Keterangan"<?php echo $t03_rpu->Keterangan->CellAttributes() ?>>
+<span id="el_t03_rpu_Keterangan">
+<span<?php echo $t03_rpu->Keterangan->ViewAttributes() ?>>
+<?php echo $t03_rpu->Keterangan->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t03_rpu->Volume->Visible) { // Volume ?>
+	<tr id="r_Volume">
+		<td class="col-sm-2"><span id="elh_t03_rpu_Volume"><?php echo $t03_rpu->Volume->FldCaption() ?></span></td>
+		<td data-name="Volume"<?php echo $t03_rpu->Volume->CellAttributes() ?>>
+<span id="el_t03_rpu_Volume">
+<span<?php echo $t03_rpu->Volume->ViewAttributes() ?>>
+<?php echo $t03_rpu->Volume->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t03_rpu->Alokasi->Visible) { // Alokasi ?>
+	<tr id="r_Alokasi">
+		<td class="col-sm-2"><span id="elh_t03_rpu_Alokasi"><?php echo $t03_rpu->Alokasi->FldCaption() ?></span></td>
+		<td data-name="Alokasi"<?php echo $t03_rpu->Alokasi->CellAttributes() ?>>
+<span id="el_t03_rpu_Alokasi">
+<span<?php echo $t03_rpu->Alokasi->ViewAttributes() ?>>
+<?php echo $t03_rpu->Alokasi->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t03_rpu->Unit_KOS->Visible) { // Unit_KOS ?>
+	<tr id="r_Unit_KOS">
+		<td class="col-sm-2"><span id="elh_t03_rpu_Unit_KOS"><?php echo $t03_rpu->Unit_KOS->FldCaption() ?></span></td>
+		<td data-name="Unit_KOS"<?php echo $t03_rpu->Unit_KOS->CellAttributes() ?>>
+<span id="el_t03_rpu_Unit_KOS">
+<span<?php echo $t03_rpu->Unit_KOS->ViewAttributes() ?>>
+<?php echo $t03_rpu->Unit_KOS->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t03_rpu->Jumlah->Visible) { // Jumlah ?>
+	<tr id="r_Jumlah">
+		<td class="col-sm-2"><span id="elh_t03_rpu_Jumlah"><?php echo $t03_rpu->Jumlah->FldCaption() ?></span></td>
+		<td data-name="Jumlah"<?php echo $t03_rpu->Jumlah->CellAttributes() ?>>
+<span id="el_t03_rpu_Jumlah">
+<span<?php echo $t03_rpu->Jumlah->ViewAttributes() ?>>
+<?php echo $t03_rpu->Jumlah->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
-<?php if (!$t02_rkas01_view->IsModal) { ?>
-<?php if ($t02_rkas01->Export == "") { ?>
-<?php if (!isset($t02_rkas01_view->Pager)) $t02_rkas01_view->Pager = new cPrevNextPager($t02_rkas01_view->StartRec, $t02_rkas01_view->DisplayRecs, $t02_rkas01_view->TotalRecs, $t02_rkas01_view->AutoHidePager) ?>
-<?php if ($t02_rkas01_view->Pager->RecordCount > 0 && $t02_rkas01_view->Pager->Visible) { ?>
+<?php if (!$t03_rpu_view->IsModal) { ?>
+<?php if ($t03_rpu->Export == "") { ?>
+<?php if (!isset($t03_rpu_view->Pager)) $t03_rpu_view->Pager = new cPrevNextPager($t03_rpu_view->StartRec, $t03_rpu_view->DisplayRecs, $t03_rpu_view->TotalRecs, $t03_rpu_view->AutoHidePager) ?>
+<?php if ($t03_rpu_view->Pager->RecordCount > 0 && $t03_rpu_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t02_rkas01_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t02_rkas01_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t02_rkas01_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t03_rpu_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t02_rkas01_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t02_rkas01_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t02_rkas01_view->PageUrl() ?>start=<?php echo $t02_rkas01_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t03_rpu_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t03_rpu_view->PageUrl() ?>start=<?php echo $t03_rpu_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t02_rkas01_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t03_rpu_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 <?php } ?>
 <?php } ?>
 </form>
-<?php if ($t02_rkas01->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <script type="text/javascript">
-ft02_rkas01view.Init();
+ft03_rpuview.Init();
 </script>
 <?php } ?>
 <?php
-$t02_rkas01_view->ShowPageFooter();
+$t03_rpu_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t02_rkas01->Export == "") { ?>
+<?php if ($t03_rpu->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1421,5 +1568,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t02_rkas01_view->Page_Terminate();
+$t03_rpu_view->Page_Terminate();
 ?>

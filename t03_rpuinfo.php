@@ -1,12 +1,12 @@
 <?php
 
 // Global variable for table object
-$t02_rkas = NULL;
+$t03_rpu = NULL;
 
 //
-// Table class for t02_rkas
+// Table class for t03_rpu
 //
-class ct02_rkas extends cTable {
+class ct03_rpu extends cTable {
 	var $AuditTrailOnAdd = TRUE;
 	var $AuditTrailOnEdit = TRUE;
 	var $AuditTrailOnDelete = TRUE;
@@ -14,14 +14,14 @@ class ct02_rkas extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
-	var $lvl;
-	var $urutan;
-	var $nour1;
-	var $ket1;
-	var $jml1;
-	var $nour2;
-	var $ket2;
-	var $jml2;
+	var $Level;
+	var $Urutan;
+	var $No_Urut;
+	var $Keterangan;
+	var $Volume;
+	var $Alokasi;
+	var $Unit_KOS;
+	var $Jumlah;
 
 	//
 	// Table class constructor
@@ -31,12 +31,12 @@ class ct02_rkas extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 't02_rkas';
-		$this->TableName = 't02_rkas';
+		$this->TableVar = 't03_rpu';
+		$this->TableName = 't03_rpu';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`t02_rkas`";
+		$this->UpdateTable = "`t03_rpu`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -56,54 +56,56 @@ class ct02_rkas extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// id
-		$this->id = new cField('t02_rkas', 't02_rkas', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->id = new cField('t03_rpu', 't03_rpu', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->id->Sortable = TRUE; // Allow sort
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
-		// lvl
-		$this->lvl = new cField('t02_rkas', 't02_rkas', 'x_lvl', 'lvl', '`lvl`', '`lvl`', 16, -1, FALSE, '`lvl`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->lvl->Sortable = TRUE; // Allow sort
-		$this->lvl->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['lvl'] = &$this->lvl;
+		// Level
+		$this->Level = new cField('t03_rpu', 't03_rpu', 'x_Level', 'Level', '`Level`', '`Level`', 16, -1, FALSE, '`Level`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Level->Sortable = TRUE; // Allow sort
+		$this->Level->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['Level'] = &$this->Level;
 
-		// urutan
-		$this->urutan = new cField('t02_rkas', 't02_rkas', 'x_urutan', 'urutan', '`urutan`', '`urutan`', 2, -1, FALSE, '`urutan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->urutan->Sortable = TRUE; // Allow sort
-		$this->urutan->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['urutan'] = &$this->urutan;
+		// Urutan
+		$this->Urutan = new cField('t03_rpu', 't03_rpu', 'x_Urutan', 'Urutan', '`Urutan`', '`Urutan`', 2, -1, FALSE, '`Urutan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Urutan->Sortable = TRUE; // Allow sort
+		$this->Urutan->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['Urutan'] = &$this->Urutan;
 
-		// nour1
-		$this->nour1 = new cField('t02_rkas', 't02_rkas', 'x_nour1', 'nour1', '`nour1`', '`nour1`', 200, -1, FALSE, '`nour1`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->nour1->Sortable = TRUE; // Allow sort
-		$this->fields['nour1'] = &$this->nour1;
+		// No_Urut
+		$this->No_Urut = new cField('t03_rpu', 't03_rpu', 'x_No_Urut', 'No_Urut', '`No_Urut`', '`No_Urut`', 200, -1, FALSE, '`No_Urut`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->No_Urut->Sortable = TRUE; // Allow sort
+		$this->fields['No_Urut'] = &$this->No_Urut;
 
-		// ket1
-		$this->ket1 = new cField('t02_rkas', 't02_rkas', 'x_ket1', 'ket1', '`ket1`', '`ket1`', 200, -1, FALSE, '`ket1`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->ket1->Sortable = TRUE; // Allow sort
-		$this->fields['ket1'] = &$this->ket1;
+		// Keterangan
+		$this->Keterangan = new cField('t03_rpu', 't03_rpu', 'x_Keterangan', 'Keterangan', '`Keterangan`', '`Keterangan`', 200, -1, FALSE, '`Keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Keterangan->Sortable = TRUE; // Allow sort
+		$this->fields['Keterangan'] = &$this->Keterangan;
 
-		// jml1
-		$this->jml1 = new cField('t02_rkas', 't02_rkas', 'x_jml1', 'jml1', '`jml1`', '`jml1`', 4, -1, FALSE, '`jml1`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->jml1->Sortable = TRUE; // Allow sort
-		$this->jml1->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
-		$this->fields['jml1'] = &$this->jml1;
+		// Volume
+		$this->Volume = new cField('t03_rpu', 't03_rpu', 'x_Volume', 'Volume', '`Volume`', '`Volume`', 4, -1, FALSE, '`Volume`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Volume->Sortable = TRUE; // Allow sort
+		$this->Volume->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['Volume'] = &$this->Volume;
 
-		// nour2
-		$this->nour2 = new cField('t02_rkas', 't02_rkas', 'x_nour2', 'nour2', '`nour2`', '`nour2`', 200, -1, FALSE, '`nour2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->nour2->Sortable = TRUE; // Allow sort
-		$this->fields['nour2'] = &$this->nour2;
+		// Alokasi
+		$this->Alokasi = new cField('t03_rpu', 't03_rpu', 'x_Alokasi', 'Alokasi', '`Alokasi`', '`Alokasi`', 4, -1, FALSE, '`Alokasi`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Alokasi->Sortable = TRUE; // Allow sort
+		$this->Alokasi->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['Alokasi'] = &$this->Alokasi;
 
-		// ket2
-		$this->ket2 = new cField('t02_rkas', 't02_rkas', 'x_ket2', 'ket2', '`ket2`', '`ket2`', 200, -1, FALSE, '`ket2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->ket2->Sortable = TRUE; // Allow sort
-		$this->fields['ket2'] = &$this->ket2;
+		// Unit_KOS
+		$this->Unit_KOS = new cField('t03_rpu', 't03_rpu', 'x_Unit_KOS', 'Unit_KOS', '`Unit_KOS`', '`Unit_KOS`', 4, -1, FALSE, '`Unit_KOS`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Unit_KOS->Sortable = TRUE; // Allow sort
+		$this->Unit_KOS->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['Unit_KOS'] = &$this->Unit_KOS;
 
-		// jml2
-		$this->jml2 = new cField('t02_rkas', 't02_rkas', 'x_jml2', 'jml2', '`jml2`', '`jml2`', 4, -1, FALSE, '`jml2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->jml2->Sortable = TRUE; // Allow sort
-		$this->jml2->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
-		$this->fields['jml2'] = &$this->jml2;
+		// Jumlah
+		$this->Jumlah = new cField('t03_rpu', 't03_rpu', 'x_Jumlah', 'Jumlah', '`Jumlah`', '`Jumlah`', 4, -1, FALSE, '`Jumlah`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Jumlah->Sortable = TRUE; // Allow sort
+		$this->Jumlah->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['Jumlah'] = &$this->Jumlah;
 	}
 
 	// Field Visibility
@@ -158,7 +160,7 @@ class ct02_rkas extends cTable {
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t02_rkas`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t03_rpu`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -226,7 +228,7 @@ class ct02_rkas extends cTable {
 	var $_SqlOrderBy = "";
 
 	function getSqlOrderBy() { // Order By
-		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`urutan` ASC";
+		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "`Urutan` ASC";
 	}
 
 	function SqlOrderBy() { // For backward compatibility
@@ -481,7 +483,7 @@ class ct02_rkas extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "t02_rkaslist.php";
+			return "t03_rpulist.php";
 		}
 	}
 
@@ -492,11 +494,11 @@ class ct02_rkas extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "t02_rkasview.php")
+		if ($pageName == "t03_rpuview.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "t02_rkasedit.php")
+		elseif ($pageName == "t03_rpuedit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "t02_rkasadd.php")
+		elseif ($pageName == "t03_rpuadd.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -504,30 +506,30 @@ class ct02_rkas extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "t02_rkaslist.php";
+		return "t03_rpulist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("t02_rkasview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("t03_rpuview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("t02_rkasview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("t03_rpuview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "t02_rkasadd.php?" . $this->UrlParm($parm);
+			$url = "t03_rpuadd.php?" . $this->UrlParm($parm);
 		else
-			$url = "t02_rkasadd.php";
+			$url = "t03_rpuadd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("t02_rkasedit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t03_rpuedit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -539,7 +541,7 @@ class ct02_rkas extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("t02_rkasadd.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("t03_rpuadd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -551,7 +553,7 @@ class ct02_rkas extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("t02_rkasdelete.php", $this->UrlParm());
+		return $this->KeyUrl("t03_rpudelete.php", $this->UrlParm());
 	}
 
 	// Add master url
@@ -653,14 +655,14 @@ class ct02_rkas extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
-		$this->lvl->setDbValue($rs->fields('lvl'));
-		$this->urutan->setDbValue($rs->fields('urutan'));
-		$this->nour1->setDbValue($rs->fields('nour1'));
-		$this->ket1->setDbValue($rs->fields('ket1'));
-		$this->jml1->setDbValue($rs->fields('jml1'));
-		$this->nour2->setDbValue($rs->fields('nour2'));
-		$this->ket2->setDbValue($rs->fields('ket2'));
-		$this->jml2->setDbValue($rs->fields('jml2'));
+		$this->Level->setDbValue($rs->fields('Level'));
+		$this->Urutan->setDbValue($rs->fields('Urutan'));
+		$this->No_Urut->setDbValue($rs->fields('No_Urut'));
+		$this->Keterangan->setDbValue($rs->fields('Keterangan'));
+		$this->Volume->setDbValue($rs->fields('Volume'));
+		$this->Alokasi->setDbValue($rs->fields('Alokasi'));
+		$this->Unit_KOS->setDbValue($rs->fields('Unit_KOS'));
+		$this->Jumlah->setDbValue($rs->fields('Jumlah'));
 	}
 
 	// Render list row values
@@ -672,99 +674,103 @@ class ct02_rkas extends cTable {
 
 	// Common render codes
 		// id
-		// lvl
-		// urutan
-		// nour1
-		// ket1
-		// jml1
-		// nour2
-		// ket2
-		// jml2
+		// Level
+		// Urutan
+		// No_Urut
+		// Keterangan
+		// Volume
+		// Alokasi
+		// Unit_KOS
+		// Jumlah
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// lvl
-		$this->lvl->ViewValue = $this->lvl->CurrentValue;
-		$this->lvl->ViewCustomAttributes = "";
+		// Level
+		$this->Level->ViewValue = $this->Level->CurrentValue;
+		$this->Level->ViewCustomAttributes = "";
 
-		// urutan
-		$this->urutan->ViewValue = $this->urutan->CurrentValue;
-		$this->urutan->ViewCustomAttributes = "";
+		// Urutan
+		$this->Urutan->ViewValue = $this->Urutan->CurrentValue;
+		$this->Urutan->ViewCustomAttributes = "";
 
-		// nour1
-		$this->nour1->ViewValue = $this->nour1->CurrentValue;
-		$this->nour1->ViewCustomAttributes = "";
+		// No_Urut
+		$this->No_Urut->ViewValue = $this->No_Urut->CurrentValue;
+		$this->No_Urut->ViewCustomAttributes = "";
 
-		// ket1
-		$this->ket1->ViewValue = $this->ket1->CurrentValue;
-		$this->ket1->ViewCustomAttributes = "";
+		// Keterangan
+		$this->Keterangan->ViewValue = $this->Keterangan->CurrentValue;
+		$this->Keterangan->ViewCustomAttributes = "";
 
-		// jml1
-		$this->jml1->ViewValue = $this->jml1->CurrentValue;
-		$this->jml1->ViewValue = ew_FormatNumber($this->jml1->ViewValue, 0, -2, -2, -2);
-		$this->jml1->CellCssStyle .= "text-align: right;";
-		$this->jml1->ViewCustomAttributes = "";
+		// Volume
+		$this->Volume->ViewValue = $this->Volume->CurrentValue;
+		$this->Volume->ViewValue = ew_FormatNumber($this->Volume->ViewValue, 0, -2, -2, -2);
+		$this->Volume->CellCssStyle .= "text-align: right;";
+		$this->Volume->ViewCustomAttributes = "";
 
-		// nour2
-		$this->nour2->ViewValue = $this->nour2->CurrentValue;
-		$this->nour2->ViewCustomAttributes = "";
+		// Alokasi
+		$this->Alokasi->ViewValue = $this->Alokasi->CurrentValue;
+		$this->Alokasi->ViewValue = ew_FormatNumber($this->Alokasi->ViewValue, 0, -2, -2, -2);
+		$this->Alokasi->CellCssStyle .= "text-align: right;";
+		$this->Alokasi->ViewCustomAttributes = "";
 
-		// ket2
-		$this->ket2->ViewValue = $this->ket2->CurrentValue;
-		$this->ket2->ViewCustomAttributes = "";
+		// Unit_KOS
+		$this->Unit_KOS->ViewValue = $this->Unit_KOS->CurrentValue;
+		$this->Unit_KOS->ViewValue = ew_FormatNumber($this->Unit_KOS->ViewValue, 0, -2, -2, -2);
+		$this->Unit_KOS->CellCssStyle .= "text-align: right;";
+		$this->Unit_KOS->ViewCustomAttributes = "";
 
-		// jml2
-		$this->jml2->ViewValue = $this->jml2->CurrentValue;
-		$this->jml2->ViewValue = ew_FormatNumber($this->jml2->ViewValue, 0, -2, -2, -2);
-		$this->jml2->CellCssStyle .= "text-align: right;";
-		$this->jml2->ViewCustomAttributes = "";
+		// Jumlah
+		$this->Jumlah->ViewValue = $this->Jumlah->CurrentValue;
+		$this->Jumlah->ViewValue = ew_FormatNumber($this->Jumlah->ViewValue, 0, -2, -2, -2);
+		$this->Jumlah->CellCssStyle .= "text-align: right;";
+		$this->Jumlah->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
 
-		// lvl
-		$this->lvl->LinkCustomAttributes = "";
-		$this->lvl->HrefValue = "";
-		$this->lvl->TooltipValue = "";
+		// Level
+		$this->Level->LinkCustomAttributes = "";
+		$this->Level->HrefValue = "";
+		$this->Level->TooltipValue = "";
 
-		// urutan
-		$this->urutan->LinkCustomAttributes = "";
-		$this->urutan->HrefValue = "";
-		$this->urutan->TooltipValue = "";
+		// Urutan
+		$this->Urutan->LinkCustomAttributes = "";
+		$this->Urutan->HrefValue = "";
+		$this->Urutan->TooltipValue = "";
 
-		// nour1
-		$this->nour1->LinkCustomAttributes = "";
-		$this->nour1->HrefValue = "";
-		$this->nour1->TooltipValue = "";
+		// No_Urut
+		$this->No_Urut->LinkCustomAttributes = "";
+		$this->No_Urut->HrefValue = "";
+		$this->No_Urut->TooltipValue = "";
 
-		// ket1
-		$this->ket1->LinkCustomAttributes = "";
-		$this->ket1->HrefValue = "";
-		$this->ket1->TooltipValue = "";
+		// Keterangan
+		$this->Keterangan->LinkCustomAttributes = "";
+		$this->Keterangan->HrefValue = "";
+		$this->Keterangan->TooltipValue = "";
 
-		// jml1
-		$this->jml1->LinkCustomAttributes = "";
-		$this->jml1->HrefValue = "";
-		$this->jml1->TooltipValue = "";
+		// Volume
+		$this->Volume->LinkCustomAttributes = "";
+		$this->Volume->HrefValue = "";
+		$this->Volume->TooltipValue = "";
 
-		// nour2
-		$this->nour2->LinkCustomAttributes = "";
-		$this->nour2->HrefValue = "";
-		$this->nour2->TooltipValue = "";
+		// Alokasi
+		$this->Alokasi->LinkCustomAttributes = "";
+		$this->Alokasi->HrefValue = "";
+		$this->Alokasi->TooltipValue = "";
 
-		// ket2
-		$this->ket2->LinkCustomAttributes = "";
-		$this->ket2->HrefValue = "";
-		$this->ket2->TooltipValue = "";
+		// Unit_KOS
+		$this->Unit_KOS->LinkCustomAttributes = "";
+		$this->Unit_KOS->HrefValue = "";
+		$this->Unit_KOS->TooltipValue = "";
 
-		// jml2
-		$this->jml2->LinkCustomAttributes = "";
-		$this->jml2->HrefValue = "";
-		$this->jml2->TooltipValue = "";
+		// Jumlah
+		$this->Jumlah->LinkCustomAttributes = "";
+		$this->Jumlah->HrefValue = "";
+		$this->Jumlah->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -786,55 +792,57 @@ class ct02_rkas extends cTable {
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// lvl
-		$this->lvl->EditAttrs["class"] = "form-control";
-		$this->lvl->EditCustomAttributes = "";
-		$this->lvl->EditValue = $this->lvl->CurrentValue;
-		$this->lvl->PlaceHolder = ew_RemoveHtml($this->lvl->FldCaption());
+		// Level
+		$this->Level->EditAttrs["class"] = "form-control";
+		$this->Level->EditCustomAttributes = "";
+		$this->Level->EditValue = $this->Level->CurrentValue;
+		$this->Level->PlaceHolder = ew_RemoveHtml($this->Level->FldCaption());
 
-		// urutan
-		$this->urutan->EditAttrs["class"] = "form-control";
-		$this->urutan->EditCustomAttributes = "";
-		$this->urutan->EditValue = $this->urutan->CurrentValue;
-		$this->urutan->PlaceHolder = ew_RemoveHtml($this->urutan->FldCaption());
+		// Urutan
+		$this->Urutan->EditAttrs["class"] = "form-control";
+		$this->Urutan->EditCustomAttributes = "";
+		$this->Urutan->EditValue = $this->Urutan->CurrentValue;
+		$this->Urutan->PlaceHolder = ew_RemoveHtml($this->Urutan->FldCaption());
 
-		// nour1
-		$this->nour1->EditAttrs["class"] = "form-control";
-		$this->nour1->EditCustomAttributes = "";
-		$this->nour1->EditValue = $this->nour1->CurrentValue;
-		$this->nour1->PlaceHolder = ew_RemoveHtml($this->nour1->FldCaption());
+		// No_Urut
+		$this->No_Urut->EditAttrs["class"] = "form-control";
+		$this->No_Urut->EditCustomAttributes = "";
+		$this->No_Urut->EditValue = $this->No_Urut->CurrentValue;
+		$this->No_Urut->PlaceHolder = ew_RemoveHtml($this->No_Urut->FldCaption());
 
-		// ket1
-		$this->ket1->EditAttrs["class"] = "form-control";
-		$this->ket1->EditCustomAttributes = "";
-		$this->ket1->EditValue = $this->ket1->CurrentValue;
-		$this->ket1->PlaceHolder = ew_RemoveHtml($this->ket1->FldCaption());
+		// Keterangan
+		$this->Keterangan->EditAttrs["class"] = "form-control";
+		$this->Keterangan->EditCustomAttributes = "";
+		$this->Keterangan->EditValue = $this->Keterangan->CurrentValue;
+		$this->Keterangan->PlaceHolder = ew_RemoveHtml($this->Keterangan->FldCaption());
 
-		// jml1
-		$this->jml1->EditAttrs["class"] = "form-control";
-		$this->jml1->EditCustomAttributes = "";
-		$this->jml1->EditValue = $this->jml1->CurrentValue;
-		$this->jml1->PlaceHolder = ew_RemoveHtml($this->jml1->FldCaption());
-		if (strval($this->jml1->EditValue) <> "" && is_numeric($this->jml1->EditValue)) $this->jml1->EditValue = ew_FormatNumber($this->jml1->EditValue, -2, -2, -2, -2);
+		// Volume
+		$this->Volume->EditAttrs["class"] = "form-control";
+		$this->Volume->EditCustomAttributes = "";
+		$this->Volume->EditValue = $this->Volume->CurrentValue;
+		$this->Volume->PlaceHolder = ew_RemoveHtml($this->Volume->FldCaption());
+		if (strval($this->Volume->EditValue) <> "" && is_numeric($this->Volume->EditValue)) $this->Volume->EditValue = ew_FormatNumber($this->Volume->EditValue, -2, -2, -2, -2);
 
-		// nour2
-		$this->nour2->EditAttrs["class"] = "form-control";
-		$this->nour2->EditCustomAttributes = "";
-		$this->nour2->EditValue = $this->nour2->CurrentValue;
-		$this->nour2->PlaceHolder = ew_RemoveHtml($this->nour2->FldCaption());
+		// Alokasi
+		$this->Alokasi->EditAttrs["class"] = "form-control";
+		$this->Alokasi->EditCustomAttributes = "";
+		$this->Alokasi->EditValue = $this->Alokasi->CurrentValue;
+		$this->Alokasi->PlaceHolder = ew_RemoveHtml($this->Alokasi->FldCaption());
+		if (strval($this->Alokasi->EditValue) <> "" && is_numeric($this->Alokasi->EditValue)) $this->Alokasi->EditValue = ew_FormatNumber($this->Alokasi->EditValue, -2, -2, -2, -2);
 
-		// ket2
-		$this->ket2->EditAttrs["class"] = "form-control";
-		$this->ket2->EditCustomAttributes = "";
-		$this->ket2->EditValue = $this->ket2->CurrentValue;
-		$this->ket2->PlaceHolder = ew_RemoveHtml($this->ket2->FldCaption());
+		// Unit_KOS
+		$this->Unit_KOS->EditAttrs["class"] = "form-control";
+		$this->Unit_KOS->EditCustomAttributes = "";
+		$this->Unit_KOS->EditValue = $this->Unit_KOS->CurrentValue;
+		$this->Unit_KOS->PlaceHolder = ew_RemoveHtml($this->Unit_KOS->FldCaption());
+		if (strval($this->Unit_KOS->EditValue) <> "" && is_numeric($this->Unit_KOS->EditValue)) $this->Unit_KOS->EditValue = ew_FormatNumber($this->Unit_KOS->EditValue, -2, -2, -2, -2);
 
-		// jml2
-		$this->jml2->EditAttrs["class"] = "form-control";
-		$this->jml2->EditCustomAttributes = "";
-		$this->jml2->EditValue = $this->jml2->CurrentValue;
-		$this->jml2->PlaceHolder = ew_RemoveHtml($this->jml2->FldCaption());
-		if (strval($this->jml2->EditValue) <> "" && is_numeric($this->jml2->EditValue)) $this->jml2->EditValue = ew_FormatNumber($this->jml2->EditValue, -2, -2, -2, -2);
+		// Jumlah
+		$this->Jumlah->EditAttrs["class"] = "form-control";
+		$this->Jumlah->EditCustomAttributes = "";
+		$this->Jumlah->EditValue = $this->Jumlah->CurrentValue;
+		$this->Jumlah->PlaceHolder = ew_RemoveHtml($this->Jumlah->FldCaption());
+		if (strval($this->Jumlah->EditValue) <> "" && is_numeric($this->Jumlah->EditValue)) $this->Jumlah->EditValue = ew_FormatNumber($this->Jumlah->EditValue, -2, -2, -2, -2);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -863,24 +871,24 @@ class ct02_rkas extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->lvl->Exportable) $Doc->ExportCaption($this->lvl);
-					if ($this->urutan->Exportable) $Doc->ExportCaption($this->urutan);
-					if ($this->nour1->Exportable) $Doc->ExportCaption($this->nour1);
-					if ($this->ket1->Exportable) $Doc->ExportCaption($this->ket1);
-					if ($this->jml1->Exportable) $Doc->ExportCaption($this->jml1);
-					if ($this->nour2->Exportable) $Doc->ExportCaption($this->nour2);
-					if ($this->ket2->Exportable) $Doc->ExportCaption($this->ket2);
-					if ($this->jml2->Exportable) $Doc->ExportCaption($this->jml2);
+					if ($this->Level->Exportable) $Doc->ExportCaption($this->Level);
+					if ($this->Urutan->Exportable) $Doc->ExportCaption($this->Urutan);
+					if ($this->No_Urut->Exportable) $Doc->ExportCaption($this->No_Urut);
+					if ($this->Keterangan->Exportable) $Doc->ExportCaption($this->Keterangan);
+					if ($this->Volume->Exportable) $Doc->ExportCaption($this->Volume);
+					if ($this->Alokasi->Exportable) $Doc->ExportCaption($this->Alokasi);
+					if ($this->Unit_KOS->Exportable) $Doc->ExportCaption($this->Unit_KOS);
+					if ($this->Jumlah->Exportable) $Doc->ExportCaption($this->Jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->lvl->Exportable) $Doc->ExportCaption($this->lvl);
-					if ($this->urutan->Exportable) $Doc->ExportCaption($this->urutan);
-					if ($this->nour1->Exportable) $Doc->ExportCaption($this->nour1);
-					if ($this->ket1->Exportable) $Doc->ExportCaption($this->ket1);
-					if ($this->jml1->Exportable) $Doc->ExportCaption($this->jml1);
-					if ($this->nour2->Exportable) $Doc->ExportCaption($this->nour2);
-					if ($this->ket2->Exportable) $Doc->ExportCaption($this->ket2);
-					if ($this->jml2->Exportable) $Doc->ExportCaption($this->jml2);
+					if ($this->Level->Exportable) $Doc->ExportCaption($this->Level);
+					if ($this->Urutan->Exportable) $Doc->ExportCaption($this->Urutan);
+					if ($this->No_Urut->Exportable) $Doc->ExportCaption($this->No_Urut);
+					if ($this->Keterangan->Exportable) $Doc->ExportCaption($this->Keterangan);
+					if ($this->Volume->Exportable) $Doc->ExportCaption($this->Volume);
+					if ($this->Alokasi->Exportable) $Doc->ExportCaption($this->Alokasi);
+					if ($this->Unit_KOS->Exportable) $Doc->ExportCaption($this->Unit_KOS);
+					if ($this->Jumlah->Exportable) $Doc->ExportCaption($this->Jumlah);
 				}
 				$Doc->EndExportRow();
 			}
@@ -912,24 +920,24 @@ class ct02_rkas extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->lvl->Exportable) $Doc->ExportField($this->lvl);
-						if ($this->urutan->Exportable) $Doc->ExportField($this->urutan);
-						if ($this->nour1->Exportable) $Doc->ExportField($this->nour1);
-						if ($this->ket1->Exportable) $Doc->ExportField($this->ket1);
-						if ($this->jml1->Exportable) $Doc->ExportField($this->jml1);
-						if ($this->nour2->Exportable) $Doc->ExportField($this->nour2);
-						if ($this->ket2->Exportable) $Doc->ExportField($this->ket2);
-						if ($this->jml2->Exportable) $Doc->ExportField($this->jml2);
+						if ($this->Level->Exportable) $Doc->ExportField($this->Level);
+						if ($this->Urutan->Exportable) $Doc->ExportField($this->Urutan);
+						if ($this->No_Urut->Exportable) $Doc->ExportField($this->No_Urut);
+						if ($this->Keterangan->Exportable) $Doc->ExportField($this->Keterangan);
+						if ($this->Volume->Exportable) $Doc->ExportField($this->Volume);
+						if ($this->Alokasi->Exportable) $Doc->ExportField($this->Alokasi);
+						if ($this->Unit_KOS->Exportable) $Doc->ExportField($this->Unit_KOS);
+						if ($this->Jumlah->Exportable) $Doc->ExportField($this->Jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->lvl->Exportable) $Doc->ExportField($this->lvl);
-						if ($this->urutan->Exportable) $Doc->ExportField($this->urutan);
-						if ($this->nour1->Exportable) $Doc->ExportField($this->nour1);
-						if ($this->ket1->Exportable) $Doc->ExportField($this->ket1);
-						if ($this->jml1->Exportable) $Doc->ExportField($this->jml1);
-						if ($this->nour2->Exportable) $Doc->ExportField($this->nour2);
-						if ($this->ket2->Exportable) $Doc->ExportField($this->ket2);
-						if ($this->jml2->Exportable) $Doc->ExportField($this->jml2);
+						if ($this->Level->Exportable) $Doc->ExportField($this->Level);
+						if ($this->Urutan->Exportable) $Doc->ExportField($this->Urutan);
+						if ($this->No_Urut->Exportable) $Doc->ExportField($this->No_Urut);
+						if ($this->Keterangan->Exportable) $Doc->ExportField($this->Keterangan);
+						if ($this->Volume->Exportable) $Doc->ExportField($this->Volume);
+						if ($this->Alokasi->Exportable) $Doc->ExportField($this->Alokasi);
+						if ($this->Unit_KOS->Exportable) $Doc->ExportField($this->Unit_KOS);
+						if ($this->Jumlah->Exportable) $Doc->ExportField($this->Jumlah);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}
@@ -973,7 +981,7 @@ class ct02_rkas extends cTable {
 
 	// Write Audit Trail start/end for grid update
 	function WriteAuditTrailDummy($typ) {
-		$table = 't02_rkas';
+		$table = 't03_rpu';
 		$usr = CurrentUserID();
 		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
@@ -982,7 +990,7 @@ class ct02_rkas extends cTable {
 	function WriteAuditTrailOnAdd(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnAdd) return;
-		$table = 't02_rkas';
+		$table = 't03_rpu';
 
 		// Get key value
 		$key = "";
@@ -1016,7 +1024,7 @@ class ct02_rkas extends cTable {
 	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
 		global $Language;
 		if (!$this->AuditTrailOnEdit) return;
-		$table = 't02_rkas';
+		$table = 't03_rpu';
 
 		// Get key value
 		$key = "";
@@ -1063,7 +1071,7 @@ class ct02_rkas extends cTable {
 	function WriteAuditTrailOnDelete(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnDelete) return;
-		$table = 't02_rkas';
+		$table = 't03_rpu';
 
 		// Get key value
 		$key = "";
@@ -1244,12 +1252,9 @@ class ct02_rkas extends cTable {
 		// To view properties of field class, use:
 		//var_dump($this-><FieldName>);
 
-		if ($this->lvl->CurrentValue > 1) {
-			$this->ket1->ViewValue = str_repeat("&nbsp;", $this->lvl->CurrentValue * 5).$this->ket1->CurrentValue;
-			$this->ket2->ViewValue = str_repeat("&nbsp;", $this->lvl->CurrentValue * 5).$this->ket2->CurrentValue;
+		if ($this->Level->CurrentValue > 1) {
+			$this->Keterangan->ViewValue = str_repeat("&nbsp;", $this->Level->CurrentValue * 5).$this->Keterangan->CurrentValue;
 		}
-
-		//$this->ket1->ViewValue = "*" . $this->ket1->CurrentValue;
 	}
 
 	// User ID Filtering event

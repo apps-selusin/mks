@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2018/3/29" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2018/4/2" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -618,41 +618,23 @@
   <project>
     <phrase id="bodytitle" value="Manajemen Keuangan Sekolah" />
     <phrase id="footertext" value="&amp;copy;2018 Selaras Solusindo. All rights reserved." />
-    <menu id="65">
-      <phrase id="menutext" value="RKAS" />
-    </menu>
-    <menu id="42">
-      <phrase id="menutext" value="t 94 rkas 1" />
-    </menu>
     <menu id="6">
       <phrase id="menutext" value="Beranda" />
     </menu>
     <menu id="1">
       <phrase id="menutext" value="Identitas Sekolah" />
     </menu>
-    <menu id="64">
+    <menu id="81">
       <phrase id="menutext" value="RKAS" />
     </menu>
-    <menu id="36">
+    <menu id="65">
       <phrase id="menutext" value="Buku RKAS" />
     </menu>
-    <menu id="63">
-      <phrase id="menutext" value="Setup" />
+    <menu id="95">
+      <phrase id="menutext" value="RPU" />
     </menu>
-    <menu id="24">
-      <phrase id="menutext" value="RKAS Level-1" />
-    </menu>
-    <menu id="31">
-      <phrase id="menutext" value="RKAS Level-2" />
-    </menu>
-    <menu id="32">
-      <phrase id="menutext" value="RKAS Level-3" />
-    </menu>
-    <menu id="33">
-      <phrase id="menutext" value="RKAS Level-4" />
-    </menu>
-    <menu id="43">
-      <phrase id="menutext" value="t 95 rkas 2" />
+    <menu id="82">
+      <phrase id="menutext" value="Buku RPU" />
     </menu>
     <menu id="41">
       <phrase id="menutext" value="Input" />
@@ -690,9 +672,6 @@
     <table id="cf01_home_php">
       <phrase id="tblcaption" value="Beranda" />
     </table>
-    <table id="cf02_input_rkas_php">
-      <phrase id="tblcaption" value="Buku RKAS" />
-    </table>
     <table id="t01_master_sekolah">
       <phrase id="tblcaption" value="Identitas Sekolah" />
       <field id="id">
@@ -725,7 +704,7 @@
       </field>
     </table>
     <table id="t02_rkas">
-      <phrase id="tblcaption" value="RKAS" />
+      <phrase id="tblcaption" value="Buku RKAS" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -754,136 +733,34 @@
         <phrase id="fldcaption" value="Jumlah" />
       </field>
     </table>
-    <table id="t02_rkas01">
-      <phrase id="tblcaption" value="RKAS Level-1" />
+    <table id="t03_rpu">
+      <phrase id="tblcaption" value="Buku RPU" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
+      <field id="level">
+        <phrase id="fldcaption" value="Level" />
+      </field>
+      <field id="urutan">
+        <phrase id="fldcaption" value="Urutan" />
+      </field>
       <field id="no_urut">
-        <phrase id="fldcaption" value="No. Urut" />
+        <phrase id="fldcaption" value="No Urut" />
       </field>
       <field id="keterangan">
         <phrase id="fldcaption" value="Keterangan" />
       </field>
-      <field id="jumlah">
-        <phrase id="fldcaption" value="Jumlah" />
+      <field id="volume">
+        <phrase id="fldcaption" value="Volume" />
       </field>
-    </table>
-    <table id="t03_rkas02">
-      <phrase id="tblcaption" value="RKAS Level-2" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
+      <field id="alokasi">
+        <phrase id="fldcaption" value="Alokasi" />
       </field>
-      <field id="lv1_id">
-        <phrase id="fldcaption" value="Level-1" />
-      </field>
-      <field id="no_urut">
-        <phrase id="fldcaption" value="No. Urut" />
-      </field>
-      <field id="keterangan">
-        <phrase id="fldcaption" value="Keterangan" />
+      <field id="unit_kos">
+        <phrase id="fldcaption" value="Unit KOS" />
       </field>
       <field id="jumlah">
         <phrase id="fldcaption" value="Jumlah" />
-      </field>
-    </table>
-    <table id="t04_rkas03">
-      <phrase id="tblcaption" value="RKAS Level-3" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="lv1_id">
-        <phrase id="fldcaption" value="Level-1" />
-      </field>
-      <field id="lv2_id">
-        <phrase id="fldcaption" value="Level-2" />
-      </field>
-      <field id="no_urut">
-        <phrase id="fldcaption" value="No. Urut" />
-      </field>
-      <field id="keterangan">
-        <phrase id="fldcaption" value="Keterangan" />
-      </field>
-      <field id="jumlah">
-        <phrase id="fldcaption" value="Jumlah" />
-      </field>
-    </table>
-    <table id="t05_rkas04">
-      <phrase id="tblcaption" value="RKAS Level-4" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="lv1_id">
-        <phrase id="fldcaption" value="Level-1" />
-      </field>
-      <field id="lv2_id">
-        <phrase id="fldcaption" value="Level-2" />
-      </field>
-      <field id="lv3_id">
-        <phrase id="fldcaption" value="Level-3" />
-      </field>
-      <field id="no_urut">
-        <phrase id="fldcaption" value="No. Urut" />
-      </field>
-      <field id="keterangan">
-        <phrase id="fldcaption" value="Keterangan" />
-      </field>
-      <field id="jumlah">
-        <phrase id="fldcaption" value="Jumlah" />
-      </field>
-    </table>
-    <table id="t94_rkas1">
-      <phrase id="tblcaption" value="t 94 rkas 1" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="no_urut">
-        <phrase id="fldcaption" value="no urut" />
-      </field>
-      <field id="keterangan">
-        <phrase id="fldcaption" value="keterangan" />
-      </field>
-      <field id="jumlah">
-        <phrase id="fldcaption" value="jumlah" />
-      </field>
-      <field id="no_keyfield">
-        <phrase id="fldcaption" value="no keyfield" />
-      </field>
-      <field id="no_level">
-        <phrase id="fldcaption" value="no level" />
-      </field>
-      <field id="nama_tabel">
-        <phrase id="fldcaption" value="nama tabel" />
-      </field>
-      <field id="id_data">
-        <phrase id="fldcaption" value="id data" />
-      </field>
-    </table>
-    <table id="t95_rkas2">
-      <phrase id="tblcaption" value="t 95 rkas 2" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="no_urut">
-        <phrase id="fldcaption" value="no urut" />
-      </field>
-      <field id="keterangan">
-        <phrase id="fldcaption" value="keterangan" />
-      </field>
-      <field id="jumlah">
-        <phrase id="fldcaption" value="jumlah" />
-      </field>
-      <field id="no_keyfield">
-        <phrase id="fldcaption" value="no keyfield" />
-      </field>
-      <field id="no_level">
-        <phrase id="fldcaption" value="no level" />
-      </field>
-      <field id="nama_tabel">
-        <phrase id="fldcaption" value="nama tabel" />
-      </field>
-      <field id="id_data">
-        <phrase id="fldcaption" value="id data" />
       </field>
     </table>
     <table id="t96_employees">

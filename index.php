@@ -305,24 +305,12 @@ class cdefault {
 		$Security->LoadUserLevel(); // Load User Level
 		if ($Security->AllowList(CurrentProjectID() . 'cf01_home.php'))
 		$this->Page_Terminate("cf01_home.php"); // Exit and go to default page
-		if ($Security->AllowList(CurrentProjectID() . 'cf02_input_rkas.php'))
-			$this->Page_Terminate("cf02_input_rkas.php");
 		if ($Security->AllowList(CurrentProjectID() . 't01_master_sekolah'))
 			$this->Page_Terminate("t01_master_sekolahlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't02_rkas'))
 			$this->Page_Terminate("t02_rkaslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't02_rkas01'))
-			$this->Page_Terminate("t02_rkas01list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't03_rkas02'))
-			$this->Page_Terminate("t03_rkas02list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't04_rkas03'))
-			$this->Page_Terminate("t04_rkas03list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't05_rkas04'))
-			$this->Page_Terminate("t05_rkas04list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't94_rkas1'))
-			$this->Page_Terminate("t94_rkas1list.php");
-		if ($Security->AllowList(CurrentProjectID() . 't95_rkas2'))
-			$this->Page_Terminate("t95_rkas2list.php");
+		if ($Security->AllowList(CurrentProjectID() . 't03_rpu'))
+			$this->Page_Terminate("t03_rpulist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't96_employees'))
 			$this->Page_Terminate("t96_employeeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't97_userlevels'))

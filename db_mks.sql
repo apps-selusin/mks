@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 29, 2018 at 10:52 AM
+-- Generation Time: Apr 02, 2018 at 07:40 AM
 -- Server version: 5.6.14
 -- PHP Version: 5.5.6
 
@@ -64,258 +64,53 @@ CREATE TABLE IF NOT EXISTS `t02_rkas` (
   `ket2` varchar(50) DEFAULT NULL,
   `jml2` float(15,2) DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `t02_rkas`
 --
 
 INSERT INTO `t02_rkas` (`id`, `lvl`, `urutan`, `nour1`, `ket1`, `jml1`, `nour2`, `ket2`, `jml2`) VALUES
-(1, 1, 1, '1.', 'Sumber Dana', 0.00, '1.', 'Penggunaan', 0.00),
+(1, 1, 1, '1.', 'Sumber Dana', 0.00, '2.', 'Penggunaan', 0.00),
 (2, 2, 2, '1.1.', 'Dana Rutin', 0.00, '2.1.', 'Dana Rutin', 0.00),
-(3, 3, 3, '1.1.1.', 'Gaji', 0.00, NULL, NULL, 0.00),
-(4, 3, 4, '1.1.2.', 'Tunjangan Profesi', 0.00, NULL, NULL, 0.00),
-(5, 3, 5, '1.1.3.', 'Kesra', 0.00, NULL, NULL, 0.00),
-(6, 2, 6, '1.2.', 'Dana Bantuan', 0.00, NULL, NULL, 0.00);
+(3, 3, 3, '1.1.1.', 'Gaji', 0.00, '2.1.1.', 'Gaji Guru / Pegawai', 0.00),
+(4, 3, 4, '1.1.2.', 'Tunjangan Profesi', 0.00, '2.1.2.', 'Tunjangan Profesional Guru', 0.00),
+(5, 3, 5, '1.1.3.', 'Kesra', 0.00, '2.1.3.', 'Kesra Guru / Pegawai', 0.00),
+(6, 2, 6, '1.2.', 'Dana Bantuan', 0.00, '2.2.', 'Dana Bantuan', 0.00),
+(7, 3, 7, '1.2.1.', 'Dana BOS', 0.00, '2.2.1.', 'Dana BOS', 0.00),
+(8, 4, 8, NULL, NULL, 0.00, '2.2.1.1.', 'Pembiayaan Penerimaan Siswa Baru', 0.00),
+(9, 4, 9, NULL, NULL, 0.00, '2.2.1.2.', 'Pembelian Buku Perpustakaan', 0.00),
+(10, 4, 10, NULL, NULL, 0.00, '2.2.1.3.', 'Pembelian Buku Pelajaran', 0.00);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `t02_rkas01`
+-- Table structure for table `t03_rpu`
 --
 
-CREATE TABLE IF NOT EXISTS `t02_rkas01` (
+CREATE TABLE IF NOT EXISTS `t03_rpu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no_urut` tinyint(4) NOT NULL DEFAULT '0',
-  `keterangan` varchar(50) NOT NULL,
-  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
+  `Level` tinyint(4) NOT NULL,
+  `Urutan` smallint(6) NOT NULL,
+  `No_Urut` varchar(10) DEFAULT NULL,
+  `Keterangan` varchar(50) DEFAULT NULL,
+  `Volume` float(15,2) NOT NULL DEFAULT '0.00',
+  `Alokasi` float(15,2) NOT NULL DEFAULT '0.00',
+  `Unit_KOS` float(15,2) NOT NULL DEFAULT '0.00',
+  `Jumlah` float(15,2) DEFAULT '0.00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
--- Dumping data for table `t02_rkas01`
+-- Dumping data for table `t03_rpu`
 --
 
-INSERT INTO `t02_rkas01` (`id`, `no_urut`, `keterangan`, `jumlah`) VALUES
-(1, 1, 'Sumber Dana', 0.00),
-(2, 2, 'Penggunaan', 0.00);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `t03_rkas02`
---
-
-CREATE TABLE IF NOT EXISTS `t03_rkas02` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no_urut` tinyint(4) NOT NULL DEFAULT '0',
-  `keterangan` varchar(50) NOT NULL,
-  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
-  `lv1_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
-
---
--- Dumping data for table `t03_rkas02`
---
-
-INSERT INTO `t03_rkas02` (`id`, `no_urut`, `keterangan`, `jumlah`, `lv1_id`) VALUES
-(1, 1, 'Dana Rutin', 0.00, 1),
-(2, 2, 'Dana Bantuan', 0.00, 1),
-(3, 3, 'Dana Komite', 0.00, 1),
-(4, 4, 'Dana Hibah', 0.00, 1),
-(5, 5, 'Dana DAK', 0.00, 1),
-(6, 1, 'Dana Rutin', 0.00, 2),
-(7, 2, 'Dana Bantuan', 0.00, 2),
-(8, 3, 'Dana Komite', 0.00, 2),
-(9, 4, 'Dana Hibah', 0.00, 2),
-(10, 5, 'Dana DAK', 0.00, 2);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `t04_rkas03`
---
-
-CREATE TABLE IF NOT EXISTS `t04_rkas03` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no_urut` tinyint(4) NOT NULL DEFAULT '0',
-  `keterangan` varchar(50) NOT NULL,
-  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
-  `lv2_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
-
---
--- Dumping data for table `t04_rkas03`
---
-
-INSERT INTO `t04_rkas03` (`id`, `no_urut`, `keterangan`, `jumlah`, `lv2_id`) VALUES
-(1, 1, 'Gaji', 0.00, 1),
-(2, 2, 'Tunjangan Profesi', 0.00, 1),
-(3, 3, 'Kesra', 0.00, 1),
-(4, 1, 'Dana BOS', 0.00, 2),
-(5, 2, 'Dana DOS', 0.00, 2),
-(6, 1, 'Gaji Guru / Pegawai', 0.00, 6),
-(7, 2, 'Tunjangan Profesional Guru', 0.00, 6),
-(8, 3, 'Kesra Guru / Pegawai', 0.00, 6),
-(9, 1, 'Dana BOS', 0.00, 7),
-(10, 2, 'Dana DOS', 0.00, 7),
-(11, 1, 'Pembiayaan Perawatan', 0.00, 8),
-(12, 2, 'Honorarium GTT', 0.00, 8),
-(13, 3, 'Penembokan Batas Halaman Sekolah', 0.00, 8),
-(14, 4, 'Pembangunan Mushalla Sekolah', 0.00, 8),
-(15, 5, 'Lain-lain', 0.00, 8),
-(16, 1, 'Pembelian Bahan Bangunan', 0.00, 10),
-(17, 2, 'Ongkos Tukang', 0.00, 10),
-(18, 3, 'Pembiayaan Laporan', 0.00, 10),
-(19, 4, 'Pajak', 0.00, 10);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `t05_rkas04`
---
-
-CREATE TABLE IF NOT EXISTS `t05_rkas04` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no_urut` tinyint(4) NOT NULL DEFAULT '0',
-  `keterangan` varchar(50) NOT NULL,
-  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
-  `lv3_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
-
---
--- Dumping data for table `t05_rkas04`
---
-
-INSERT INTO `t05_rkas04` (`id`, `no_urut`, `keterangan`, `jumlah`, `lv3_id`) VALUES
-(1, 1, 'Pembiayaan Penerimaan Siswa Baru', 0.00, 9),
-(2, 2, 'Pembelian Buku Perpustakaan', 0.00, 9),
-(3, 3, 'Pembelian Buku Pelajaran', 0.00, 9),
-(4, 4, 'Pembiayaan Remidial (Ekstrakurikuler)', 0.00, 9),
-(5, 5, 'Pembiayaan Ulangan Semester dan UAS/UASBN', 0.00, 9),
-(6, 6, 'Pembiayaan Bahan Habis Pakai (ATK)', 0.00, 9),
-(7, 7, 'Pembiayaan Langganan Daya & Jasa', 0.00, 9),
-(8, 8, 'Pembiayaan Perawatan', 0.00, 9),
-(9, 9, 'Pembiayaan Honorarium GTT', 0.00, 9),
-(10, 10, 'Pengembangan Profesi Guru', 0.00, 9),
-(11, 11, 'Bantuan Transportasi Siswa Miskin', 0.00, 9),
-(12, 12, 'Pembiayaan Pengolahan & BOS', 0.00, 9),
-(13, 13, 'Pembelian Komputer', 0.00, 9),
-(14, 14, 'Pembelian ABP & Lain-lain', 0.00, 9),
-(15, 15, 'Pengeluaran Pajak', 0.00, 9),
-(16, 1, 'Pelaksanaan Pelajaran', 0.00, 10),
-(17, 2, 'TU Sekolah', 0.00, 10),
-(18, 3, 'Belajar Barang', 0.00, 10),
-(19, 4, 'Pendataan / Pelaporan Sekolah', 0.00, 10),
-(20, 5, 'Honor Guru / Pegawai', 0.00, 10),
-(21, 6, 'Transport', 0.00, 10),
-(22, 7, 'Lain-lain', 0.00, 10),
-(23, 8, 'Pajak', 0.00, 10);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `t94_rkas1`
---
-
-CREATE TABLE IF NOT EXISTS `t94_rkas1` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no_urut` varchar(12) NOT NULL,
-  `keterangan` varchar(50) NOT NULL,
-  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
-  `no_keyfield` varchar(8) NOT NULL,
-  `no_level` tinyint(4) NOT NULL,
-  `nama_tabel` varchar(10) NOT NULL,
-  `id_data` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
-
---
--- Dumping data for table `t94_rkas1`
---
-
-INSERT INTO `t94_rkas1` (`id`, `no_urut`, `keterangan`, `jumlah`, `no_keyfield`, `no_level`, `nama_tabel`, `id_data`) VALUES
-(1, '1.', 'Sumber Dana', 0.00, '01000000', 1, 't02_rkas01', 1),
-(2, '1.1.', 'Dana Rutin', 0.00, '01010000', 2, 't03_rkas02', 1),
-(3, '1.1.1.', 'Gaji', 0.00, '01010100', 3, 't04_rkas03', 1),
-(4, '1.1.2.', 'Tunjangan Profesi', 0.00, '01010200', 3, 't04_rkas03', 2),
-(5, '1.1.3.', 'Kesra', 0.00, '01010300', 3, 't04_rkas03', 3),
-(6, '1.2.', 'Dana Bantuan', 0.00, '01020000', 2, 't03_rkas02', 2),
-(7, '1.2.1.', 'Dana BOS', 0.00, '01020100', 3, 't04_rkas03', 4),
-(8, '1.2.2.', 'Dana DOS', 0.00, '01020200', 3, 't04_rkas03', 5),
-(9, '1.3.', 'Dana Komite', 0.00, '01030000', 2, 't03_rkas02', 3),
-(10, '1.4.', 'Dana Hibah', 0.00, '01040000', 2, 't03_rkas02', 4),
-(11, '1.5.', 'Dana DAK', 0.00, '01050000', 2, 't03_rkas02', 5);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `t95_rkas2`
---
-
-CREATE TABLE IF NOT EXISTS `t95_rkas2` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no_urut` varchar(12) NOT NULL,
-  `keterangan` varchar(50) NOT NULL,
-  `jumlah` float(15,2) NOT NULL DEFAULT '0.00',
-  `no_keyfield` varchar(8) NOT NULL,
-  `no_level` tinyint(4) NOT NULL,
-  `nama_tabel` varchar(10) NOT NULL,
-  `id_data` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
-
---
--- Dumping data for table `t95_rkas2`
---
-
-INSERT INTO `t95_rkas2` (`id`, `no_urut`, `keterangan`, `jumlah`, `no_keyfield`, `no_level`, `nama_tabel`, `id_data`) VALUES
-(1, '2.', 'Penggunaan', 0.00, '01000000', 1, 't02_rkas01', 2),
-(2, '2.1.', 'Dana Rutin', 0.00, '01010000', 2, 't03_rkas02', 6),
-(3, '2.1.1.', 'Gaji Guru / Pegawai', 0.00, '01010100', 3, 't04_rkas03', 6),
-(4, '2.1.2.', 'Tunjangan Profesional Guru', 0.00, '01010200', 3, 't04_rkas03', 7),
-(5, '2.1.3.', 'Kesra Guru / Pegawai', 0.00, '01010300', 3, 't04_rkas03', 8),
-(6, '2.2.', 'Dana Bantuan', 0.00, '01020000', 2, 't03_rkas02', 7),
-(7, '2.2.1.', 'Dana BOS', 0.00, '01020100', 3, 't04_rkas03', 9),
-(8, '2.2.1.1.', 'Pembiayaan Penerimaan Siswa Baru', 0.00, '01020101', 4, 't05_rkas04', 1),
-(9, '2.2.1.2.', 'Pembelian Buku Perpustakaan', 0.00, '01020102', 4, 't05_rkas04', 2),
-(10, '2.2.1.3.', 'Pembelian Buku Pelajaran', 0.00, '01020103', 4, 't05_rkas04', 3),
-(11, '2.2.1.4.', 'Pembiayaan Remidial (Ekstrakurikuler)', 0.00, '01020104', 4, 't05_rkas04', 4),
-(12, '2.2.1.5.', 'Pembiayaan Ulangan Semester dan UAS/UASBN', 0.00, '01020105', 4, 't05_rkas04', 5),
-(13, '2.2.1.6.', 'Pembiayaan Bahan Habis Pakai (ATK)', 0.00, '01020106', 4, 't05_rkas04', 6),
-(14, '2.2.1.7.', 'Pembiayaan Langganan Daya & Jasa', 0.00, '01020107', 4, 't05_rkas04', 7),
-(15, '2.2.1.8.', 'Pembiayaan Perawatan', 0.00, '01020108', 4, 't05_rkas04', 8),
-(16, '2.2.1.9.', 'Pembiayaan Honorarium GTT', 0.00, '01020109', 4, 't05_rkas04', 9),
-(17, '2.2.1.10.', 'Pengembangan Profesi Guru', 0.00, '01020110', 4, 't05_rkas04', 10),
-(18, '2.2.1.11.', 'Bantuan Transportasi Siswa Miskin', 0.00, '01020111', 4, 't05_rkas04', 11),
-(19, '2.2.1.12.', 'Pembiayaan Pengolahan & BOS', 0.00, '01020112', 4, 't05_rkas04', 12),
-(20, '2.2.1.13.', 'Pembelian Komputer', 0.00, '01020113', 4, 't05_rkas04', 13),
-(21, '2.2.1.14.', 'Pembelian ABP & Lain-lain', 0.00, '01020114', 4, 't05_rkas04', 14),
-(22, '2.2.1.15.', 'Pengeluaran Pajak', 0.00, '01020115', 4, 't05_rkas04', 15),
-(23, '2.2.2.', 'Dana DOS', 0.00, '01020200', 3, 't04_rkas03', 10),
-(24, '2.2.2.1.', 'Pelaksanaan Pelajaran', 0.00, '01020201', 4, 't05_rkas04', 16),
-(25, '2.2.2.2.', 'TU Sekolah', 0.00, '01020202', 4, 't05_rkas04', 17),
-(26, '2.2.2.3.', 'Belajar Barang', 0.00, '01020203', 4, 't05_rkas04', 18),
-(27, '2.2.2.4.', 'Pendataan / Pelaporan Sekolah', 0.00, '01020204', 4, 't05_rkas04', 19),
-(28, '2.2.2.5.', 'Honor Guru / Pegawai', 0.00, '01020205', 4, 't05_rkas04', 20),
-(29, '2.2.2.6.', 'Transport', 0.00, '01020206', 4, 't05_rkas04', 21),
-(30, '2.2.2.7.', 'Lain-lain', 0.00, '01020207', 4, 't05_rkas04', 22),
-(31, '2.2.2.8.', 'Pajak', 0.00, '01020208', 4, 't05_rkas04', 23),
-(32, '2.3.', 'Dana Komite', 0.00, '01030000', 2, 't03_rkas02', 8),
-(33, '2.3.1.', 'Pembiayaan Perawatan', 0.00, '01030100', 3, 't04_rkas03', 11),
-(34, '2.3.2.', 'Honorarium GTT', 0.00, '01030200', 3, 't04_rkas03', 12),
-(35, '2.3.3.', 'Penembokan Batas Halaman Sekolah', 0.00, '01030300', 3, 't04_rkas03', 13),
-(36, '2.3.4.', 'Pembangunan Mushalla Sekolah', 0.00, '01030400', 3, 't04_rkas03', 14),
-(37, '2.3.5.', 'Lain-lain', 0.00, '01030500', 3, 't04_rkas03', 15),
-(38, '2.4.', 'Dana Hibah', 0.00, '01040000', 2, 't03_rkas02', 9),
-(39, '2.5.', 'Dana DAK', 0.00, '01050000', 2, 't03_rkas02', 10),
-(40, '2.5.1.', 'Pembelian Bahan Bangunan', 0.00, '01050100', 3, 't04_rkas03', 16),
-(41, '2.5.2.', 'Ongkos Tukang', 0.00, '01050200', 3, 't04_rkas03', 17),
-(42, '2.5.3.', 'Pembiayaan Laporan', 0.00, '01050300', 3, 't04_rkas03', 18),
-(43, '2.5.4.', 'Pajak', 0.00, '01050400', 3, 't04_rkas03', 19);
+INSERT INTO `t03_rpu` (`id`, `Level`, `Urutan`, `No_Urut`, `Keterangan`, `Volume`, `Alokasi`, `Unit_KOS`, `Jumlah`) VALUES
+(1, 1, 1, '1', 'Penerimaan Siswa Baru', 0.00, 0.00, 0.00, 0.00),
+(2, 1, 2, '2', 'Pembelian Buku Perpustakaan', 0.00, 0.00, 0.00, 0.00),
+(3, 1, 3, '3', 'Pembelian Buku Teks Pelajaran (BSE)', 0.00, 0.00, 0.00, 0.00),
+(4, 2, 4, '3.1.', 'Pendidikan Agama Islam Kelas  1', 0.00, 0.00, 0.00, 0.00),
+(5, 2, 5, '3.2.', 'Pendidikan Agama Islam Kelas  2', 0.00, 0.00, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -427,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `t99_audit_trail` (
   `oldvalue` longtext,
   `newvalue` longtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=437 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=542 ;
 
 --
 -- Dumping data for table `t99_audit_trail`
@@ -869,7 +664,113 @@ INSERT INTO `t99_audit_trail` (`id`, `datetime`, `script`, `user`, `action`, `ta
 (433, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '6', '', '0'),
 (434, '2018-03-29 09:38:41', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '6', '', '6'),
 (435, '2018-03-29 09:39:41', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '2', NULL, '2.1.'),
-(436, '2018-03-29 09:39:41', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '2', NULL, 'Dana Rutin');
+(436, '2018-03-29 09:39:41', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '2', NULL, 'Dana Rutin'),
+(437, '2018-04-02 08:52:13', '/mks/login.php', 'admin', 'login', '::1', '', '', '', ''),
+(438, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '7', '', '3'),
+(439, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '7', '', '7'),
+(440, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '7', '', '1.2.1'),
+(441, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '7', '', 'Dana BOS'),
+(442, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '7', '', '0'),
+(443, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '7', '', NULL),
+(444, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '7', '', NULL),
+(445, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '7', '', '0'),
+(446, '2018-04-02 11:01:03', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '7', '', '7'),
+(447, '2018-04-02 11:03:40', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour1', '7', '1.2.1', '1.2.1.'),
+(448, '2018-04-02 11:04:09', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '1', '1.', '2.'),
+(449, '2018-04-02 11:05:10', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '1', '2.', '1.'),
+(450, '2018-04-02 11:05:18', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '2', '2.1.', '1.1.'),
+(451, '2018-04-02 11:05:53', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '3', NULL, '1.1.1.'),
+(452, '2018-04-02 11:05:53', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '3', NULL, 'Gaji Guru / Pegawai'),
+(453, '2018-04-02 11:06:36', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '4', NULL, '1.1.2.'),
+(454, '2018-04-02 11:06:36', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '4', NULL, 'Tunjangan Profesional Guru'),
+(455, '2018-04-02 11:07:48', '/mks/t02_rkaslist.php', '1', '*** Batch update begin ***', 't02_rkas', '', '', '', ''),
+(456, '2018-04-02 11:07:48', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '1', '1.', '2.'),
+(457, '2018-04-02 11:07:48', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '2', '1.1.', '2.1.'),
+(458, '2018-04-02 11:07:48', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '3', '1.1.1.', '2.1.1.'),
+(459, '2018-04-02 11:07:48', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '4', '1.1.2.', '2.1.2.'),
+(460, '2018-04-02 11:07:48', '/mks/t02_rkaslist.php', '1', '*** Batch update successful ***', 't02_rkas', '', '', '', ''),
+(461, '2018-04-02 11:09:28', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '5', NULL, '2.1.3.'),
+(462, '2018-04-02 11:09:28', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '5', NULL, 'Kesra Guru / Pegawai'),
+(463, '2018-04-02 11:09:54', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '6', NULL, '2.2.'),
+(464, '2018-04-02 11:09:54', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '6', NULL, 'Dana Bantuan'),
+(465, '2018-04-02 11:10:17', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'nour2', '7', NULL, '2.2.1.'),
+(466, '2018-04-02 11:10:17', '/mks/t02_rkaslist.php', '1', 'U', 't02_rkas', 'ket2', '7', NULL, 'Dana BOS'),
+(467, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '8', '', '4'),
+(468, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '8', '', '8'),
+(469, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '8', '', NULL),
+(470, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '8', '', NULL),
+(471, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '8', '', '0.00'),
+(472, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '8', '', '2.2.1.1.'),
+(473, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '8', '', 'Pembiayaan Penerimaan Siswa Baru'),
+(474, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '8', '', '0.00'),
+(475, '2018-04-02 11:10:59', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '8', '', '8'),
+(476, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '9', '', '4'),
+(477, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '9', '', '9'),
+(478, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '9', '', NULL),
+(479, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '9', '', NULL);
+INSERT INTO `t99_audit_trail` (`id`, `datetime`, `script`, `user`, `action`, `table`, `field`, `keyvalue`, `oldvalue`, `newvalue`) VALUES
+(480, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '9', '', '0.00'),
+(481, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '9', '', '2.2.1.2.'),
+(482, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '9', '', 'Pembelian Buku Perpustakaan'),
+(483, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '9', '', '0.00'),
+(484, '2018-04-02 11:11:37', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '9', '', '9'),
+(485, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'lvl', '10', '', '4'),
+(486, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'urutan', '10', '', '10'),
+(487, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour1', '10', '', NULL),
+(488, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket1', '10', '', NULL),
+(489, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml1', '10', '', '0.00'),
+(490, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'nour2', '10', '', '2.2.1.3.'),
+(491, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'ket2', '10', '', 'Pembelian Buku Pelajaran'),
+(492, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'jml2', '10', '', '0.00'),
+(493, '2018-04-02 11:17:52', '/mks/t02_rkaslist.php', '1', 'A', 't02_rkas', 'id', '10', '', '10'),
+(494, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', '*** Batch insert begin ***', 't03_rpu', '', '', '', ''),
+(495, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Level', '1', '', '1'),
+(496, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Urutan', '1', '', '1'),
+(497, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'No_Urut', '1', '', '1'),
+(498, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Keterangan', '1', '', 'Penerimaan Siswa Baru'),
+(499, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Volume', '1', '', '0'),
+(500, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Alokasi', '1', '', '0'),
+(501, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Unit_KOS', '1', '', '0'),
+(502, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Jumlah', '1', '', '0'),
+(503, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'id', '1', '', '1'),
+(504, '2018-04-02 11:46:04', '/mks/t03_rpulist.php', '1', '*** Batch insert successful ***', 't03_rpu', '', '', '', ''),
+(505, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Level', '2', '', '1'),
+(506, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Urutan', '2', '', '2'),
+(507, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'No_Urut', '2', '', '2'),
+(508, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Keterangan', '2', '', 'Pembelian Buku Perpustakaan'),
+(509, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Volume', '2', '', '0.00'),
+(510, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Alokasi', '2', '', '0.00'),
+(511, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Unit_KOS', '2', '', '0.00'),
+(512, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Jumlah', '2', '', '0.00'),
+(513, '2018-04-02 11:49:03', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'id', '2', '', '2'),
+(514, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Level', '3', '', '1'),
+(515, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Urutan', '3', '', '3'),
+(516, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'No_Urut', '3', '', '3'),
+(517, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Keterangan', '3', '', 'Pembelian Buku Teks Pelajaran (BSE)'),
+(518, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Volume', '3', '', '0.00'),
+(519, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Alokasi', '3', '', '0.00'),
+(520, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Unit_KOS', '3', '', '0.00'),
+(521, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Jumlah', '3', '', '0.00'),
+(522, '2018-04-02 11:49:53', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'id', '3', '', '3'),
+(523, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Level', '4', '', '2'),
+(524, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Urutan', '4', '', '4'),
+(525, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'No_Urut', '4', '', '3.1.'),
+(526, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Keterangan', '4', '', 'Pendidikan Agama Islam Kelas  1'),
+(527, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Volume', '4', '', '0.00'),
+(528, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Alokasi', '4', '', '0.00'),
+(529, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Unit_KOS', '4', '', '0.00'),
+(530, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Jumlah', '4', '', '0.00'),
+(531, '2018-04-02 11:50:28', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'id', '4', '', '4'),
+(532, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Level', '5', '', '2'),
+(533, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Urutan', '5', '', '5'),
+(534, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'No_Urut', '5', '', '3.2'),
+(535, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Keterangan', '5', '', 'Pendidikan Agama Islam Kelas  2'),
+(536, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Volume', '5', '', '0.00'),
+(537, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Alokasi', '5', '', '0.00'),
+(538, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Unit_KOS', '5', '', '0.00'),
+(539, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'Jumlah', '5', '', '0.00'),
+(540, '2018-04-02 11:52:23', '/mks/t03_rpulist.php', '1', 'A', 't03_rpu', 'id', '5', '', '5'),
+(541, '2018-04-02 11:53:23', '/mks/t03_rpulist.php', '1', 'U', 't03_rpu', 'No_Urut', '5', '3.2', '3.2.');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

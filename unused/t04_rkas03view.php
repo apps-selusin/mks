@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "t99_audit_trailinfo.php" ?>
+<?php include_once "t04_rkas03info.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t99_audit_trail_view = NULL; // Initialize page object first
+$t04_rkas03_view = NULL; // Initialize page object first
 
-class ct99_audit_trail_view extends ct99_audit_trail {
+class ct04_rkas03_view extends ct04_rkas03 {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +25,10 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 	var $ProjectID = '{EC8C353E-21D9-43CE-9845-66794CB3C5CD}';
 
 	// Table name
-	var $TableName = 't99_audit_trail';
+	var $TableName = 't04_rkas03';
 
 	// Page object name
-	var $PageObjName = 't99_audit_trail_view';
+	var $PageObjName = 't04_rkas03_view';
 
 	// Page headings
 	var $Heading = '';
@@ -288,10 +288,10 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t99_audit_trail)
-		if (!isset($GLOBALS["t99_audit_trail"]) || get_class($GLOBALS["t99_audit_trail"]) == "ct99_audit_trail") {
-			$GLOBALS["t99_audit_trail"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t99_audit_trail"];
+		// Table object (t04_rkas03)
+		if (!isset($GLOBALS["t04_rkas03"]) || get_class($GLOBALS["t04_rkas03"]) == "ct04_rkas03") {
+			$GLOBALS["t04_rkas03"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t04_rkas03"];
 		}
 		$KeyUrl = "";
 		if (@$_GET["id"] <> "") {
@@ -315,7 +315,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't99_audit_trail', TRUE);
+			define("EW_TABLE_NAME", 't04_rkas03', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -370,7 +370,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t99_audit_traillist.php"));
+				$this->Page_Terminate(ew_GetUrl("t04_rkas03list.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -431,18 +431,11 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->id->SetVisibility();
-		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->id->Visible = FALSE;
-		$this->datetime->SetVisibility();
-		$this->script->SetVisibility();
-		$this->user->SetVisibility();
-		$this->action->SetVisibility();
-		$this->_table->SetVisibility();
-		$this->_field->SetVisibility();
-		$this->keyvalue->SetVisibility();
-		$this->oldvalue->SetVisibility();
-		$this->newvalue->SetVisibility();
+		$this->lv1_id->SetVisibility();
+		$this->lv2_id->SetVisibility();
+		$this->no_urut->SetVisibility();
+		$this->keterangan->SetVisibility();
+		$this->jumlah->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -474,13 +467,13 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t99_audit_trail;
+		global $EW_EXPORT, $t04_rkas03;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t99_audit_trail);
+				$doc = new $class($t04_rkas03);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -506,7 +499,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "t99_audit_trailview.php")
+					if ($pageName == "t04_rkas03view.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -572,7 +565,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 					if ($this->TotalRecs <= 0) { // No record found
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$this->Page_Terminate("t99_audit_traillist.php"); // Return to list page
+						$this->Page_Terminate("t04_rkas03list.php"); // Return to list page
 					} elseif ($bLoadCurrentRecord) { // Load current record position
 						$this->SetupStartRec(); // Set up start record position
 
@@ -596,7 +589,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 					if (!$bMatchRecord) {
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "t99_audit_traillist.php"; // No matching record, return to list
+						$sReturnUrl = "t04_rkas03list.php"; // No matching record, return to list
 					} else {
 						$this->LoadRowValues($this->Recordset); // Load row values
 					}
@@ -609,7 +602,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "t99_audit_traillist.php"; // Not page request, return to list
+			$sReturnUrl = "t04_rkas03list.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -724,7 +717,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 		if ($this->UseSelectLimit) {
 			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 			if ($dbtype == "MSSQL") {
-				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderBy())));
+				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset, array("_hasOrderBy" => trim($this->getOrderBy()) || trim($this->getSessionOrderByList())));
 			} else {
 				$rs = $conn->SelectLimit($sSql, $rowcnt, $offset);
 			}
@@ -773,30 +766,32 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 			return;
 		if ($this->AuditTrailOnView) $this->WriteAuditTrailOnView($row);
 		$this->id->setDbValue($row['id']);
-		$this->datetime->setDbValue($row['datetime']);
-		$this->script->setDbValue($row['script']);
-		$this->user->setDbValue($row['user']);
-		$this->action->setDbValue($row['action']);
-		$this->_table->setDbValue($row['table']);
-		$this->_field->setDbValue($row['field']);
-		$this->keyvalue->setDbValue($row['keyvalue']);
-		$this->oldvalue->setDbValue($row['oldvalue']);
-		$this->newvalue->setDbValue($row['newvalue']);
+		$this->lv1_id->setDbValue($row['lv1_id']);
+		if (array_key_exists('EV__lv1_id', $rs->fields)) {
+			$this->lv1_id->VirtualValue = $rs->fields('EV__lv1_id'); // Set up virtual field value
+		} else {
+			$this->lv1_id->VirtualValue = ""; // Clear value
+		}
+		$this->lv2_id->setDbValue($row['lv2_id']);
+		if (array_key_exists('EV__lv2_id', $rs->fields)) {
+			$this->lv2_id->VirtualValue = $rs->fields('EV__lv2_id'); // Set up virtual field value
+		} else {
+			$this->lv2_id->VirtualValue = ""; // Clear value
+		}
+		$this->no_urut->setDbValue($row['no_urut']);
+		$this->keterangan->setDbValue($row['keterangan']);
+		$this->jumlah->setDbValue($row['jumlah']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
 		$row['id'] = NULL;
-		$row['datetime'] = NULL;
-		$row['script'] = NULL;
-		$row['user'] = NULL;
-		$row['action'] = NULL;
-		$row['table'] = NULL;
-		$row['field'] = NULL;
-		$row['keyvalue'] = NULL;
-		$row['oldvalue'] = NULL;
-		$row['newvalue'] = NULL;
+		$row['lv1_id'] = NULL;
+		$row['lv2_id'] = NULL;
+		$row['no_urut'] = NULL;
+		$row['keterangan'] = NULL;
+		$row['jumlah'] = NULL;
 		return $row;
 	}
 
@@ -806,15 +801,11 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->datetime->DbValue = $row['datetime'];
-		$this->script->DbValue = $row['script'];
-		$this->user->DbValue = $row['user'];
-		$this->action->DbValue = $row['action'];
-		$this->_table->DbValue = $row['table'];
-		$this->_field->DbValue = $row['field'];
-		$this->keyvalue->DbValue = $row['keyvalue'];
-		$this->oldvalue->DbValue = $row['oldvalue'];
-		$this->newvalue->DbValue = $row['newvalue'];
+		$this->lv1_id->DbValue = $row['lv1_id'];
+		$this->lv2_id->DbValue = $row['lv2_id'];
+		$this->no_urut->DbValue = $row['no_urut'];
+		$this->keterangan->DbValue = $row['keterangan'];
+		$this->jumlah->DbValue = $row['jumlah'];
 	}
 
 	// Render row values based on field settings
@@ -829,20 +820,20 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 		$this->ListUrl = $this->GetListUrl();
 		$this->SetupOtherOptions();
 
+		// Convert decimal values if posted back
+		if ($this->jumlah->FormValue == $this->jumlah->CurrentValue && is_numeric(ew_StrToFloat($this->jumlah->CurrentValue)))
+			$this->jumlah->CurrentValue = ew_StrToFloat($this->jumlah->CurrentValue);
+
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
 		// id
-		// datetime
-		// script
-		// user
-		// action
-		// table
-		// field
-		// keyvalue
-		// oldvalue
-		// newvalue
+		// lv1_id
+		// lv2_id
+		// no_urut
+		// keterangan
+		// jumlah
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -850,92 +841,102 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// datetime
-		$this->datetime->ViewValue = $this->datetime->CurrentValue;
-		$this->datetime->ViewValue = ew_FormatDateTime($this->datetime->ViewValue, 0);
-		$this->datetime->ViewCustomAttributes = "";
+		// lv1_id
+		if ($this->lv1_id->VirtualValue <> "") {
+			$this->lv1_id->ViewValue = $this->lv1_id->VirtualValue;
+		} else {
+			$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+		if (strval($this->lv1_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv1_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_rkas01`";
+		$sWhereWrk = "";
+		$this->lv1_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv1_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv1_id->ViewValue = $this->lv1_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv1_id->ViewValue = $this->lv1_id->CurrentValue;
+			}
+		} else {
+			$this->lv1_id->ViewValue = NULL;
+		}
+		}
+		$this->lv1_id->ViewCustomAttributes = "";
 
-		// script
-		$this->script->ViewValue = $this->script->CurrentValue;
-		$this->script->ViewCustomAttributes = "";
+		// lv2_id
+		if ($this->lv2_id->VirtualValue <> "") {
+			$this->lv2_id->ViewValue = $this->lv2_id->VirtualValue;
+		} else {
+			$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
+		if (strval($this->lv2_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->lv2_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `no_urut` AS `DispFld`, `keterangan` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_rkas02`";
+		$sWhereWrk = "";
+		$this->lv2_id->LookupFilters = array("dx1" => '`no_urut`', "dx2" => '`keterangan`');
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->lv2_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->lv2_id->ViewValue = $this->lv2_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->lv2_id->ViewValue = $this->lv2_id->CurrentValue;
+			}
+		} else {
+			$this->lv2_id->ViewValue = NULL;
+		}
+		}
+		$this->lv2_id->ViewCustomAttributes = "";
 
-		// user
-		$this->user->ViewValue = $this->user->CurrentValue;
-		$this->user->ViewCustomAttributes = "";
+		// no_urut
+		$this->no_urut->ViewValue = $this->no_urut->CurrentValue;
+		$this->no_urut->ViewCustomAttributes = "";
 
-		// action
-		$this->action->ViewValue = $this->action->CurrentValue;
-		$this->action->ViewCustomAttributes = "";
+		// keterangan
+		$this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+		$this->keterangan->ViewCustomAttributes = "";
 
-		// table
-		$this->_table->ViewValue = $this->_table->CurrentValue;
-		$this->_table->ViewCustomAttributes = "";
+		// jumlah
+		$this->jumlah->ViewValue = $this->jumlah->CurrentValue;
+		$this->jumlah->ViewValue = ew_FormatNumber($this->jumlah->ViewValue, 2, -2, -2, -2);
+		$this->jumlah->CellCssStyle .= "text-align: right;";
+		$this->jumlah->ViewCustomAttributes = "";
 
-		// field
-		$this->_field->ViewValue = $this->_field->CurrentValue;
-		$this->_field->ViewCustomAttributes = "";
+			// lv1_id
+			$this->lv1_id->LinkCustomAttributes = "";
+			$this->lv1_id->HrefValue = "";
+			$this->lv1_id->TooltipValue = "";
 
-		// keyvalue
-		$this->keyvalue->ViewValue = $this->keyvalue->CurrentValue;
-		$this->keyvalue->ViewCustomAttributes = "";
+			// lv2_id
+			$this->lv2_id->LinkCustomAttributes = "";
+			$this->lv2_id->HrefValue = "";
+			$this->lv2_id->TooltipValue = "";
 
-		// oldvalue
-		$this->oldvalue->ViewValue = $this->oldvalue->CurrentValue;
-		$this->oldvalue->ViewCustomAttributes = "";
+			// no_urut
+			$this->no_urut->LinkCustomAttributes = "";
+			$this->no_urut->HrefValue = "";
+			$this->no_urut->TooltipValue = "";
 
-		// newvalue
-		$this->newvalue->ViewValue = $this->newvalue->CurrentValue;
-		$this->newvalue->ViewCustomAttributes = "";
+			// keterangan
+			$this->keterangan->LinkCustomAttributes = "";
+			$this->keterangan->HrefValue = "";
+			$this->keterangan->TooltipValue = "";
 
-			// id
-			$this->id->LinkCustomAttributes = "";
-			$this->id->HrefValue = "";
-			$this->id->TooltipValue = "";
-
-			// datetime
-			$this->datetime->LinkCustomAttributes = "";
-			$this->datetime->HrefValue = "";
-			$this->datetime->TooltipValue = "";
-
-			// script
-			$this->script->LinkCustomAttributes = "";
-			$this->script->HrefValue = "";
-			$this->script->TooltipValue = "";
-
-			// user
-			$this->user->LinkCustomAttributes = "";
-			$this->user->HrefValue = "";
-			$this->user->TooltipValue = "";
-
-			// action
-			$this->action->LinkCustomAttributes = "";
-			$this->action->HrefValue = "";
-			$this->action->TooltipValue = "";
-
-			// table
-			$this->_table->LinkCustomAttributes = "";
-			$this->_table->HrefValue = "";
-			$this->_table->TooltipValue = "";
-
-			// field
-			$this->_field->LinkCustomAttributes = "";
-			$this->_field->HrefValue = "";
-			$this->_field->TooltipValue = "";
-
-			// keyvalue
-			$this->keyvalue->LinkCustomAttributes = "";
-			$this->keyvalue->HrefValue = "";
-			$this->keyvalue->TooltipValue = "";
-
-			// oldvalue
-			$this->oldvalue->LinkCustomAttributes = "";
-			$this->oldvalue->HrefValue = "";
-			$this->oldvalue->TooltipValue = "";
-
-			// newvalue
-			$this->newvalue->LinkCustomAttributes = "";
-			$this->newvalue->HrefValue = "";
-			$this->newvalue->TooltipValue = "";
+			// jumlah
+			$this->jumlah->LinkCustomAttributes = "";
+			$this->jumlah->HrefValue = "";
+			$this->jumlah->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -985,7 +986,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_t99_audit_trail\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t99_audit_trail',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft99_audit_trailview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_t04_rkas03\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_t04_rkas03',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.ft04_rkas03view,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = TRUE;
 
 		// Drop down button for export
@@ -1186,7 +1187,7 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t99_audit_traillist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t04_rkas03list.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1298,30 +1299,30 @@ class ct99_audit_trail_view extends ct99_audit_trail {
 <?php
 
 // Create page object
-if (!isset($t99_audit_trail_view)) $t99_audit_trail_view = new ct99_audit_trail_view();
+if (!isset($t04_rkas03_view)) $t04_rkas03_view = new ct04_rkas03_view();
 
 // Page init
-$t99_audit_trail_view->Page_Init();
+$t04_rkas03_view->Page_Init();
 
 // Page main
-$t99_audit_trail_view->Page_Main();
+$t04_rkas03_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t99_audit_trail_view->Page_Render();
+$t04_rkas03_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = ft99_audit_trailview = new ew_Form("ft99_audit_trailview", "view");
+var CurrentForm = ft04_rkas03view = new ew_Form("ft04_rkas03view", "view");
 
 // Form_CustomValidate event
-ft99_audit_trailview.Form_CustomValidate = 
+ft04_rkas03view.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1329,253 +1330,204 @@ ft99_audit_trailview.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ft99_audit_trailview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+ft04_rkas03view.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+ft04_rkas03view.Lists["x_lv1_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":["x_lv2_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t02_rkas01"};
+ft04_rkas03view.Lists["x_lv1_id"].Data = "<?php echo $t04_rkas03_view->lv1_id->LookupFilterQuery(FALSE, "view") ?>";
+ft04_rkas03view.AutoSuggests["x_lv1_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_view->lv1_id->LookupFilterQuery(TRUE, "view"))) ?>;
+ft04_rkas03view.Lists["x_lv2_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_no_urut","x_keterangan","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t03_rkas02"};
+ft04_rkas03view.Lists["x_lv2_id"].Data = "<?php echo $t04_rkas03_view->lv2_id->LookupFilterQuery(FALSE, "view") ?>";
+ft04_rkas03view.AutoSuggests["x_lv2_id"] = <?php echo json_encode(array("data" => "ajax=autosuggest&" . $t04_rkas03_view->lv2_id->LookupFilterQuery(TRUE, "view"))) ?>;
 
+// Form object for search
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <div class="ewToolbar">
-<?php $t99_audit_trail_view->ExportOptions->Render("body") ?>
+<?php $t04_rkas03_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($t99_audit_trail_view->OtherOptions as &$option)
+	foreach ($t04_rkas03_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $t99_audit_trail_view->ShowPageHeader(); ?>
+<?php $t04_rkas03_view->ShowPageHeader(); ?>
 <?php
-$t99_audit_trail_view->ShowMessage();
+$t04_rkas03_view->ShowMessage();
 ?>
-<?php if (!$t99_audit_trail_view->IsModal) { ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if (!$t04_rkas03_view->IsModal) { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($t99_audit_trail_view->Pager)) $t99_audit_trail_view->Pager = new cPrevNextPager($t99_audit_trail_view->StartRec, $t99_audit_trail_view->DisplayRecs, $t99_audit_trail_view->TotalRecs, $t99_audit_trail_view->AutoHidePager) ?>
-<?php if ($t99_audit_trail_view->Pager->RecordCount > 0 && $t99_audit_trail_view->Pager->Visible) { ?>
+<?php if (!isset($t04_rkas03_view->Pager)) $t04_rkas03_view->Pager = new cPrevNextPager($t04_rkas03_view->StartRec, $t04_rkas03_view->DisplayRecs, $t04_rkas03_view->TotalRecs, $t04_rkas03_view->AutoHidePager) ?>
+<?php if ($t04_rkas03_view->Pager->RecordCount > 0 && $t04_rkas03_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t99_audit_trail_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t99_audit_trail_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t99_audit_trail_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rkas03_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t99_audit_trail_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t99_audit_trail_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t99_audit_trail_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rkas03_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 </form>
 <?php } ?>
 <?php } ?>
-<form name="ft99_audit_trailview" id="ft99_audit_trailview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t99_audit_trail_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t99_audit_trail_view->Token ?>">
+<form name="ft04_rkas03view" id="ft04_rkas03view" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t04_rkas03_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_rkas03_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t99_audit_trail">
-<input type="hidden" name="modal" value="<?php echo intval($t99_audit_trail_view->IsModal) ?>">
+<input type="hidden" name="t" value="t04_rkas03">
+<input type="hidden" name="modal" value="<?php echo intval($t04_rkas03_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($t99_audit_trail->id->Visible) { // id ?>
-	<tr id="r_id">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_id"><?php echo $t99_audit_trail->id->FldCaption() ?></span></td>
-		<td data-name="id"<?php echo $t99_audit_trail->id->CellAttributes() ?>>
-<span id="el_t99_audit_trail_id">
-<span<?php echo $t99_audit_trail->id->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->id->ViewValue ?></span>
+<?php if ($t04_rkas03->lv1_id->Visible) { // lv1_id ?>
+	<tr id="r_lv1_id">
+		<td class="col-sm-2"><span id="elh_t04_rkas03_lv1_id"><?php echo $t04_rkas03->lv1_id->FldCaption() ?></span></td>
+		<td data-name="lv1_id"<?php echo $t04_rkas03->lv1_id->CellAttributes() ?>>
+<span id="el_t04_rkas03_lv1_id">
+<span<?php echo $t04_rkas03->lv1_id->ViewAttributes() ?>>
+<?php echo $t04_rkas03->lv1_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t99_audit_trail->datetime->Visible) { // datetime ?>
-	<tr id="r_datetime">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_datetime"><?php echo $t99_audit_trail->datetime->FldCaption() ?></span></td>
-		<td data-name="datetime"<?php echo $t99_audit_trail->datetime->CellAttributes() ?>>
-<span id="el_t99_audit_trail_datetime">
-<span<?php echo $t99_audit_trail->datetime->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->datetime->ViewValue ?></span>
+<?php if ($t04_rkas03->lv2_id->Visible) { // lv2_id ?>
+	<tr id="r_lv2_id">
+		<td class="col-sm-2"><span id="elh_t04_rkas03_lv2_id"><?php echo $t04_rkas03->lv2_id->FldCaption() ?></span></td>
+		<td data-name="lv2_id"<?php echo $t04_rkas03->lv2_id->CellAttributes() ?>>
+<span id="el_t04_rkas03_lv2_id">
+<span<?php echo $t04_rkas03->lv2_id->ViewAttributes() ?>>
+<?php echo $t04_rkas03->lv2_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t99_audit_trail->script->Visible) { // script ?>
-	<tr id="r_script">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_script"><?php echo $t99_audit_trail->script->FldCaption() ?></span></td>
-		<td data-name="script"<?php echo $t99_audit_trail->script->CellAttributes() ?>>
-<span id="el_t99_audit_trail_script">
-<span<?php echo $t99_audit_trail->script->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->script->ViewValue ?></span>
+<?php if ($t04_rkas03->no_urut->Visible) { // no_urut ?>
+	<tr id="r_no_urut">
+		<td class="col-sm-2"><span id="elh_t04_rkas03_no_urut"><?php echo $t04_rkas03->no_urut->FldCaption() ?></span></td>
+		<td data-name="no_urut"<?php echo $t04_rkas03->no_urut->CellAttributes() ?>>
+<span id="el_t04_rkas03_no_urut">
+<span<?php echo $t04_rkas03->no_urut->ViewAttributes() ?>>
+<?php echo $t04_rkas03->no_urut->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t99_audit_trail->user->Visible) { // user ?>
-	<tr id="r_user">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_user"><?php echo $t99_audit_trail->user->FldCaption() ?></span></td>
-		<td data-name="user"<?php echo $t99_audit_trail->user->CellAttributes() ?>>
-<span id="el_t99_audit_trail_user">
-<span<?php echo $t99_audit_trail->user->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->user->ViewValue ?></span>
+<?php if ($t04_rkas03->keterangan->Visible) { // keterangan ?>
+	<tr id="r_keterangan">
+		<td class="col-sm-2"><span id="elh_t04_rkas03_keterangan"><?php echo $t04_rkas03->keterangan->FldCaption() ?></span></td>
+		<td data-name="keterangan"<?php echo $t04_rkas03->keterangan->CellAttributes() ?>>
+<span id="el_t04_rkas03_keterangan">
+<span<?php echo $t04_rkas03->keterangan->ViewAttributes() ?>>
+<?php echo $t04_rkas03->keterangan->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t99_audit_trail->action->Visible) { // action ?>
-	<tr id="r_action">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_action"><?php echo $t99_audit_trail->action->FldCaption() ?></span></td>
-		<td data-name="action"<?php echo $t99_audit_trail->action->CellAttributes() ?>>
-<span id="el_t99_audit_trail_action">
-<span<?php echo $t99_audit_trail->action->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->action->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t99_audit_trail->_table->Visible) { // table ?>
-	<tr id="r__table">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail__table"><?php echo $t99_audit_trail->_table->FldCaption() ?></span></td>
-		<td data-name="_table"<?php echo $t99_audit_trail->_table->CellAttributes() ?>>
-<span id="el_t99_audit_trail__table">
-<span<?php echo $t99_audit_trail->_table->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->_table->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t99_audit_trail->_field->Visible) { // field ?>
-	<tr id="r__field">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail__field"><?php echo $t99_audit_trail->_field->FldCaption() ?></span></td>
-		<td data-name="_field"<?php echo $t99_audit_trail->_field->CellAttributes() ?>>
-<span id="el_t99_audit_trail__field">
-<span<?php echo $t99_audit_trail->_field->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->_field->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t99_audit_trail->keyvalue->Visible) { // keyvalue ?>
-	<tr id="r_keyvalue">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_keyvalue"><?php echo $t99_audit_trail->keyvalue->FldCaption() ?></span></td>
-		<td data-name="keyvalue"<?php echo $t99_audit_trail->keyvalue->CellAttributes() ?>>
-<span id="el_t99_audit_trail_keyvalue">
-<span<?php echo $t99_audit_trail->keyvalue->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->keyvalue->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t99_audit_trail->oldvalue->Visible) { // oldvalue ?>
-	<tr id="r_oldvalue">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_oldvalue"><?php echo $t99_audit_trail->oldvalue->FldCaption() ?></span></td>
-		<td data-name="oldvalue"<?php echo $t99_audit_trail->oldvalue->CellAttributes() ?>>
-<span id="el_t99_audit_trail_oldvalue">
-<span<?php echo $t99_audit_trail->oldvalue->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->oldvalue->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($t99_audit_trail->newvalue->Visible) { // newvalue ?>
-	<tr id="r_newvalue">
-		<td class="col-sm-2"><span id="elh_t99_audit_trail_newvalue"><?php echo $t99_audit_trail->newvalue->FldCaption() ?></span></td>
-		<td data-name="newvalue"<?php echo $t99_audit_trail->newvalue->CellAttributes() ?>>
-<span id="el_t99_audit_trail_newvalue">
-<span<?php echo $t99_audit_trail->newvalue->ViewAttributes() ?>>
-<?php echo $t99_audit_trail->newvalue->ViewValue ?></span>
+<?php if ($t04_rkas03->jumlah->Visible) { // jumlah ?>
+	<tr id="r_jumlah">
+		<td class="col-sm-2"><span id="elh_t04_rkas03_jumlah"><?php echo $t04_rkas03->jumlah->FldCaption() ?></span></td>
+		<td data-name="jumlah"<?php echo $t04_rkas03->jumlah->CellAttributes() ?>>
+<span id="el_t04_rkas03_jumlah">
+<span<?php echo $t04_rkas03->jumlah->ViewAttributes() ?>>
+<?php echo $t04_rkas03->jumlah->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
-<?php if (!$t99_audit_trail_view->IsModal) { ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
-<?php if (!isset($t99_audit_trail_view->Pager)) $t99_audit_trail_view->Pager = new cPrevNextPager($t99_audit_trail_view->StartRec, $t99_audit_trail_view->DisplayRecs, $t99_audit_trail_view->TotalRecs, $t99_audit_trail_view->AutoHidePager) ?>
-<?php if ($t99_audit_trail_view->Pager->RecordCount > 0 && $t99_audit_trail_view->Pager->Visible) { ?>
+<?php if (!$t04_rkas03_view->IsModal) { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
+<?php if (!isset($t04_rkas03_view->Pager)) $t04_rkas03_view->Pager = new cPrevNextPager($t04_rkas03_view->StartRec, $t04_rkas03_view->DisplayRecs, $t04_rkas03_view->TotalRecs, $t04_rkas03_view->AutoHidePager) ?>
+<?php if ($t04_rkas03_view->Pager->RecordCount > 0 && $t04_rkas03_view->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t99_audit_trail_view->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t99_audit_trail_view->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t99_audit_trail_view->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_rkas03_view->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t99_audit_trail_view->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t99_audit_trail_view->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t99_audit_trail_view->PageUrl() ?>start=<?php echo $t99_audit_trail_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t04_rkas03_view->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_rkas03_view->PageUrl() ?>start=<?php echo $t04_rkas03_view->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t99_audit_trail_view->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_rkas03_view->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 <?php } ?>
 <?php } ?>
 </form>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <script type="text/javascript">
-ft99_audit_trailview.Init();
+ft04_rkas03view.Init();
 </script>
 <?php } ?>
 <?php
-$t99_audit_trail_view->ShowPageFooter();
+$t04_rkas03_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($t99_audit_trail->Export == "") { ?>
+<?php if ($t04_rkas03->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1585,5 +1537,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$t99_audit_trail_view->Page_Terminate();
+$t04_rkas03_view->Page_Terminate();
 ?>
